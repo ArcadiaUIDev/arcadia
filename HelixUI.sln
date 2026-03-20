@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelixUI.Theme", "src\HelixU
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelixUI.Notifications", "src\HelixUI.Notifications\HelixUI.Notifications.csproj", "{040220B3-48AF-4643-B7D6-04213D766AF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelixUI.FormBuilder", "src\HelixUI.FormBuilder\HelixUI.FormBuilder.csproj", "{20A9CFDF-3E0B-4421-9412-282A3A385578}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelixUI.Demo.Server", "samples\HelixUI.Demo.Server\HelixUI.Demo.Server.csproj", "{C993C6E8-DED5-40D2-B41B-6F303409C180}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelixUI.Demo.Wasm", "samples\HelixUI.Demo.Wasm\HelixUI.Demo.Wasm.csproj", "{CA4B739F-9E28-46E7-A868-AC96D2434E95}"
@@ -41,6 +43,10 @@ Global
 		{CA4B739F-9E28-46E7-A868-AC96D2434E95}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CA4B739F-9E28-46E7-A868-AC96D2434E95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CA4B739F-9E28-46E7-A868-AC96D2434E95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20A9CFDF-3E0B-4421-9412-282A3A385578}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20A9CFDF-3E0B-4421-9412-282A3A385578}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20A9CFDF-3E0B-4421-9412-282A3A385578}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20A9CFDF-3E0B-4421-9412-282A3A385578}.Release|Any CPU.Build.0 = Release|Any CPU
 		{ACB58C5E-1C01-449A-9FFA-2EF8C4318AAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{ACB58C5E-1C01-449A-9FFA-2EF8C4318AAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ACB58C5E-1C01-449A-9FFA-2EF8C4318AAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
