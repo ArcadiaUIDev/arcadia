@@ -183,20 +183,167 @@ record SalesRecord(string Month, double Revenue, double Target);
 
 ---
 
-## 5. Feature Requirements by Phase
+## 5. Layout Engine — Anti-Collision System
+
+**This is the most critical piece of the entire charting library.** The #1 complaint with chart libraries is overlapping labels, crowded ticks, and legends that overflow. We solve this with a dedicated layout engine that runs as a separate pass before any SVG is rendered.
+
+### Architecture
+
+```csharp
+public class ChartLayoutEngine
+{
+    // Runs BEFORE rendering. All collision resolution happens here.
+    // The chart renderer receives pre-resolved, non-overlapping positions.
+    public ChartLayoutResult Calculate(ChartLayoutInput input);
+}
+
+public class ChartLayoutInput
+{
+    public double Width { get; set; }
+    public double Height { get; set; }
+    public DataRange XRange { get; set; }
+    public DataRange YRange { get; set; }
+    public List<string> TickLabels { get; set; }
+    public List<SeriesInfo> Series { get; set; }
+    public LegendConfig Legend { get; set; }
+    public string? Title { get; set; }
+    public string? XAxisTitle { get; set; }
+    public string? YAxisTitle { get; set; }
+}
+
+public class ChartLayoutResult
+{
+    public ChartMargins Margins { get; set; }       // Final resolved margins
+    public PlotArea PlotArea { get; set; }           // Usable drawing area
+    public List<TickMark> XTicks { get; set; }       // Resolved tick positions + labels
+    public List<TickMark> YTicks { get; set; }
+    public double TickLabelRotation { get; set; }    // 0, 45, or 90 degrees
+    public LegendLayout Legend { get; set; }          // Resolved legend item positions
+    public List<DataLabelPosition> DataLabels { get; set; } // Collision-free label positions
+}
+```
+
+### Anti-Collision Strategies
+
+**1. Axis Tick Labels**
+The most common collision. Strategy cascade (each step tried in order):
+1. **Ideal ticks** — calculate nice round numbers (Wilkinson's algorithm) that fit with spacing
+2. **Reduce tick count** — if labels overlap, halve the number of ticks and recalculate
+3. **Rotate labels** — 0° → 45° → 90° rotation, recalculate space needed
+4. **Abbreviate** — "January" → "Jan" → "J"; "1,000,000" → "1M"
+5. **Skip labels** — show every Nth label, keep all tick marks
+6. **Last resort** — show only first, middle, and last labels
+
+Text width estimation without DOM:
+```csharp
+// Approximate: average char width × character count × font size factor
+// Calibrated per font family. Not pixel-perfect but sufficient for layout math.
+public static double EstimateTextWidth(string text, double fontSize)
+{
+    const double avgCharWidth = 0.6; // ratio to fontSize for sans-serif
+    return text.Length * fontSize * avgCharWidth;
+}
+```
+
+Time axis special behavior:
+- < 7 days visible → show day names ("Mon", "Tue")
+- < 3 months → show "Jan 15", "Feb 1"
+- < 2 years → show "Jan", "Feb", "Mar"
+- < 10 years → show "2024", "2025"
+- 10+ years → show "2020", "2025", "2030"
+
+**2. Data Labels on Points/Bars**
+- Calculate bounding box for each label at its ideal position (centered above point)
+- Run pairwise AABB overlap detection
+- Collision resolution priority:
+  1. Nudge vertically (alternate above/below)
+  2. Nudge horizontally (offset left/right)
+  3. If still overlapping, hide the lower-value label
+  4. At high density, switch to "hover-only" labels (show on tooltip instead)
+- Maximum label density: no more than 1 label per 40px of horizontal space
+
+**3. Pie/Donut Labels**
+Pie labels are the hardest. Strategy:
+- **Inside labels** — for slices > 10% of total, place label inside the slice
+- **Outside labels** — for small slices, use leader lines
+- **Two-column layout** — labels go in sorted vertical columns on left/right sides
+- **Minimum slice angle** — slices below 2° get grouped into "Other"
+- **Leader line routing** — lines route around other slices, never cross each other
+
+**4. Legend**
+Adaptive layout based on available space:
+- **Horizontal (default)** — items in a row, if total width < chart width
+- **Horizontal wrapped** — wraps to 2-3 rows if too wide
+- **Vertical** — switch to vertical stack if > 6-8 items
+- **Truncated** — if > 12 items, show first 10 + "+N more" with expand on click
+- **Repositioned** — if legend at bottom would make chart too short, move to right side
+
+**5. Responsive Breakpoints**
+Not just CSS scaling — the layout engine makes **structural decisions** per width:
+
+| Width | Ticks | Labels | Legend | Grid | Axis Titles | Data Labels |
+|---|---|---|---|---|---|---|
+| > 600px | Full | Horizontal | Below/right | Both | Yes | Yes |
+| 400-600px | Reduced | Rotated 45° | Below, compact | Horizontal only | No | Hover only |
+| 300-400px | Minimal | Rotated 90° | Hidden (tooltip) | None | No | No |
+| < 300px | First/last only | Abbreviated | Hidden | None | No | No |
+
+**6. Margin Auto-Calculation**
+Margins are never hardcoded. The layout engine calculates them:
+```
+Left margin   = Y-axis label width + Y-axis title height + padding
+Bottom margin = X-axis label height (accounting for rotation) + X-axis title height + padding
+Top margin    = chart title height + padding
+Right margin  = legend width (if positioned right) + padding
+```
+The plot area is whatever remains after margins. If margins would consume > 50% of chart area, the engine starts dropping elements (titles first, then reduces tick labels).
+
+**7. Collision Detection Algorithm**
+Pure C# AABB (Axis-Aligned Bounding Box):
+```csharp
+public static bool Overlaps(LabelBox a, LabelBox b, double padding = 2)
+{
+    return a.X < b.X + b.Width + padding
+        && a.X + a.Width + padding > b.X
+        && a.Y < b.Y + b.Height + padding
+        && a.Y + a.Height + padding > b.Y;
+}
+```
+Runs in O(n²) for labels — fine for the typical case (< 100 labels). For data labels on scatter charts with many points, we use a spatial grid for O(n) average case.
+
+### Why This Matters
+- **Every test includes layout assertions** — tick counts, label rotation, margin values
+- **Layout engine is pure C#** — no DOM, no JS, fully unit testable
+- **Deterministic** — same input always produces same layout (important for snapshot testing)
+- **Runs before render** — chart components just draw what the engine tells them, no layout logic in Razor files
+
+---
+
+## 6. Feature Requirements by Phase
 
 ### Phase 1 — Core Engine + 4 Chart Types
 *Ship the foundation and most-used charts.*
+
+**Layout Engine (the foundation):**
+- [ ] ChartLayoutEngine with full collision detection pipeline
+- [ ] Text width estimation (sans-serif calibrated)
+- [ ] Smart tick generator (Wilkinson's algorithm for nice numbers)
+- [ ] Tick label collision cascade (reduce → rotate → abbreviate → skip)
+- [ ] Data label AABB collision detection and resolution
+- [ ] Legend adaptive layout (horizontal → wrapped → vertical → truncated)
+- [ ] Responsive breakpoint system (4 tiers)
+- [ ] Auto-margin calculation from resolved label sizes
+- [ ] Pie label two-column layout with leader lines
 
 **SVG Rendering Engine:**
 - [ ] Linear scale (data range → pixel range mapping)
 - [ ] Band scale (category-based for bar charts)
 - [ ] Time scale (DateTime mapping)
-- [ ] Axis renderer (ticks, labels, gridlines, auto-tick calculation)
-- [ ] Chart layout calculator (margins, padding, legend space)
+- [ ] Axis renderer (ticks, labels, gridlines — positions from layout engine)
 - [ ] Responsive container (resize observer via minimal JS)
 - [ ] Color palette system integrated with HelixUI.Theme tokens
 - [ ] 10+ built-in palettes (Default, Cool, Warm, Monochrome, Pastel, etc.)
+- [ ] Data downsampling (LTTB algorithm) for datasets > 1,000 points
 
 **Chart Components:**
 - [ ] HelixLineChart — single/multi-series line, curved/linear/stepped interpolation, area fill
