@@ -33,13 +33,11 @@
             }
 
             @* X-axis labels *@
-            @for (var i = 0; i < _xLabels.Count; i++)
+            @foreach (var tick in _layout.XTicks)
             {
-                var x = _layout.PlotArea.X + (i + 0.5) * (_layout.PlotArea.Width / _xLabels.Count);
-                var rot = _layout.TickLabelRotation > 0 ? $" transform=\"rotate({_layout.TickLabelRotation},{F(x)},{F(_layout.PlotArea.Y + _layout.PlotArea.Height + 16)})\"" : "";
-                <SvgText x="@F(x)" y="@F(_layout.PlotArea.Y + _layout.PlotArea.Height + 18)"
-                      text-anchor="@(_layout.TickLabelRotation > 0 ? "end" : "middle")"
-                      class="helix-chart__tick-label"@((Microsoft.AspNetCore.Components.MarkupString)rot)>@_xLabels[i]</SvgText>
+                <SvgText x="@F(tick.Position)" y="@F(_layout.PlotArea.Y + _layout.PlotArea.Height + 18)"
+                      text-anchor="middle"
+                      class="helix-chart__tick-label">@tick.Label</SvgText>
             }
 
             @* Series *@
