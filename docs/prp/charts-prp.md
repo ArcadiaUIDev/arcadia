@@ -492,10 +492,11 @@ public void FuzzTest_NoOverlaps_AtAnySize()
 - [ ] Color palette system (theme token integration)
 - [ ] 10+ built-in palettes
 
-**Community Charts (3 types):**
+**Community Charts (4 types):**
 - [ ] HelixLineChart — single/multi-series, curved/linear, area fill
 - [ ] HelixBarChart — vertical/horizontal, grouped/stacked
 - [ ] HelixPieChart — pie + donut, labels, hover explode
+- [ ] HelixScatterChart — scatter + bubble (size-mapped)
 
 **Composable Elements:**
 - [ ] HelixXAxis, HelixYAxis
@@ -538,7 +539,6 @@ public void FuzzTest_NoOverlaps_AtAnySize()
 ### Phase 2 — Pro Charts + Advanced Features
 
 **Additional Chart Types (Pro):**
-- [ ] HelixScatterChart — scatter + bubble
 - [ ] HelixRadarChart — radar/spider with fill
 - [ ] HelixGaugeChart — radial gauge with thresholds
 - [ ] HelixHeatmap — 2D color grid with scale legend
@@ -591,11 +591,16 @@ public void FuzzTest_NoOverlaps_AtAnySize()
 
 ---
 
-## 14. Open Questions
+## 14. Resolved Decisions
 
-1. **Path morphing:** Web Animations API (JS) or CSS transitions on SVG attributes?
-2. **Hidden data table:** Inside SVG as foreign object, or sibling element?
-3. **Viewport state:** Internal only, or bindable parameter for URL persistence?
-4. **Live data backpressure:** Buffer and batch at 60fps, or drop intermediate frames?
-5. **Community/Pro split:** Is the line in the right place? Should Scatter be Community?
-6. **Localization:** Ship built-in formatters or rely on .NET's CultureInfo?
+| Question | Decision | Rationale |
+|---|---|---|
+| **Path morphing** | Web Animations API (JS) | Modern standard, already in our JS module budget. C# renders, JS animates. Chart works without JS — just no animation. |
+| **Hidden data table** | Sibling `<table>` element | `<foreignObject>` has inconsistent browser/screen reader support. Sibling table is universally accessible. |
+| **Viewport state** | Bindable `@bind-Viewport` | Developers need URL-persistable zoom/pan state for shareable dashboard links. Internal default, opt-in binding. |
+| **Live data backpressure** | Buffer + batch at 60fps | Never drop data. Buffer incoming points, flush once per animation frame. LTTB handles visual density. |
+| **Community/Pro split** | Line, Bar, Pie, Scatter, Sparkline = free | 4 basic charts feels generous, drives adoption. Radar, Gauge, Heatmap + dashboard widgets = Pro. |
+| **Localization** | .NET CultureInfo | Accept `CultureInfo`/`IFormatProvider` on axes and tooltips. Don't reinvent — `ToString("C", culture)` already works. |
+
+### Design Principle
+**C# renders, JS animates.** The chart is fully functional without JS (static SVG). JS makes it beautiful and interactive. This means static SSR works out of the box — charts render as plain SVG markup with no JS required.
