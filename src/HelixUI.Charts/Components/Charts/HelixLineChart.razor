@@ -117,7 +117,7 @@
 
         @* Hidden data table for screen readers *@
         <table class="helix-sr-only" aria-label="Chart data">
-            <thead><tr><th>@XAxisLabel</th>@foreach (var s in Series) { <th>@s.Name</th> }</tr></thead>
+            <thead><tr><th>@XAxisTitle</th>@foreach (var s in Series) { <th>@s.Name</th> }</tr></thead>
             <tbody>
                 @foreach (var item in Data)
                 {

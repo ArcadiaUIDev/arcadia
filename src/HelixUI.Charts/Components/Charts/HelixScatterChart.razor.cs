@@ -31,22 +31,17 @@ public partial class HelixScatterChart<T> : ChartBase<T>
     [Parameter] public string? YAxisLabel { get; set; }
 
     /// <summary>Custom tooltip template rendered for each data point.</summary>
-    [Parameter] public RenderFragment<T>? TooltipTemplate { get; set; }
 
     /// <summary>Trendline configuration for the scatter data.</summary>
     [Parameter] public TrendlineConfig? Trendline { get; set; }
 
     /// <summary>Whether to show data labels on points.</summary>
-    [Parameter] public bool ShowDataLabels { get; set; } = false;
 
     /// <summary>Format string for data labels.</summary>
-    [Parameter] public string? DataLabelFormatString { get; set; }
 
     /// <summary>Format string for Y-axis labels.</summary>
-    [Parameter] public string? YAxisFormatString { get; set; }
 
     /// <summary>Format string for X-axis labels.</summary>
-    [Parameter] public string? XAxisFormatString { get; set; }
 
     private ChartLayoutResult _layout = new();
     private LinearScale? _xScale;

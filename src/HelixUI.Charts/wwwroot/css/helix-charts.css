@@ -1,6 +1,26 @@
 /* HelixUI Charts — Dashboard Analytics Toolkit
    Usage: <link href="_content/HelixUI.Charts/css/helix-charts.css" rel="stylesheet" /> */
 
+/* Loading state */
+.helix-chart--loading { position: relative; }
+.helix-chart--loading::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent 25%, var(--helix-color-surface-sunken, #f8fafc) 50%, transparent 75%);
+  background-size: 200% 100%; animation: helix-shimmer 1.5s infinite; border-radius: var(--helix-radius-md, 0.375rem);
+}
+@keyframes helix-shimmer { to { background-position: -200% 0; } }
+
+/* No data state */
+.helix-chart__no-data {
+  display: flex; align-items: center; justify-content: center;
+  height: 100%; min-height: 200px;
+  color: var(--helix-color-text-muted, #64748b); font-size: var(--helix-text-sm, 0.875rem);
+  border: 1px dashed var(--helix-color-border, #e2e8f0); border-radius: var(--helix-radius-md, 0.375rem);
+}
+
+/* Subtitle */
+.helix-chart__subtitle { font-size: var(--helix-text-sm, 0.875rem); fill: var(--helix-color-text-muted, #64748b); }
+
 /* Sparkline */
 .helix-sparkline { display: inline-block; vertical-align: middle; }
 

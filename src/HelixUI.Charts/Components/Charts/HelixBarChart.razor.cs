@@ -20,17 +20,11 @@ public partial class HelixBarChart<T> : ChartBase<T>
     /// <summary>Whether to stack bars on top of each other instead of side by side.</summary>
     [Parameter] public bool Stacked { get; set; }
 
-    /// <summary>Custom tooltip template rendered for each data point.</summary>
-    [Parameter] public RenderFragment<T>? TooltipTemplate { get; set; }
+    /// <summary>Bar padding ratio (0-1). Controls gap between bars.</summary>
+    [Parameter] public double BarPadding { get; set; } = 0.15;
 
-    /// <summary>Whether to show value labels on bars.</summary>
-    [Parameter] public bool ShowDataLabels { get; set; } = false;
-
-    /// <summary>Format string for data labels.</summary>
-    [Parameter] public string? DataLabelFormatString { get; set; }
-
-    /// <summary>Format string for Y-axis labels (e.g. "C0" for currency, "P0" for percent).</summary>
-    [Parameter] public string? YAxisFormatString { get; set; }
+    /// <summary>Bar corner radius. Only applies when Rounded=true.</summary>
+    [Parameter] public double CornerRadius { get; set; } = 3;
 
     private ChartLayoutResult _layout = new();
     private LinearScale? _yScale;
@@ -88,7 +82,7 @@ public partial class HelixBarChart<T> : ChartBase<T>
             SeriesNames = Series.Select(s => s.Name).ToList()
         });
 
-        _bandScale = new BandScale(categories, _layout.PlotArea.X, _layout.PlotArea.X + _layout.PlotArea.Width, 0.15);
+        _bandScale = new BandScale(categories, _layout.PlotArea.X, _layout.PlotArea.X + _layout.PlotArea.Width, BarPadding);
 
         var yTicks = TickGenerator.GenerateNumericTicks(yMin, yMax, 8);
         _yScale = new LinearScale(

@@ -33,7 +33,6 @@ public partial class HelixHeatmap<T> : ChartBase<T>
     [Parameter] public string? ValueFormatString { get; set; }
 
     /// <summary>Custom tooltip template for cells.</summary>
-    [Parameter] public RenderFragment<T>? TooltipTemplate { get; set; }
 
     private List<string> _xCategories = new();
     private List<string> _yCategories = new();

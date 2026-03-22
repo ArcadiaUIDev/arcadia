@@ -12,43 +12,14 @@ public partial class HelixLineChart<T> : ChartBase<T>
     /// <summary>Function to extract the X-axis label from each data item.</summary>
     [Parameter] public Func<T, object>? XField { get; set; }
 
-    /// <summary>X-axis label text.</summary>
-    [Parameter] public string? XAxisLabel { get; set; }
-
-    /// <summary>Y-axis label text.</summary>
-    [Parameter] public string? YAxisLabel { get; set; }
-
     /// <summary>Series configurations.</summary>
     [Parameter] public List<SeriesConfig<T>>? Series { get; set; }
 
-    /// <summary>Whether to show data points on the line.</summary>
+    /// <summary>Whether to show data points on the line (overridden per-series by SeriesConfig.ShowPoints).</summary>
     [Parameter] public bool ShowPoints { get; set; } = true;
 
-    /// <summary>How to handle null/missing data values.</summary>
+    /// <summary>How to handle null/missing data values (NaN in series Field).</summary>
     [Parameter] public NullHandling NullHandling { get; set; } = NullHandling.Gap;
-
-    /// <summary>Custom tooltip template rendered for each data point.</summary>
-    [Parameter] public RenderFragment<T>? TooltipTemplate { get; set; }
-
-    /// <summary>Whether to show value labels on data points.</summary>
-    [Parameter] public bool ShowDataLabels { get; set; } = false;
-
-    /// <summary>Format string for data labels.</summary>
-    [Parameter] public string? DataLabelFormatString { get; set; }
-
-    /// <summary>Format string for Y-axis labels (e.g. "C2" for currency, "P0" for percent).</summary>
-    [Parameter] public string? YAxisFormatString { get; set; }
-
-    /// <summary>Format string for X-axis labels.</summary>
-    [Parameter] public string? XAxisFormatString { get; set; }
-
-    /// <summary>Function to extract a nullable Y value, for null data handling support.</summary>
-    /// <remarks>
-    /// When this is set on a SeriesConfig, use it instead of Field for null-aware rendering.
-    /// Since SeriesConfig.Field returns double (non-nullable), we use a separate mechanism.
-    /// Provide this mapping from T to nullable double for null handling.
-    /// </remarks>
-    [Parameter] public Func<T, double?>? NullableField { get; set; }
 
     private ChartLayoutResult _layout = new();
     private LinearScale? _yScale;
@@ -68,32 +39,30 @@ public partial class HelixLineChart<T> : ChartBase<T>
             return;
 
         // Build X labels
-        _xLabels = Data.Select(d => FormatLabel(XField(d), XAxisFormatString)).ToList();
+        _xLabels = Data.Select(d => FormatLabel(XField(d))).ToList();
 
         // Calculate Y range across all series (filter out NaN for null handling)
         var allYValues = Series.SelectMany(s => Data.Select(d => s.Field(d)))
             .Where(v => !double.IsNaN(v)).ToList();
         if (allYValues.Count == 0) return;
-        var yMin = allYValues.Min();
-        var yMax = allYValues.Max();
-        if (yMin > 0) yMin = 0; // Include zero baseline
+        var yMin = YAxisMin ?? allYValues.Min();
+        var yMax = YAxisMax ?? allYValues.Max();
+        if (YAxisMin is null && yMin > 0) yMin = 0; // Include zero baseline unless manually set
 
-        // Run layout engine
         _layout = LayoutEngine.Calculate(new ChartLayoutInput
         {
             Width = Width,
             Height = Height,
             Title = Title,
-            XAxisTitle = XAxisLabel,
-            YAxisTitle = YAxisLabel,
+            XAxisTitle = XAxisTitle,
+            YAxisTitle = YAxisTitle,
             XTickLabels = _xLabels,
             YMin = yMin,
             YMax = yMax,
             SeriesNames = Series.Select(s => s.Name).ToList()
         });
 
-        // Create Y scale (inverted — SVG Y goes down)
-        var yTicks = TickGenerator.GenerateNumericTicks(yMin, yMax, 8);
+        var yTicks = TickGenerator.GenerateNumericTicks(yMin, yMax, YAxisMaxTicks);
         _yScale = new LinearScale(
             yTicks.Min(), yTicks.Max(),
             _layout.PlotArea.Y + _layout.PlotArea.Height,
@@ -211,11 +180,11 @@ public partial class HelixLineChart<T> : ChartBase<T>
         }
     }
 
-    private string FormatLabel(object? value, string? formatString)
+    private string FormatLabel(object? value)
     {
         if (value is null) return "";
-        if (formatString is not null && value is IFormattable formattable)
-            return formattable.ToString(formatString, FormatProvider);
+        if (XAxisFormatString is not null && value is IFormattable formattable)
+            return formattable.ToString(XAxisFormatString, FormatProvider);
         return value.ToString() ?? "";
     }
 
@@ -226,12 +195,7 @@ public partial class HelixLineChart<T> : ChartBase<T>
         return _layout.YTicks.FirstOrDefault(t => Math.Abs(t.Value - value) < double.Epsilon)?.Label ?? value.ToString("G4");
     }
 
-    internal string FormatDataLabel(double value)
-    {
-        if (DataLabelFormatString is not null)
-            return value.ToString(DataLabelFormatString, FormatProvider);
-        return value.ToString("G4");
-    }
+    internal string FormatDataLabel(double value) => FormatValue(value, DataLabelFormatString);
 
     private static string F(double v) => v.ToString("F1");
 

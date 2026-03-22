@@ -22,10 +22,10 @@
                       class="helix-chart__pie-slice @(AnimateOnLoad ? "helix-animate-point" : "")"
                       style="@(AnimateOnLoad ? $"animation-delay: {i * 100}ms;" : "")" />
 
-                @if (ShowLabels && slice.Percent > 5)
+                @if (ShowLabels && slice.Percent >= MinLabelPercent && LabelFormat != PieLabelFormat.None)
                 {
                     <SvgText x="@F(slice.LabelX)" y="@F(slice.LabelY)" text-anchor="middle"
-                          class="helix-chart__pie-label">@($"{slice.Percent:F0}%")</SvgText>
+                          class="helix-chart__pie-label">@slice.LabelText</SvgText>
                 }
             }
         </svg>

@@ -194,7 +194,7 @@
     List<SeriesConfig<MonthlySales>> _trendSeries = new()
     {
         new() { Name = "Revenue", Field = d => d.Revenue, Color = "primary",
-                Trendline = new() { Type = TrendlineType.LinearRegression, Color = "var(--helix-color-danger)", Dashed = true } },
+                Trendline = new() { Type = TrendlineType.Linear, Color = "var(--helix-color-danger)", Dashed = true } },
     };
 
     // Gauge thresholds

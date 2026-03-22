@@ -26,10 +26,8 @@ public partial class HelixRadarChart<T> : ChartBase<T>
     [Parameter] public bool ShowPoints { get; set; } = true;
 
     /// <summary>Whether to show the legend.</summary>
-    [Parameter] public bool ShowLegend { get; set; } = true;
 
     /// <summary>Custom tooltip template for data points.</summary>
-    [Parameter] public RenderFragment<T>? TooltipTemplate { get; set; }
 
     private double _cx;
     private double _cy;

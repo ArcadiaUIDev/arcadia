@@ -28,7 +28,6 @@ public partial class HelixCandlestickChart<T> : ChartBase<T>
     [Parameter] public List<SeriesConfig<T>>? OverlaySeries { get; set; }
 
     /// <summary>Format string for Y-axis labels.</summary>
-    [Parameter] public string? YAxisFormatString { get; set; }
 
     private ChartLayoutResult _layout = new();
     private LinearScale? _yScale;
