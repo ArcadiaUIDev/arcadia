@@ -1,0 +1,91 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+title: Line Chart
+description: Multi-series line and area charts with trendlines, animations, and null data handling.
+---
+
+# Line Chart
+
+Single or multi-series line chart with area fill, trendlines, data points, and null data handling.
+
+## Basic Usage
+
+```razor
+<HelixLineChart TItem="SalesRecord" Data="@data"
+                XField="@(d => (object)d.Month)"
+                Series="@series"
+                Height="300" Width="600" />
+
+@code {
+    record SalesRecord(string Month, double Revenue);
+
+    var data = new List<SalesRecord>
+    {
+        new("Jan", 45000), new("Feb", 52000),
+        new("Mar", 48000), new("Apr", 61000),
+    };
+
+    var series = new List<SeriesConfig<SalesRecord>>
+    {
+        new() { Name = "Revenue", Field = d => d.Revenue }
+    };
+}
+```
+
+## Multi-Series with Area Fill
+
+```csharp
+var series = new List<SeriesConfig<SalesRecord>>
+{
+    new() { Name = "Revenue", Field = d => d.Revenue,
+            Color = "primary", ShowArea = true },
+    new() { Name = "Target", Field = d => d.Target,
+            Color = "secondary", Dashed = true },
+};
+```
+
+## With Trendline
+
+```csharp
+new() {
+    Name = "Revenue", Field = d => d.Revenue,
+    Trendline = new()
+    {
+        Type = TrendlineType.Linear,
+        Color = "danger",
+        Dashed = true,
+    }
+}
+```
+
+## Line Chart Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `XField` | `Func<T, object>` | — | X-axis label selector (required) |
+| `Series` | `List<SeriesConfig<T>>` | — | Series configs (required) |
+| `ShowPoints` | `bool` | true | Show data point dots |
+| `NullHandling` | `NullHandling` | Gap | Gap, Connect, or Zero |
+
+Plus all [shared ChartBase parameters](/docs/charts).
+
+## Null Data Handling
+
+```csharp
+// Gap — break the line at missing points
+<HelixLineChart NullHandling="NullHandling.Gap" />
+
+// Connect — skip missing, connect neighbors
+<HelixLineChart NullHandling="NullHandling.Connect" />
+
+// Zero — treat missing as 0
+<HelixLineChart NullHandling="NullHandling.Zero" />
+```
+
+## Axis Formatting
+
+```razor
+<HelixLineChart YAxisFormatString="C0"
+                XAxisFormatString="MMM"
+                FormatProvider="@CultureInfo.GetCultureInfo("en-US")" />
+```

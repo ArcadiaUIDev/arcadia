@@ -1,0 +1,100 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+title: Charts Overview
+description: 8 chart types + 7 dashboard widgets for Blazor. Native SVG rendering, zero JS dependencies.
+---
+
+# Charts & Dashboard Widgets
+
+A dashboard analytics toolkit for Blazor — 8 chart types and 7 pre-composed dashboard widgets. Native SVG rendering with zero JavaScript dependencies.
+
+## Chart Types
+
+| Chart | Component | Tier |
+|---|---|---|
+| Line / Area | `HelixLineChart<T>` | Community (Free) |
+| Bar / Column | `HelixBarChart<T>` | Community (Free) |
+| Pie / Donut | `HelixPieChart<T>` | Community (Free) |
+| Scatter / Bubble | `HelixScatterChart<T>` | Community (Free) |
+| Candlestick (OHLC) | `HelixCandlestickChart<T>` | Pro |
+| Radar / Spider | `HelixRadarChart<T>` | Pro |
+| Gauge | `HelixGaugeChart` | Pro |
+| Heatmap | `HelixHeatmap<T>` | Pro |
+
+## Dashboard Widgets
+
+| Widget | Component | Description |
+|---|---|---|
+| Sparkline | `HelixSparkline` | Inline mini chart, no axes |
+| KPI Card | `HelixKpiCard` | Value + delta + sparkline + footer |
+| Delta Indicator | `HelixDeltaIndicator` | Up/down arrow with percentage |
+| Progress Bar | `HelixProgressBar` | Linear progress with thresholds |
+| Bar List | `HelixBarList<T>` | Horizontal bar ranking |
+| Tracker | `HelixTracker` | GitHub-style contribution grid |
+| Category Bar | `HelixCategoryBar<T>` | Segmented horizontal bar |
+
+## Shared Parameters
+
+All chart components inherit from `ChartBase<T>` and share these parameters:
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `Data` | `IReadOnlyList<T>` | — | The data to visualize |
+| `Width` | `double` | 600 | Chart width in pixels |
+| `Height` | `double` | 300 | Chart height in pixels |
+| `Title` | `string?` | null | Chart title |
+| `Subtitle` | `string?` | null | Subtitle below title |
+| `ShowGrid` | `bool` | true | Show grid lines |
+| `ShowLegend` | `bool` | true | Show legend |
+| `LegendPosition` | `string` | "bottom" | top/bottom/left/right |
+| `AnimateOnLoad` | `bool` | true | Animate on first render |
+| `YAxisMin` / `YAxisMax` | `double?` | null | Manual axis range |
+| `YAxisFormatString` | `string?` | null | Format (e.g., "C0", "P1") |
+| `ShowDataLabels` | `bool` | false | Value labels on data points |
+| `OnPointClick` | `EventCallback<T>` | — | Click event on data point |
+| `Loading` | `bool` | false | Show loading skeleton |
+| `AriaLabel` | `string?` | null | Screen reader label |
+| `FormatProvider` | `IFormatProvider?` | null | Culture for formatting |
+
+## Series Configuration
+
+```csharp
+var series = new List<SeriesConfig<SalesRecord>>
+{
+    new()
+    {
+        Name = "Revenue",         // Legend label
+        Field = d => d.Revenue,   // Y-value selector
+        Color = "primary",        // Color name or CSS
+        StrokeWidth = 2,          // Line width
+        ShowArea = true,          // Fill below line
+        AreaOpacity = 0.15,       // Fill opacity
+        Dashed = false,           // Dashed line
+        ShowPoints = true,        // Data point dots
+        PointRadius = 3,          // Dot size
+        PointShape = "circle",    // circle/square/diamond/triangle
+        CurveType = "linear",     // linear/smooth/step
+    }
+};
+```
+
+## Color Palettes
+
+7 built-in palettes:
+
+```csharp
+ChartPalette.Default    // Theme token colors
+ChartPalette.Cool       // Blues and greens
+ChartPalette.Warm       // Reds and oranges
+ChartPalette.Monochrome // Grays
+ChartPalette.Pastel     // Soft colors
+ChartPalette.Vibrant    // Saturated
+ChartPalette.Accessible // Okabe-Ito (color-blind safe)
+```
+
+## Accessibility
+
+Every chart automatically includes:
+- `role="figure"` and `aria-label` on the SVG
+- Hidden `<table>` with all data for screen readers
+- Animations respect `prefers-reduced-motion`

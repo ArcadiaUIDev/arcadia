@@ -1,0 +1,53 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+title: Toast Notifications
+description: Toast notifications with auto-dismiss, stacking, and ARIA accessibility.
+---
+
+# Toast Notifications
+
+Imperative toast system with auto-dismiss, stacking, and full ARIA accessibility.
+
+## Setup
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ToastService>();
+```
+
+```razor
+// MainLayout.razor
+<HelixToastContainer Position="ToastPosition.TopRight" />
+```
+
+## Show Toasts
+
+```csharp
+@inject ToastService ToastService
+
+ToastService.ShowInfo("Processing...");
+ToastService.ShowSuccess("File uploaded!");
+ToastService.ShowWarning("Storage almost full.");
+ToastService.ShowError("Connection lost.");
+
+// With title
+ToastService.ShowSuccess("Your changes were saved.", "Saved!");
+
+// Custom duration (0 = no auto-dismiss)
+ToastService.ShowError("Critical error", duration: 0);
+```
+
+## Dismiss
+
+```csharp
+var id = ToastService.ShowInfo("Processing...");
+ToastService.Dismiss(id);      // Dismiss one
+ToastService.DismissAll();     // Clear all
+```
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `Position` | `ToastPosition` | TopRight | Screen position |
+| `MaxVisible` | `int` | 5 | Max toasts before oldest dismissed |

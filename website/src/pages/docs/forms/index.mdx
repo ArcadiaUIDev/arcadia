@@ -1,0 +1,90 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+title: Form Builder
+description: 21 field types, schema-driven rendering, wizard forms, and validation for Blazor.
+---
+
+# Form Builder
+
+The most feature-complete form builder in the Blazor ecosystem. 21 field types, schema-driven or model-driven rendering, wizard forms, and cross-field validation.
+
+## Three Ways to Build Forms
+
+### 1. Schema-Driven
+
+```csharp
+var schema = new FormSchema
+{
+    Title = "Contact Form",
+    Fields = new()
+    {
+        new() { Name = "name", Type = FieldType.Text,
+                Label = "Full Name", Required = true },
+        new() { Name = "email", Type = FieldType.Text,
+                Label = "Email",
+                Validation = new() { Pattern = "email" } },
+    }
+};
+```
+
+```razor
+<HelixFormBuilder Schema="@schema" OnValidSubmit="HandleSubmit" />
+```
+
+### 2. Model-Driven
+
+```csharp
+public class ContactForm
+{
+    [Required, StringLength(100)]
+    [HelixField(Placeholder = "John Doe")]
+    public string Name { get; set; }
+
+    [Required, EmailAddress]
+    public string Email { get; set; }
+}
+
+var schema = ModelFormGenerator.Generate<ContactForm>();
+```
+
+### 3. Component-Based
+
+```razor
+<TextField Label="Name" @bind-Value="model.Name" Required />
+<NumberField Label="Age" @bind-Value="model.Age" Min="0" />
+<SelectField Label="Role" @bind-Value="model.Role" Options="@roles" />
+```
+
+## 21 Field Types
+
+| Field | Component | Value Type |
+|---|---|---|
+| Text | `TextField` | `string` |
+| Number | `NumberField` | `double?` |
+| TextArea | `TextAreaField` | `string` |
+| Select | `SelectField` | `string` |
+| Multi-Select | `MultiSelectField` | `List<string>` |
+| Checkbox | `CheckboxField` | `bool` |
+| Checkbox Group | `CheckboxGroupField` | `List<string>` |
+| Radio Group | `RadioGroupField` | `string` |
+| Date | `DateField` | `DateTime?` |
+| Time | `TimeField` | `TimeSpan?` |
+| Date Range | `DateRangeField` | `DateTime?` x2 |
+| Switch | `SwitchField` | `bool` |
+| Slider | `SliderField` | `double` |
+| Color | `ColorField` | `string` |
+| Password | `PasswordField` | `string` |
+| Masked | `MaskedField` | `string` |
+| File | `FileField` | `IBrowserFile` |
+| Autocomplete | `AutocompleteField` | `string` |
+| Rating | `RatingField` | `int` |
+| Hidden | `HiddenField` | `string` |
+| Repeater | `RepeaterField` | `List<Dictionary>` |
+
+## Validation
+
+Three approaches, composable together:
+
+- **Built-in** — Required, MinLength, MaxLength, Min, Max, Pattern
+- **Cross-field** — MustEqual, MustBeAfter, AtLeastOneRequired
+- **Custom** — Implement `IFieldValidator` or `IAsyncFieldValidator`

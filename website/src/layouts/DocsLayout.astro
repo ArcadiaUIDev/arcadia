@@ -1,0 +1,143 @@
+---
+import '../styles/global.css'
+
+interface Props {
+  title: string;
+  description?: string;
+  section?: string;
+  activeSlug?: string;
+}
+
+const { title, description, section, activeSlug } = Astro.props;
+
+const nav = [
+  {
+    title: 'Getting Started',
+    items: [
+      { title: 'Installation', href: '/docs' },
+      { title: 'Quick Start', href: '/docs/quick-start' },
+    ]
+  },
+  {
+    title: 'Charts',
+    items: [
+      { title: 'Overview', href: '/docs/charts' },
+      { title: 'Line Chart', href: '/docs/charts/line-chart' },
+      { title: 'Bar Chart', href: '/docs/charts/bar-chart' },
+      { title: 'Pie & Donut', href: '/docs/charts/pie-chart' },
+      { title: 'Scatter Chart', href: '/docs/charts/scatter-chart' },
+      { title: 'Candlestick', href: '/docs/charts/candlestick' },
+      { title: 'Radar Chart', href: '/docs/charts/radar-chart' },
+      { title: 'Gauge Chart', href: '/docs/charts/gauge-chart' },
+      { title: 'Heatmap', href: '/docs/charts/heatmap' },
+      { title: 'Dashboard Widgets', href: '/docs/charts/dashboard-widgets' },
+    ]
+  },
+  {
+    title: 'Form Builder',
+    items: [
+      { title: 'Overview', href: '/docs/forms' },
+      { title: 'Schema-Driven Forms', href: '/docs/forms/schema-driven' },
+      { title: 'Model-Driven Forms', href: '/docs/forms/model-driven' },
+      { title: 'Field Types', href: '/docs/forms/field-types' },
+      { title: 'Wizard Forms', href: '/docs/forms/wizard' },
+      { title: 'Validation', href: '/docs/forms/validation' },
+    ]
+  },
+  {
+    title: 'Theme',
+    items: [
+      { title: 'Overview', href: '/docs/theme' },
+      { title: 'Design Tokens', href: '/docs/theme/tokens' },
+      { title: 'Dark Mode', href: '/docs/theme/dark-mode' },
+      { title: 'Tailwind Plugin', href: '/docs/theme/tailwind' },
+    ]
+  },
+  {
+    title: 'Notifications',
+    items: [
+      { title: 'Toast Notifications', href: '/docs/notifications' },
+    ]
+  },
+];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '');
+---
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content={description || `${title} — Arcadia Controls Documentation`} />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <title>{title} — Arcadia Controls Docs</title>
+</head>
+<body>
+  <!-- Nav -->
+  <nav class="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-[#080014]/80 border-b border-purple-500/10">
+    <div class="max-w-[1400px] mx-auto px-6 h-14 flex items-center justify-between">
+      <a href="/" class="text-lg font-bold">
+        <span class="gradient-text">Arcadia</span>
+        <span class="text-[var(--arc-text-muted)] font-normal ml-1">Docs</span>
+      </a>
+      <div class="flex items-center gap-6 text-sm text-[var(--arc-text-muted)]">
+        <a href="/" class="hover:text-white transition-colors">Home</a>
+        <a href="/docs" class="hover:text-white transition-colors">Docs</a>
+        <a href="/#pricing" class="hover:text-white transition-colors">Pricing</a>
+        <a href="#" class="hover:text-white transition-colors">GitHub</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="flex max-w-[1400px] mx-auto pt-14">
+    <!-- Sidebar -->
+    <aside class="hidden lg:block w-64 shrink-0 border-r border-purple-500/10 h-[calc(100vh-56px)] sticky top-14 overflow-y-auto py-8 px-4">
+      {nav.map(group => (
+        <div class="mb-6">
+          <h4 class="text-xs font-semibold uppercase tracking-wider text-[var(--arc-text-muted)] mb-2 px-3">{group.title}</h4>
+          <ul class="space-y-0.5">
+            {group.items.map(item => {
+              const isActive = currentPath === item.href || currentPath === item.href.replace(/\/$/, '');
+              return (
+                <li>
+                  <a href={item.href}
+                     class={`block px-3 py-1.5 rounded-lg text-sm transition-colors ${isActive ? 'bg-purple-500/15 text-purple-300 font-medium' : 'text-[var(--arc-text-muted)] hover:text-white hover:bg-purple-500/5'}`}>
+                    {item.title}
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </aside>
+
+    <!-- Content -->
+    <main class="flex-1 min-w-0 px-8 py-10 max-w-4xl">
+      <article class="prose-docs">
+        <slot />
+      </article>
+    </main>
+  </div>
+
+  <style>
+    .prose-docs h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--arc-text); }
+    .prose-docs h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 0.75rem; color: var(--arc-text); border-bottom: 1px solid rgba(139,92,246,0.15); padding-bottom: 0.5rem; }
+    .prose-docs h3 { font-size: 1.15rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.5rem; color: var(--arc-text); }
+    .prose-docs p { color: var(--arc-text-muted); line-height: 1.75; margin-bottom: 1rem; }
+    .prose-docs ul { list-style: disc; padding-left: 1.5rem; color: var(--arc-text-muted); margin-bottom: 1rem; }
+    .prose-docs li { margin-bottom: 0.25rem; line-height: 1.75; }
+    .prose-docs code:not(pre code) { background: rgba(139,92,246,0.12); color: #c084fc; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'JetBrains Mono', monospace; }
+    .prose-docs pre { background: rgba(10,5,30,0.8); border: 1px solid var(--arc-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.7; }
+    .prose-docs pre code { background: none; color: var(--arc-text); padding: 0; }
+    .prose-docs table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem; }
+    .prose-docs th { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid rgba(139,92,246,0.2); color: var(--arc-text); font-weight: 600; }
+    .prose-docs td { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(139,92,246,0.08); color: var(--arc-text-muted); }
+    .prose-docs .callout { background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
+    .prose-docs .callout-title { font-weight: 600; color: #c084fc; margin-bottom: 0.25rem; }
+  </style>
+</body>
+</html>

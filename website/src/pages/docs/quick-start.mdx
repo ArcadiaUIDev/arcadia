@@ -1,0 +1,62 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Quick Start
+description: Build a complete analytics dashboard in 5 minutes with Arcadia Controls.
+---
+
+# Quick Start
+
+Build a revenue dashboard with KPI cards, charts, and rankings in under 50 lines.
+
+```razor
+@page "/dashboard"
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+@using Arcadia.Charts.Components.Dashboard
+
+<HelixKpiCard Title="Revenue" Value="$142,500"
+              Delta="+12.3%" DeltaType="DeltaType.Increase"
+              Sparkline="@(new double[] { 42, 48, 45, 52, 55, 58, 62 })" />
+
+<HelixLineChart TItem="SalesRecord" Data="@data"
+                XField="@(d => (object)d.Month)"
+                Series="@series" Height="300" />
+
+<HelixBarList TItem="Product" Data="@products"
+              NameField="@(d => d.Name)"
+              ValueField="@(d => d.Sales)" ValueFormat="$#,##0" />
+
+@code {
+    record SalesRecord(string Month, double Revenue, double Target);
+    record Product(string Name, double Sales);
+
+    var data = new List<SalesRecord>
+    {
+        new("Jan", 45000, 50000), new("Feb", 52000, 50000),
+        new("Mar", 48000, 52000), new("Apr", 61000, 55000),
+    };
+
+    var series = new List<SeriesConfig<SalesRecord>>
+    {
+        new() { Name = "Revenue", Field = d => d.Revenue,
+                Color = "primary", ShowArea = true },
+        new() { Name = "Target", Field = d => d.Target,
+                Color = "secondary", Dashed = true },
+    };
+
+    var products = new List<Product>
+    {
+        new("Enterprise Suite", 48500),
+        new("Pro License", 32000),
+        new("Starter Plan", 18200),
+    };
+}
+```
+
+## What You Get
+
+- **KPI Cards** — value, delta, sparkline. Zero config.
+- **Line Charts** — multi-series, area fill, animations.
+- **Bar Rankings** — auto-sized horizontal bars.
+- **Accessibility** — hidden data tables, ARIA labels, keyboard nav.
+- **Theming** — all colors from CSS custom properties.

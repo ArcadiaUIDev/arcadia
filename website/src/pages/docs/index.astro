@@ -1,0 +1,87 @@
+---
+import DocsLayout from '../../layouts/DocsLayout.astro';
+---
+<DocsLayout title="Installation" description="Install Arcadia Controls and add your first component in under 5 minutes.">
+
+<h1>Installation</h1>
+<p>Get Arcadia Controls running in your Blazor project in under 5 minutes.</p>
+
+<h2>Prerequisites</h2>
+<ul>
+  <li>.NET 5.0 or later (recommended: .NET 9)</li>
+  <li>A Blazor Server, WebAssembly, or Auto project</li>
+</ul>
+
+<h2>Install Packages</h2>
+<p>Install the packages you need via NuGet. Each package is independent — only <code>Arcadia.Core</code> is a shared dependency.</p>
+
+<pre><code># Charts + Dashboard Widgets (includes Core)
+dotnet add package Arcadia.Charts
+
+# Form Builder (includes Core)
+dotnet add package Arcadia.FormBuilder
+
+# Toast Notifications (includes Core)
+dotnet add package Arcadia.Notifications
+
+# Theme Engine (includes Core)
+dotnet add package Arcadia.Theme
+
+# Or install everything
+dotnet add package Arcadia.Charts
+dotnet add package Arcadia.FormBuilder
+dotnet add package Arcadia.Notifications</code></pre>
+
+<h2>Add Stylesheets</h2>
+<p>Add the CSS files to your app's <code>&lt;head&gt;</code> (in <code>App.razor</code> or <code>index.html</code>):</p>
+
+<pre><code>&lt;!-- Theme tokens (required) --&gt;
+&lt;link href="_content/Arcadia.Theme/css/helix.css" rel="stylesheet" /&gt;
+
+&lt;!-- Charts styles --&gt;
+&lt;link href="_content/Arcadia.Charts/css/arcadia-charts.css" rel="stylesheet" /&gt;
+
+&lt;!-- Form styles --&gt;
+&lt;link href="_content/Arcadia.FormBuilder/css/arcadia-forms.css" rel="stylesheet" /&gt;
+
+&lt;!-- Notification styles --&gt;
+&lt;link href="_content/Arcadia.Notifications/css/arcadia-notifications.css" rel="stylesheet" /&gt;</code></pre>
+
+<h2>Register Services</h2>
+<p>In your <code>Program.cs</code>, register the services you need:</p>
+
+<pre><code>using Arcadia.Theme;
+using Arcadia.Notifications;
+
+// Theme (required for ThemeProvider)
+builder.Services.AddScoped&lt;ThemeService&gt;();
+
+// Toast notifications
+builder.Services.AddScoped&lt;ToastService&gt;();</code></pre>
+
+<h2>Wrap Your App</h2>
+<p>Wrap your layout in <code>ThemeProvider</code> to enable theming across all components:</p>
+
+<pre><code>@using Arcadia.Theme
+
+&lt;ThemeProvider&gt;
+    @Body
+&lt;/ThemeProvider&gt;</code></pre>
+
+<h2>Your First Component</h2>
+<p>Drop in a KPI card to verify everything works:</p>
+
+<pre><code>@using Arcadia.Charts.Components.Dashboard
+
+&lt;HelixKpiCard Title="Revenue"
+              Value="$142,500"
+              Delta="+12.3%"
+              DeltaType="DeltaType.Increase"
+              Sparkline="@(new double[] { 42, 48, 45, 52, 55, 58, 62 })" /&gt;</code></pre>
+
+<div class="callout">
+  <div class="callout-title">Next steps</div>
+  <p>Check out the <a href="/docs/quick-start" style="color: #c084fc;">Quick Start</a> guide for a complete dashboard example, or dive into <a href="/docs/charts" style="color: #c084fc;">Charts</a> or <a href="/docs/forms" style="color: #c084fc;">Forms</a>.</p>
+</div>
+
+</DocsLayout>

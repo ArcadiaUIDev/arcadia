@@ -1,0 +1,67 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+title: Theme Engine
+description: Design tokens, light/dark themes, density modes, and Tailwind CSS integration.
+---
+
+# Theme Engine
+
+CSS custom property theming with design tokens, light/dark themes, and Tailwind integration.
+
+## Setup
+
+```html
+<link href="_content/Arcadia.Theme/css/helix.css" rel="stylesheet" />
+```
+
+```csharp
+builder.Services.AddScoped<ThemeService>();
+```
+
+```razor
+<ThemeProvider>@Body</ThemeProvider>
+```
+
+## Theme Switching
+
+```csharp
+@inject ThemeService ThemeService
+
+ThemeService.SetTheme(new DarkTheme());
+ThemeService.SetTheme(new LightTheme());
+```
+
+## Design Tokens
+
+```css
+var(--arcadia-color-primary)
+var(--arcadia-color-surface)
+var(--arcadia-color-text)
+var(--arcadia-spacing-md)      /* 16px */
+var(--arcadia-text-sm)         /* 14px */
+var(--arcadia-shadow-md)
+var(--arcadia-radius-md)       /* 6px */
+```
+
+## Density Modes
+
+```razor
+<ThemeProvider Density="compact" />     <!-- Tight -->
+<ThemeProvider Density="default" />     <!-- Normal -->
+<ThemeProvider Density="comfortable" /> <!-- Spacious -->
+```
+
+## Custom Theme
+
+```csharp
+public class CorporateTheme : HelixThemeBase
+{
+    public override string Name => "corporate";
+
+    public CorporateTheme()
+    {
+        Set("--arcadia-color-primary", "#1e40af");
+        Set("--arcadia-color-surface", "#f8fafc");
+    }
+}
+```
