@@ -45,18 +45,19 @@
                 @if (ShowFill)
                 {
                     <polygon points="@localPoly.PointsString" fill="@localPoly.Color" opacity="@F(localPoly.Opacity)"
-                             class="helix-chart__radar-fill" />
+                             class="helix-chart__radar-fill @(AnimateOnLoad ? "helix-animate-radar-fill" : "")" />
                 }
 
                 <polygon points="@localPoly.PointsString" fill="none" stroke="@localPoly.Color"
-                         stroke-width="@F(localPoly.StrokeWidth)" class="helix-chart__radar-line" />
+                         stroke-width="@F(localPoly.StrokeWidth)"
+                         class="helix-chart__radar-line @(AnimateOnLoad ? "helix-animate-radar" : "")" />
 
                 @if (ShowPoints)
                 {
                     @foreach (var pt in localPoly.Points)
                     {
                         <circle cx="@F(pt.X)" cy="@F(pt.Y)" r="3" fill="@localPoly.Color"
-                                class="helix-chart__point" />
+                                class="helix-chart__point @(AnimateOnLoad ? "helix-animate-point" : "")" />
                     }
                 }
             }

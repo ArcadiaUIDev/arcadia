@@ -52,8 +52,8 @@ public partial class HelixGaugeChart : HelixUI.Core.Base.HelixComponentBase
     /// <summary>Accessible description for screen readers.</summary>
     [Parameter] public string? AriaLabel { get; set; }
 
-    /// <summary>Custom tooltip template.</summary>
-    [Parameter] public RenderFragment? TooltipTemplate { get; set; }
+    /// <summary>Whether to animate on load.</summary>
+    [Parameter] public bool AnimateOnLoad { get; set; } = true;
 
     private double _cx;
     private double _cy;

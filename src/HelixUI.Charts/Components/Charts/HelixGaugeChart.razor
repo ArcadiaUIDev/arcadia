@@ -21,7 +21,7 @@
         {
             <path d="@_valuePath" fill="none" stroke="@_valueColor"
                   stroke-width="@F(StrokeWidth)" stroke-linecap="round"
-                  class="helix-gauge__value" />
+                  class="helix-gauge__value @(AnimateOnLoad ? "helix-animate-line" : "")" />
         }
 
         @* Center value text *@

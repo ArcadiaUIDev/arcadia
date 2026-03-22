@@ -104,7 +104,8 @@ public partial class HelixHeatmap<T> : ChartBase<T>
                 Value = value,
                 DisplayValue = displayValue,
                 XCategory = xCat,
-                YCategory = yCat
+                YCategory = yCat,
+                Index = _cells.Count
             });
         }
     }
@@ -158,5 +159,6 @@ public partial class HelixHeatmap<T> : ChartBase<T>
         public string DisplayValue { get; set; } = "";
         public string XCategory { get; set; } = "";
         public string YCategory { get; set; } = "";
+        public int Index { get; set; }
     }
 }

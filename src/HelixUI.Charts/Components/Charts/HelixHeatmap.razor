@@ -19,7 +19,9 @@
             {
                 var localCell = cell;
                 <rect x="@F(localCell.X)" y="@F(localCell.Y)" width="@F(Math.Max(1, _cellWidth - 1))" height="@F(Math.Max(1, _cellHeight - 1))"
-                      fill="@localCell.Color" class="helix-heatmap__cell">
+                      fill="@localCell.Color"
+                      class="helix-heatmap__cell @(AnimateOnLoad ? "helix-animate-heatmap" : "")"
+                      style="@(AnimateOnLoad ? $"animation-delay: {localCell.Index * 15}ms;" : "")">
                     <title>@localCell.XCategory, @localCell.YCategory: @localCell.DisplayValue</title>
                 </rect>
 
