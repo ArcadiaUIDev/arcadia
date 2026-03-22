@@ -123,21 +123,127 @@ const currentPath = Astro.url.pathname.replace(/\/$/, '');
     </main>
   </div>
 
-  <style>
-    .prose-docs h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.5rem; color: var(--arc-text); }
-    .prose-docs h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2.5rem; margin-bottom: 0.75rem; color: var(--arc-text); border-bottom: 1px solid rgba(139,92,246,0.15); padding-bottom: 0.5rem; }
-    .prose-docs h3 { font-size: 1.15rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.5rem; color: var(--arc-text); }
-    .prose-docs p { color: var(--arc-text-muted); line-height: 1.75; margin-bottom: 1rem; }
-    .prose-docs ul { list-style: disc; padding-left: 1.5rem; color: var(--arc-text-muted); margin-bottom: 1rem; }
-    .prose-docs li { margin-bottom: 0.25rem; line-height: 1.75; }
-    .prose-docs code:not(pre code) { background: rgba(139,92,246,0.12); color: #c084fc; padding: 2px 6px; border-radius: 4px; font-size: 0.9em; font-family: 'JetBrains Mono', monospace; }
-    .prose-docs pre { background: rgba(10,5,30,0.8); border: 1px solid var(--arc-border); border-radius: 12px; padding: 1.25rem; margin-bottom: 1.5rem; overflow-x: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.875rem; line-height: 1.7; }
-    .prose-docs pre code { background: none; color: var(--arc-text); padding: 0; }
-    .prose-docs table { width: 100%; border-collapse: collapse; margin-bottom: 1.5rem; font-size: 0.9rem; }
-    .prose-docs th { text-align: left; padding: 0.75rem 1rem; border-bottom: 1px solid rgba(139,92,246,0.2); color: var(--arc-text); font-weight: 600; }
-    .prose-docs td { padding: 0.75rem 1rem; border-bottom: 1px solid rgba(139,92,246,0.08); color: var(--arc-text-muted); }
-    .prose-docs .callout { background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.2); border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
-    .prose-docs .callout-title { font-weight: 600; color: #c084fc; margin-bottom: 0.25rem; }
+  <style is:global>
+    /* ── Typography ── */
+    .prose-docs h1 {
+      font-size: 2.5rem; font-weight: 800; margin-bottom: 0.75rem;
+      color: #f1f0f9; letter-spacing: -0.025em; line-height: 1.2;
+    }
+    .prose-docs h2 {
+      font-size: 1.5rem; font-weight: 700; margin-top: 3rem; margin-bottom: 1rem;
+      color: #f1f0f9; letter-spacing: -0.015em;
+      border-bottom: 1px solid rgba(139,92,246,0.15); padding-bottom: 0.75rem;
+    }
+    .prose-docs h3 {
+      font-size: 1.2rem; font-weight: 600; margin-top: 2rem; margin-bottom: 0.75rem;
+      color: #e2e0f0;
+    }
+    .prose-docs p {
+      color: #9490b3; line-height: 1.8; margin-bottom: 1.25rem; font-size: 0.95rem;
+    }
+    .prose-docs > p:first-of-type {
+      font-size: 1.1rem; color: #b0adc8; line-height: 1.7;
+    }
+    .prose-docs strong { color: #d4d0ec; font-weight: 600; }
+    .prose-docs a { color: #c084fc; text-decoration: underline; text-underline-offset: 3px; }
+    .prose-docs a:hover { color: #d8b4fe; }
+
+    /* ── Lists ── */
+    .prose-docs ul {
+      list-style: none; padding-left: 0; color: #9490b3;
+      margin-bottom: 1.5rem;
+    }
+    .prose-docs ul li {
+      position: relative; padding-left: 1.5rem; margin-bottom: 0.5rem;
+      line-height: 1.75; font-size: 0.95rem;
+    }
+    .prose-docs ul li::before {
+      content: ''; position: absolute; left: 0; top: 0.65em;
+      width: 6px; height: 6px; border-radius: 50%;
+      background: linear-gradient(135deg, #8b5cf6, #ec4899);
+    }
+    .prose-docs ol {
+      list-style: decimal; padding-left: 1.5rem; color: #9490b3; margin-bottom: 1.5rem;
+    }
+    .prose-docs ol li { margin-bottom: 0.5rem; line-height: 1.75; font-size: 0.95rem; }
+
+    /* ── Inline code ── */
+    .prose-docs code:not(pre code) {
+      background: rgba(139,92,246,0.12); color: #c084fc;
+      padding: 3px 8px; border-radius: 6px; font-size: 0.85em;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      border: 1px solid rgba(139,92,246,0.1);
+    }
+
+    /* ── Code blocks ── */
+    .prose-docs pre {
+      background: rgba(8,3,25,0.9) !important;
+      border: 1px solid rgba(139,92,246,0.15);
+      border-radius: 14px; padding: 1.5rem;
+      margin-bottom: 1.75rem; overflow-x: auto;
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.85rem; line-height: 1.75;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(139,92,246,0.08);
+    }
+    .prose-docs pre code {
+      background: none !important; color: #d4d0ec; padding: 0;
+      border: none; font-size: inherit;
+    }
+
+    /* ── Tables ── */
+    .prose-docs table {
+      width: 100%; border-collapse: collapse; margin-bottom: 2rem;
+      font-size: 0.875rem; border-radius: 12px; overflow: hidden;
+    }
+    .prose-docs thead {
+      background: rgba(139,92,246,0.08);
+    }
+    .prose-docs th {
+      text-align: left; padding: 0.875rem 1rem;
+      border-bottom: 2px solid rgba(139,92,246,0.2);
+      color: #d4d0ec; font-weight: 600; font-size: 0.8rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .prose-docs td {
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid rgba(139,92,246,0.06);
+      color: #9490b3;
+    }
+    .prose-docs tbody tr:hover {
+      background: rgba(139,92,246,0.04);
+    }
+    .prose-docs td code {
+      font-size: 0.8em !important;
+    }
+
+    /* ── Horizontal rules ── */
+    .prose-docs hr {
+      border: none; border-top: 1px solid rgba(139,92,246,0.12);
+      margin: 2.5rem 0;
+    }
+
+    /* ── Blockquotes / Callouts ── */
+    .prose-docs blockquote {
+      background: rgba(139,92,246,0.06); border-left: 3px solid #8b5cf6;
+      border-radius: 0 12px 12px 0; padding: 1rem 1.25rem;
+      margin: 0 0 1.5rem 0;
+    }
+    .prose-docs blockquote p { color: #b0adc8; margin-bottom: 0; }
+
+    .prose-docs .callout {
+      background: rgba(139,92,246,0.06);
+      border: 1px solid rgba(139,92,246,0.15);
+      border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.75rem;
+    }
+    .prose-docs .callout-title {
+      font-weight: 600; color: #c084fc; margin-bottom: 0.35rem; font-size: 0.9rem;
+    }
+
+    /* ── Images ── */
+    .prose-docs img {
+      border-radius: 12px; border: 1px solid rgba(139,92,246,0.15);
+      margin-bottom: 1.5rem;
+    }
   </style>
 </body>
 </html>

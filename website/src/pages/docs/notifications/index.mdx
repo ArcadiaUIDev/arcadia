@@ -6,6 +6,9 @@ description: Toast notifications with auto-dismiss, stacking, and ARIA accessibi
 
 # Toast Notifications
 
+import LiveDemo from "../../../components/LiveDemo.astro";
+
+
 Imperative toast system with auto-dismiss, stacking, and full ARIA accessibility.
 
 ## Setup
@@ -51,3 +54,7 @@ ToastService.DismissAll();     // Clear all
 |---|---|---|---|
 | `Position` | `ToastPosition` | TopRight | Screen position |
 | `MaxVisible` | `int` | 5 | Max toasts before oldest dismissed |
+
+## Live Demo
+
+<LiveDemo route="/notifications" height="400px" title="Toast Notifications Demo" />
