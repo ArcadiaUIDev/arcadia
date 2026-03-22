@@ -234,3 +234,105 @@ public class ChartLayoutEngineTests
         }
     }
 }
+
+public class DenseTickOverlapTests
+{
+    private readonly ChartLayoutEngine _engine = new();
+
+    [Theory]
+    [InlineData(700, 30, "Mar 1")]   // Candlestick scenario — the bug that shipped
+    [InlineData(600, 24, "January")]  // Long month names
+    [InlineData(400, 20, "Sep 22")]   // Narrow + many dates
+    [InlineData(800, 50, "2026-03-22")] // ISO dates, lots of them
+    [InlineData(500, 15, "Quarter 1")] // Medium length labels
+    [InlineData(300, 12, "Week 42")]  // Narrow
+    public void DenseLabels_NeverOverlap(int width, int labelCount, string sampleLabel)
+    {
+        var labels = Enumerable.Range(0, labelCount).Select(i => $"{sampleLabel.Replace("1", (i+1).ToString())}").ToList();
+
+        var result = _engine.Calculate(new ChartLayoutInput
+        {
+            Width = width,
+            Height = 400,
+            XTickLabels = labels,
+            YMin = 0,
+            YMax = 100
+        });
+
+        // Core invariant: no adjacent ticks overlap
+        for (var i = 0; i < result.XTicks.Count - 1; i++)
+        {
+            var a = result.XTicks[i];
+            var b = result.XTicks[i + 1];
+            Assert.False(
+                CollisionDetector.Overlaps(a.BoundingBox, b.BoundingBox),
+                $"Tick '{a.Label}' at {a.BoundingBox} overlaps '{b.Label}' at {b.BoundingBox} " +
+                $"(width={width}, labels={labelCount}, sample='{sampleLabel}')");
+        }
+
+        // Must have reduced label count
+        result.XTicks.Count.Should().BeLessThanOrEqualTo(labelCount,
+            $"Expected some labels to be culled at width={width} with {labelCount} labels");
+    }
+
+    [Fact]
+    public void ThirtyDateLabels_At700px_ReducesToFewer()
+    {
+        // This is the exact candlestick bug scenario
+        var labels = Enumerable.Range(0, 30).Select(i => $"Mar {i + 1}").ToList();
+
+        var result = _engine.Calculate(new ChartLayoutInput
+        {
+            Width = 700,
+            Height = 400,
+            XTickLabels = labels
+        });
+
+        // 30 labels at 700px is too many — should reduce significantly
+        result.XTicks.Count.Should().BeLessThan(25,
+            "30 date labels at 700px should be reduced to prevent overlap");
+        result.XTicks.Count.Should().BeGreaterThan(3,
+            "Should still show a reasonable number of labels");
+    }
+
+    [Fact]
+    public void FuzzTest_DateLabels_NeverOverlap()
+    {
+        var random = new Random(99);
+        var dateFormats = new[] { "MMM d", "yyyy-MM-dd", "M/d/yy", "MMMM d, yyyy", "ddd MMM d" };
+
+        for (var i = 0; i < 500; i++)
+        {
+            var width = random.Next(250, 1200);
+            var labelCount = random.Next(5, 60);
+            var format = dateFormats[random.Next(dateFormats.Length)];
+            var startDate = new DateTime(2026, 1, 1).AddDays(random.Next(0, 365));
+
+            var labels = Enumerable.Range(0, labelCount)
+                .Select(j => startDate.AddDays(j).ToString(format))
+                .ToList();
+
+            var result = _engine.Calculate(new ChartLayoutInput
+            {
+                Width = width,
+                Height = 300,
+                XTickLabels = labels,
+                YMin = 0,
+                YMax = 100
+            });
+
+            // Invariant: no overlaps, ever
+            for (var j = 0; j < result.XTicks.Count - 1; j++)
+            {
+                var a = result.XTicks[j];
+                var b = result.XTicks[j + 1];
+                Assert.False(
+                    CollisionDetector.Overlaps(a.BoundingBox, b.BoundingBox),
+                    $"Overlap at iter {i}: '{a.Label}' / '{b.Label}' " +
+                    $"(w={width}, n={labelCount}, fmt={format})");
+            }
+
+            Assert.True(result.PlotArea.Width > 0, $"Negative plot at iter {i}");
+        }
+    }
+}
