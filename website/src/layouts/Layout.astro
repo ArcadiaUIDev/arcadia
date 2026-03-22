@@ -4,9 +4,21 @@ import '../styles/global.css'
 interface Props {
   title: string;
   description?: string;
+  canonical?: string;
+  image?: string;
+  type?: string;
 }
 
-const { title, description = 'Premium Blazor UI components for enterprise .NET developers. Charts, forms, dashboards — beautifully crafted.' } = Astro.props;
+const {
+  title,
+  description = 'Premium Blazor UI components for enterprise .NET developers. Charts, forms, dashboards, and notifications — native SVG rendering with zero JavaScript.',
+  canonical,
+  image = 'https://arcadiaui.com/og-image.png',
+  type = 'website'
+} = Astro.props;
+
+const siteUrl = 'https://arcadiaui.com';
+const canonicalUrl = canonical || new URL(Astro.url.pathname, siteUrl).href;
 ---
 
 <!DOCTYPE html>
@@ -14,15 +26,82 @@ const { title, description = 'Premium Blazor UI components for enterprise .NET d
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO -->
+  <title>{title}</title>
   <meta name="description" content={description} />
+  <link rel="canonical" href={canonicalUrl} />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Arcadia Controls" />
+  <meta name="keywords" content="Blazor, UI components, charts, dashboard, forms, .NET, C#, data visualization, SVG charts, Blazor components, enterprise, WCAG, accessible" />
+
+  <!-- Open Graph -->
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={type} />
+  <meta property="og:url" content={canonicalUrl} />
+  <meta property="og:image" content={image} />
+  <meta property="og:site_name" content="Arcadia Controls" />
+  <meta property="og:locale" content="en_US" />
+
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={image} />
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
-  <title>{title}</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- JSON-LD Structured Data -->
+  <script type="application/ld+json" set:html={JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "Arcadia Controls",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Cross-platform",
+    "description": description,
+    "url": siteUrl,
+    "author": {
+      "@type": "Organization",
+      "name": "Arcadia Controls",
+      "url": siteUrl,
+      "email": "sales@arcadiaui.com"
+    },
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "Community",
+        "price": "0",
+        "priceCurrency": "USD",
+        "description": "Free forever. Core, Theme, 4 chart types, Sparkline, Notifications. MIT licensed."
+      },
+      {
+        "@type": "Offer",
+        "name": "Pro",
+        "price": "299",
+        "priceCurrency": "USD",
+        "priceValidUntil": "2027-12-31",
+        "description": "All 8 chart types, 7 dashboard widgets, Form Builder, animations, email support. Per developer, annual."
+      },
+      {
+        "@type": "Offer",
+        "name": "Enterprise",
+        "price": "799",
+        "priceCurrency": "USD",
+        "priceValidUntil": "2027-12-31",
+        "description": "Everything in Pro plus custom feature requests, private roadmap, priority bug fixes, dedicated support. Per developer, annual."
+      }
+    ],
+    "programmingLanguage": ["C#", "Blazor"],
+    "softwareRequirements": ".NET 5 or later",
+    "license": "https://opensource.org/licenses/MIT"
+  })} />
 </head>
 <body class="noise-overlay">
   <!-- Background mesh blobs -->

@@ -1,0 +1,48 @@
+# Arcadia Controls
+
+> Premium Blazor UI components for enterprise .NET developers. Charts, forms, dashboards, and notifications — native SVG rendering with zero JavaScript dependencies.
+
+## Overview
+
+Arcadia Controls is a commercial Blazor component library that provides:
+- 8 chart types (Line, Bar, Pie, Scatter, Radar, Gauge, Heatmap, Candlestick)
+- 7 dashboard widgets (KPI Card, Sparkline, Delta Indicator, Progress Bar, Bar List, Tracker, Category Bar)
+- 21-field Form Builder with schema-driven and model-driven rendering
+- Toast notification system
+- Theme engine with design tokens, light/dark modes, and Tailwind CSS plugin
+
+## Technical Details
+
+- Rendering: Native Blazor SVG — zero JavaScript for core chart rendering
+- Frameworks: .NET 5, 6, 7, 8, 9, 10
+- Render Modes: Blazor Server, WebAssembly, Auto, Static SSR
+- Accessibility: WCAG 2.1 AA compliant with hidden data tables for screen readers
+- Testing: 555+ unit tests
+- License: Community Edition is MIT (free), Pro and Enterprise are commercial
+
+## Installation
+
+```
+dotnet add package Arcadia.Charts
+dotnet add package Arcadia.FormBuilder
+dotnet add package Arcadia.Theme
+dotnet add package Arcadia.Notifications
+```
+
+## Pricing
+
+- Community: Free forever (MIT). Core, Theme, 4 chart types, Sparkline, Notifications.
+- Pro: $299/developer/year. All 8 chart types, 7 dashboard widgets, Form Builder, animations, email support.
+- Enterprise: $799/developer/year. Everything in Pro plus custom feature requests, private roadmap access, priority bug fixes, early access, dedicated support.
+
+## Links
+
+- Documentation: https://arcadiaui.com/docs
+- Demo: https://arcadiaui.com/demo
+- GitHub (Community): https://github.com/helixuidev/arcadia
+- Pricing: https://arcadiaui.com/#pricing
+
+## Contact
+
+- Sales: sales@arcadiaui.com
+- Support: support@arcadiaui.com
