@@ -36,4 +36,8 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" VersionOverride="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+
 </Project>

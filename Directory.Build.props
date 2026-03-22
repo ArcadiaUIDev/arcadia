@@ -10,15 +10,16 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Authors>HelixUI</Authors>
-    <Company>HelixUI</Company>
-    <Product>HelixUI</Product>
-    <Copyright>Copyright © 2026 HelixUI. All rights reserved.</Copyright>
-    <PackageLicenseExpression>LicenseRef-Commercial</PackageLicenseExpression>
-    <PackageProjectUrl>https://helixui.dev</PackageProjectUrl>
+    <Authors>Arcadia Controls</Authors>
+    <Company>Arcadia Controls</Company>
+    <Product>Arcadia Controls</Product>
+    <Copyright>Copyright © 2026 Arcadia Controls. All rights reserved.</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://arcadiacontrols.com</PackageProjectUrl>
     <RepositoryUrl>https://github.com/helixuidev/helixui</RepositoryUrl>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageTags>blazor;components;ui;datagrid;forms;dashboard</PackageTags>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>blazor;components;ui;charts;forms;dashboard;dotnet;aspnetcore</PackageTags>
+    <Version>1.0.0-beta.1</Version>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">

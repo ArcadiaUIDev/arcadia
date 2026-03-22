@@ -1,0 +1,62 @@
+name: Release to NuGet
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  publish:
+    name: Build, Test & Publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore
+        run: dotnet restore HelixUI.sln
+
+      - name: Build Release
+        run: dotnet build HelixUI.sln --configuration Release --no-restore
+
+      - name: Run tests
+        run: dotnet test HelixUI.sln --configuration Release --no-build --verbosity normal
+
+      - name: Pack all packages
+        run: |
+          for proj in src/Arcadia.Core/Arcadia.Core.csproj \
+                      src/Arcadia.Theme/Arcadia.Theme.csproj \
+                      src/Arcadia.Notifications/Arcadia.Notifications.csproj \
+                      src/Arcadia.FormBuilder/Arcadia.FormBuilder.csproj \
+                      src/Arcadia.Charts/Arcadia.Charts.csproj; do
+            dotnet pack "$proj" \
+              --configuration Release \
+              --no-build \
+              --output ./nupkgs \
+              /p:Version=${{ steps.version.outputs.VERSION }} \
+              /p:PackageVersion=${{ steps.version.outputs.VERSION }}
+          done
+
+      - name: Push to NuGet
+        run: dotnet nuget push ./nupkgs/*.nupkg --api-key ${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json --skip-duplicate
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ./nupkgs/*.nupkg
+          generate_release_notes: true
