@@ -13,6 +13,10 @@
             {
                 <SvgText x="@(Width / 2)" y="20" text-anchor="middle" class="helix-chart__title">@Title</SvgText>
             }
+            @if (!string.IsNullOrEmpty(Subtitle))
+            {
+                <SvgText x="@(Width / 2)" y="36" text-anchor="middle" class="helix-chart__subtitle">@Subtitle</SvgText>
+            }
 
             @* Grid lines *@
             @if (ShowGrid)
