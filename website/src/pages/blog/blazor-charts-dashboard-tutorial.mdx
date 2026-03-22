@@ -1,0 +1,265 @@
+---
+layout: ../../layouts/BlogLayout.astro
+title: "How to Add Charts to a Blazor App — From Zero to Dashboard in 10 Minutes"
+description: "Build a complete analytics dashboard with Blazor charts. Line charts, bar charts, KPI cards, and sparklines — all with working code that compiles."
+date: "2026-03-22"
+readTime: "10 min read"
+tags: ["Blazor", "Charts", "Dashboard", "Tutorial", ".NET"]
+---
+
+Here's a line chart in Blazor. Six lines of Razor, no JavaScript:
+
+```razor
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+
+<HelixLineChart TItem="MonthlySales"
+                Data="@salesData"
+                XField="@(d => (object)d.Month)"
+                Series="@lineSeries"
+                Height="300"
+                Width="600"
+                Title="Monthly Revenue"
+                ShowPoints="true"
+                AnimateOnLoad="true" />
+```
+
+That renders a native SVG chart — no npm install, no webpack, no JavaScript bundle. Just `dotnet add package Arcadia.Charts` and you're drawing.
+
+This guide builds a complete dashboard. Every code sample compiles. I tested them.
+
+## Install
+
+```bash
+dotnet add package Arcadia.Charts
+```
+
+Add the stylesheet to your `App.razor` or `_Host.cshtml`:
+
+```html
+<link href="_content/Arcadia.Charts/css/arcadia-charts.css"
+      rel="stylesheet" />
+```
+
+That's it. No npm. No node_modules.
+
+## The data model
+
+Every chart is strongly typed. You define a record, pass a `List<T>`, and use lambda selectors to tell the chart which fields to plot:
+
+```csharp
+record MonthlySales(string Month, double Revenue, double Target);
+
+List<MonthlySales> salesData = new()
+{
+    new("Jan", 45000, 50000), new("Feb", 52000, 50000),
+    new("Mar", 48000, 52000), new("Apr", 61000, 55000),
+    new("May", 55000, 55000), new("Jun", 67000, 58000),
+    new("Jul", 72000, 60000), new("Aug", 68000, 62000),
+    new("Sep", 75000, 65000), new("Oct", 82000, 68000),
+    new("Nov", 79000, 70000), new("Dec", 88000, 72000),
+};
+```
+
+No magic strings. No `DataSource="@data" XName="Month" YName="Revenue"` guessing. The compiler catches your typos.
+
+## Multi-series line chart with area fill
+
+Most dashboards compare two things — actual vs target, this year vs last year. Here's how:
+
+```csharp
+List<SeriesConfig<MonthlySales>> multiSeries = new()
+{
+    new()
+    {
+        Name = "Revenue",
+        Field = d => d.Revenue,
+        Color = "primary",
+        ShowArea = true,
+        AreaOpacity = 0.15
+    },
+    new()
+    {
+        Name = "Target",
+        Field = d => d.Target,
+        Color = "secondary",
+        Dashed = true
+    },
+};
+```
+
+```razor
+<HelixLineChart TItem="MonthlySales"
+                Data="@salesData"
+                XField="@(d => (object)d.Month)"
+                Series="@multiSeries"
+                Height="300"
+                Width="600"
+                Title="Revenue vs Target" />
+```
+
+The revenue line gets a filled area underneath. The target line is dashed. Both animate in on page load — the line draws itself left-to-right, the area fades in after.
+
+Each `SeriesConfig` controls its own color, stroke width, dashing, area fill, and point visibility independently.
+
+## Blazor bar chart — grouped multi-series
+
+```csharp
+record QuarterData(string Quarter, double NorthAmerica, double Europe);
+
+List<QuarterData> quarterData = new()
+{
+    new("Q1", 145000, 98000), new("Q2", 183000, 112000),
+    new("Q3", 215000, 134000), new("Q4", 268000, 156000),
+};
+
+List<SeriesConfig<QuarterData>> barSeries = new()
+{
+    new() { Name = "North America", Field = d => d.NorthAmerica, Color = "primary" },
+    new() { Name = "Europe", Field = d => d.Europe, Color = "success" },
+};
+```
+
+```razor
+<HelixBarChart TItem="QuarterData"
+               Data="@quarterData"
+               XField="@(d => (object)d.Quarter)"
+               Series="@barSeries"
+               Height="300"
+               Width="600"
+               Title="Quarterly Sales by Region" />
+```
+
+Bars grow upward from the baseline on load. Each bar in a group is a different series — North America and Europe side by side for each quarter. Add `Stacked="true"` to stack them instead.
+
+## Pie and donut charts
+
+```csharp
+record CategorySlice(string Category, double Amount);
+
+List<CategorySlice> pieData = new()
+{
+    new("Enterprise", 68500), new("Pro", 42800),
+    new("Starter", 21280), new("Free Trial", 10000),
+};
+```
+
+```razor
+<HelixPieChart TItem="CategorySlice"
+               Data="@pieData"
+               NameField="@(d => d.Category)"
+               ValueField="@(d => d.Amount)"
+               Height="300"
+               Width="400"
+               Title="Revenue by Category"
+               InnerRadius="60" />
+```
+
+`InnerRadius="60"` makes it a donut. Set it to `0` for a pie. Labels auto-hide on small slices (configurable via `MinLabelPercent`). You can change label format to show names, values, or percentages via `LabelFormat`.
+
+## KPI cards with sparklines
+
+This is the piece most Blazor chart libraries don't have. Pre-composed dashboard widgets:
+
+```razor
+@using Arcadia.Charts.Components.Dashboard
+
+<div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+    <HelixKpiCard Title="Revenue"
+                  Value="$142,500"
+                  Delta="+12.3%"
+                  DeltaType="DeltaType.Increase"
+                  Sparkline="@(new double[] { 42, 48, 45, 52, 49, 55, 58, 62, 59, 65, 68, 72 })"
+                  Footer="vs last month" />
+
+    <HelixKpiCard Title="Users"
+                  Value="8,420"
+                  Delta="-2.1%"
+                  DeltaType="DeltaType.Decrease"
+                  Sparkline="@(new double[] { 85, 82, 88, 84, 80, 78, 82, 79, 76, 74, 78, 72 })"
+                  SparklineColor="danger" />
+
+    <HelixKpiCard Title="Conversion"
+                  Value="3.8%"
+                  Delta="+0.5%"
+                  DeltaType="DeltaType.Increase"
+                  Sparkline="@(new double[] { 2.1, 2.3, 2.5, 2.4, 2.8, 3.0, 2.9, 3.2, 3.4, 3.5, 3.6, 3.8 })"
+                  SparklineColor="success" />
+</div>
+```
+
+Each card shows a value, a delta indicator (green up arrow or red down arrow), and an inline sparkline. The sparkline draws itself on load. No configuration beyond passing a `double[]`.
+
+## Inline sparklines
+
+Sparklines work anywhere — table cells, paragraphs, card headers:
+
+```razor
+<p>Revenue trend:
+    <HelixSparkline Data="@(new double[] { 42, 48, 45, 52, 49, 55, 58, 62, 59, 65, 68, 72 })"
+                    Width="120" Height="32"
+                    Color="primary" ShowArea="true" />
+</p>
+```
+
+32 pixels tall. No axes, no labels, no chrome. Just the shape of the data.
+
+## Scatter chart
+
+```csharp
+record DataPoint(double X, double Y);
+
+List<DataPoint> scatterData = Enumerable.Range(0, 30).Select(i =>
+{
+    var rng = new Random(i);
+    return new DataPoint(150 + rng.NextDouble() * 40, 55 + rng.NextDouble() * 50);
+}).ToList();
+```
+
+```razor
+<HelixScatterChart TItem="DataPoint"
+                   Data="@scatterData"
+                   XField="@(d => d.X)"
+                   YField="@(d => d.Y)"
+                   Height="300"
+                   Width="600"
+                   Title="Height vs Weight"
+                   Color="primary"
+                   PointSize="6" />
+```
+
+Points pop in with staggered animation. Add `SizeField` for bubble charts where point radius maps to a third variable.
+
+## What happens under the hood
+
+Every chart goes through this pipeline:
+
+1. **Layout engine** — calculates tick positions, label rotations, margins. Runs collision detection to guarantee no labels overlap. Pure C#, no DOM access.
+2. **Scale mapping** — maps your data values to pixel coordinates via `LinearScale`, `BandScale`, or `TimeScale`.
+3. **SVG generation** — Blazor's `RenderTreeBuilder` outputs SVG elements. No JavaScript touches the rendering.
+4. **Animation** — CSS `stroke-dashoffset` for line draw, `scaleY` for bars, `scale` for points. All respect `prefers-reduced-motion`.
+5. **Accessibility** — a hidden `<table>` with all data values is rendered alongside every chart for screen readers.
+
+The layout engine is fuzz-tested with 2,000 random configurations. The invariant: plot area is always positive and no adjacent tick labels overlap. This runs on every build.
+
+## Compared to other Blazor chart options
+
+There are six options in 2026. The [full comparison is here](/blog/best-blazor-chart-libraries-2026). The short version:
+
+- **Syncfusion** ($995/yr) has 55+ chart types. If you need candlestick + waterfall + funnel + box plot, go there.
+- **MudBlazor** (free) has ~8 basic types. Good enough for simple use cases. No dashboard widgets, no accessibility.
+- **Arcadia** (free community / $299 pro) has 8 types + dashboard widgets. Native SVG, zero JS, WCAG AA. The dashboard widgets (KPI cards, bar lists, sparklines) are unique in Blazor.
+
+The community edition with Line, Bar, Pie, Scatter, and Sparkline is [free on GitHub](https://github.com/helixuidev/arcadia).
+
+## Get started
+
+```bash
+dotnet add package Arcadia.Charts
+```
+
+Full [documentation here](/docs/charts). The [admin dashboard demo](/admin) shows everything working together in a realistic SaaS app.
+
+---
+
+*Questions? [support@arcadiaui.com](mailto:support@arcadiaui.com?subject=[Arcadia Support]). Source code for all examples: [GitHub](https://github.com/helixuidev/arcadia).*
