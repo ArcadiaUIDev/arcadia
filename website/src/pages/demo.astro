@@ -2,45 +2,543 @@
 import Layout from '../layouts/Layout.astro';
 ---
 
-<Layout title="Live Demo — Arcadia Controls" description="Try Arcadia Controls components live in your browser. Charts, forms, notifications — all interactive.">
+<Layout title="Component Showcase — Arcadia Controls" description="Explore Arcadia Controls components with visual mockups and code samples. Charts, forms, notifications, and theming for Blazor.">
 
+  <!-- HERO -->
   <section class="pt-28 pb-12 px-6">
     <div class="max-w-5xl mx-auto text-center">
-      <h1 class="text-4xl font-bold mb-4">
-        Try <span class="gradient-text">Arcadia Controls</span> Live
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        Component <span class="gradient-text">Showcase</span>
       </h1>
-      <p class="text-[var(--arc-text-muted)] text-lg mb-8 max-w-2xl mx-auto">
-        All demos run in your browser via Blazor WebAssembly. Click through the tabs to explore charts, forms, and notifications.
+      <p class="text-[var(--arc-text-muted)] text-lg mb-4 max-w-2xl mx-auto leading-relaxed">
+        See what you can build with Arcadia Controls. Each section below shows a visual preview alongside the Razor code to create it.
+      </p>
+      <p class="text-sm text-[var(--arc-text-muted)]">
+        Want the full interactive experience?
       </p>
     </div>
   </section>
 
-  <section class="px-6 pb-24">
+  <!-- TAB NAVIGATION -->
+  <section class="px-6 pb-4">
     <div class="max-w-6xl mx-auto">
-      <!-- Demo navigation tabs -->
-      <div class="flex gap-2 mb-6 overflow-x-auto" id="demo-tabs">
-        <button class="demo-tab active" onclick="switchDemo('/', this)">Home</button>
-        <button class="demo-tab" onclick="switchDemo('/charts', this)">Charts</button>
-        <button class="demo-tab" onclick="switchDemo('/forms', this)">Forms</button>
-        <button class="demo-tab" onclick="switchDemo('/notifications', this)">Notifications</button>
-        <button class="demo-tab" onclick="switchDemo('/theme', this)">Theme</button>
+      <div class="flex gap-2 overflow-x-auto justify-center" id="demo-tabs">
+        <button class="demo-tab active" data-tab="charts">Charts</button>
+        <button class="demo-tab" data-tab="forms">Forms</button>
+        <button class="demo-tab" data-tab="notifications">Notifications</button>
+        <button class="demo-tab" data-tab="theme">Theme</button>
       </div>
+    </div>
+  </section>
 
-      <!-- Demo frame -->
-      <div style="border: 1px solid rgba(139,92,246,0.2); border-radius: 16px; overflow: hidden; box-shadow: 0 8px 40px rgba(0,0,0,0.4);">
-        <div style="display: flex; align-items: center; gap: 6px; padding: 12px 16px; background: rgba(15,8,35,0.9); border-bottom: 1px solid rgba(139,92,246,0.12);">
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: #ff5f57;"></div>
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: #febc2e;"></div>
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: #28c840;"></div>
-          <span style="margin-left: 8px; font-size: 0.8rem; color: #9490b3;">Arcadia Demo — Blazor Server</span>
-          <a href="http://localhost:5050" target="_blank" style="margin-left: auto; font-size: 0.75rem; color: #8b5cf6; text-decoration: none; opacity: 0.7;">Open in new tab ↗</a>
+  <!-- CHARTS SECTION -->
+  <section class="px-6 pb-16 demo-section" id="tab-charts">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-8 items-start">
+        <!-- Visual mockup -->
+        <div class="gradient-border">
+          <div class="bg-[#060012] rounded-2xl p-6">
+            <div class="flex justify-between items-center mb-4">
+              <span class="text-sm font-semibold">Revenue vs Target</span>
+              <span class="text-xs text-[var(--arc-text-muted)]">Last 12 months</span>
+            </div>
+            <svg viewBox="0 0 500 180" class="w-full">
+              <defs>
+                <linearGradient id="cg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6" stop-opacity="0.3"/><stop offset="100%" stop-color="#8b5cf6" stop-opacity="0"/></linearGradient>
+              </defs>
+              <line x1="40" y1="20" x2="480" y2="20" stroke="#1e1545" stroke-width="0.5"/>
+              <line x1="40" y1="55" x2="480" y2="55" stroke="#1e1545" stroke-width="0.5"/>
+              <line x1="40" y1="90" x2="480" y2="90" stroke="#1e1545" stroke-width="0.5"/>
+              <line x1="40" y1="125" x2="480" y2="125" stroke="#1e1545" stroke-width="0.5"/>
+              <text x="32" y="24" fill="#6b6490" font-size="8" text-anchor="end">$90K</text>
+              <text x="32" y="59" fill="#6b6490" font-size="8" text-anchor="end">$70K</text>
+              <text x="32" y="94" fill="#6b6490" font-size="8" text-anchor="end">$50K</text>
+              <text x="32" y="129" fill="#6b6490" font-size="8" text-anchor="end">$30K</text>
+              <path d="M50,110 L87,100 L125,105 L162,80 L200,85 L237,65 L275,55 L312,60 L350,45 L387,35 L425,40 L462,25 L462,140 L50,140 Z" fill="url(#cg1)"/>
+              <path d="M50,110 L87,100 L125,105 L162,80 L200,85 L237,65 L275,55 L312,60 L350,45 L387,35 L425,40 L462,25" fill="none" stroke="#8b5cf6" stroke-width="2.5" stroke-linecap="round"/>
+              <path d="M50,105 L87,100 L125,95 L162,90 L200,85 L237,80 L275,75 L312,70 L350,65 L387,60 L425,55 L462,50" fill="none" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.6"/>
+              <circle cx="462" cy="25" r="4" fill="#8b5cf6"/><circle cx="462" cy="25" r="8" fill="#8b5cf6" opacity="0.2"/>
+              <text x="50" y="155" fill="#6b6490" font-size="7">Jan</text>
+              <text x="125" y="155" fill="#6b6490" font-size="7">Mar</text>
+              <text x="200" y="155" fill="#6b6490" font-size="7">May</text>
+              <text x="275" y="155" fill="#6b6490" font-size="7">Jul</text>
+              <text x="350" y="155" fill="#6b6490" font-size="7">Sep</text>
+              <text x="425" y="155" fill="#6b6490" font-size="7">Nov</text>
+              <!-- Legend -->
+              <line x1="50" y1="170" x2="65" y2="170" stroke="#8b5cf6" stroke-width="2"/>
+              <text x="70" y="173" fill="#9490b3" font-size="7">Revenue</text>
+              <line x1="120" y1="170" x2="135" y2="170" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="4,3"/>
+              <text x="140" y="173" fill="#9490b3" font-size="7">Target</text>
+            </svg>
+
+            <!-- Bar chart below -->
+            <div class="mt-6 pt-4 border-t border-purple-500/10">
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-sm font-semibold">Monthly Breakdown</span>
+                <span class="text-xs text-[var(--arc-text-muted)]">Q4 2025</span>
+              </div>
+              <svg viewBox="0 0 500 100" class="w-full">
+                <defs>
+                  <linearGradient id="bg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8b5cf6"/><stop offset="100%" stop-color="#6d28d9"/></linearGradient>
+                  <linearGradient id="bg2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ec4899"/><stop offset="100%" stop-color="#be185d"/></linearGradient>
+                </defs>
+                <!-- Oct -->
+                <rect x="50" y="30" width="45" height="50" rx="4" fill="url(#bg1)" opacity="0.8"/>
+                <rect x="100" y="45" width="45" height="35" rx="4" fill="url(#bg2)" opacity="0.6"/>
+                <text x="97" y="92" fill="#6b6490" font-size="8" text-anchor="middle">Oct</text>
+                <!-- Nov -->
+                <rect x="190" y="15" width="45" height="65" rx="4" fill="url(#bg1)" opacity="0.8"/>
+                <rect x="240" y="35" width="45" height="45" rx="4" fill="url(#bg2)" opacity="0.6"/>
+                <text x="237" y="92" fill="#6b6490" font-size="8" text-anchor="middle">Nov</text>
+                <!-- Dec -->
+                <rect x="330" y="10" width="45" height="70" rx="4" fill="url(#bg1)" opacity="0.8"/>
+                <rect x="380" y="25" width="45" height="55" rx="4" fill="url(#bg2)" opacity="0.6"/>
+                <text x="377" y="92" fill="#6b6490" font-size="8" text-anchor="middle">Dec</text>
+              </svg>
+            </div>
+          </div>
         </div>
-        <iframe id="demo-frame" src="http://localhost:5050/" style="width: 100%; height: 700px; border: none; background: white;"></iframe>
-      </div>
 
-      <p class="text-center text-sm text-[var(--arc-text-muted)] mt-6">
-        This demo runs the Blazor Server demo app. <code style="background: rgba(139,92,246,0.1); padding: 2px 6px; border-radius: 4px; font-size: 0.85em;">dotnet run --project samples/Arcadia.Demo.Server</code>
-      </p>
+        <!-- Code + parameters -->
+        <div>
+          <h2 class="text-2xl font-bold mb-2">Charts & Dashboards</h2>
+          <p class="text-[var(--arc-text-muted)] mb-6">Line, Bar, Pie, Scatter, Sparkline and more. Pure SVG rendering with animated transitions and full accessibility.</p>
+
+          <div class="gradient-border mb-6">
+            <div class="code-block text-sm !p-5">
+              <div class="text-[#6b6490] mb-2">// Multi-series line chart</div>
+              <div><span style="color:#c084fc">&lt;</span><span style="color:#67e8f9">ArcLineChart</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Data</span>=<span style="color:#f472b6">"@salesData"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">XField</span>=<span style="color:#f472b6">"@(d =&gt; d.Month)"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Series</span>=<span style="color:#f472b6">"@series"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">ShowPoints</span>=<span style="color:#f472b6">"true"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Animate</span>=<span style="color:#f472b6">"true"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Height</span>=<span style="color:#f472b6">"300"</span> <span style="color:#c084fc">/&gt;</span></div>
+            </div>
+          </div>
+
+          <h3 class="text-sm font-semibold text-[var(--arc-text-muted)] uppercase tracking-wider mb-3">Key Parameters</h3>
+          <div class="space-y-2">
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Data</code>
+              <span class="text-[var(--arc-text-muted)]">IEnumerable&lt;T&gt; data source for the chart</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Series</code>
+              <span class="text-[var(--arc-text-muted)]">List of series definitions with color and label</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">XField</code>
+              <span class="text-[var(--arc-text-muted)]">Lambda expression for the X-axis value</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Animate</code>
+              <span class="text-[var(--arc-text-muted)]">Enable on-load SVG animations (respects prefers-reduced-motion)</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">ShowPoints</code>
+              <span class="text-[var(--arc-text-muted)]">Render data point circles on the line</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FORMS SECTION -->
+  <section class="px-6 pb-16 demo-section hidden" id="tab-forms">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-8 items-start">
+        <!-- Visual mockup -->
+        <div class="gradient-border">
+          <div class="bg-[#060012] rounded-2xl p-6">
+            <div class="text-sm font-semibold mb-4">New Employee Registration</div>
+
+            <!-- Step indicator -->
+            <div class="flex items-center gap-2 mb-6">
+              <div class="flex items-center gap-1.5">
+                <div class="w-7 h-7 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-xs font-bold">1</div>
+                <span class="text-xs text-white">Personal</span>
+              </div>
+              <div class="flex-1 h-px bg-purple-500/30"></div>
+              <div class="flex items-center gap-1.5">
+                <div class="w-7 h-7 rounded-full bg-purple-500/20 border border-purple-500/30 flex items-center justify-center text-xs text-[var(--arc-text-muted)]">2</div>
+                <span class="text-xs text-[var(--arc-text-muted)]">Role</span>
+              </div>
+              <div class="flex-1 h-px bg-white/5"></div>
+              <div class="flex items-center gap-1.5">
+                <div class="w-7 h-7 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-xs text-[var(--arc-text-muted)]">3</div>
+                <span class="text-xs text-[var(--arc-text-muted)]">Review</span>
+              </div>
+            </div>
+
+            <!-- Form fields -->
+            <div class="space-y-4">
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="text-xs text-[var(--arc-text-muted)] mb-1 block">First Name</label>
+                  <div class="bg-[#0d0525] border border-purple-500/20 rounded-lg px-3 py-2 text-sm text-white">Sarah</div>
+                </div>
+                <div>
+                  <label class="text-xs text-[var(--arc-text-muted)] mb-1 block">Last Name</label>
+                  <div class="bg-[#0d0525] border border-purple-500/20 rounded-lg px-3 py-2 text-sm text-white">Chen</div>
+                </div>
+              </div>
+              <div>
+                <label class="text-xs text-[var(--arc-text-muted)] mb-1 block">Email Address</label>
+                <div class="bg-[#0d0525] border border-purple-500/20 rounded-lg px-3 py-2 text-sm text-white">sarah.chen@acme.com</div>
+              </div>
+              <div>
+                <label class="text-xs text-[var(--arc-text-muted)] mb-1 block">Department</label>
+                <div class="bg-[#0d0525] border border-purple-500/20 rounded-lg px-3 py-2 text-sm flex justify-between items-center">
+                  <span class="text-white">Engineering</span>
+                  <svg class="w-4 h-4 text-[var(--arc-text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+                </div>
+              </div>
+              <div>
+                <label class="text-xs text-[var(--arc-text-muted)] mb-1 block">Start Date</label>
+                <div class="bg-[#0d0525] border border-purple-500/20 rounded-lg px-3 py-2 text-sm flex justify-between items-center">
+                  <span class="text-white">March 15, 2026</span>
+                  <svg class="w-4 h-4 text-[var(--arc-text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                </div>
+              </div>
+              <div class="flex items-center gap-2 pt-1">
+                <div class="w-5 h-5 rounded bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                  <svg class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <span class="text-xs text-[var(--arc-text-muted)]">Send welcome email on registration</span>
+              </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex justify-end gap-3 mt-6 pt-4 border-t border-purple-500/10">
+              <div class="px-4 py-2 rounded-lg border border-purple-500/20 text-sm text-[var(--arc-text-muted)]">Cancel</div>
+              <div class="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-500 to-pink-500 text-sm font-medium text-white">Next Step</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Code + parameters -->
+        <div>
+          <h2 class="text-2xl font-bold mb-2">Form Builder</h2>
+          <p class="text-[var(--arc-text-muted)] mb-6">21 field types. Schema-driven or model-driven. Wizard forms with step validation, cross-field rules, and auto-save.</p>
+
+          <div class="gradient-border mb-6">
+            <div class="code-block text-sm !p-5">
+              <div class="text-[#6b6490] mb-2">// Wizard form from a model</div>
+              <div><span style="color:#c084fc">&lt;</span><span style="color:#67e8f9">ArcFormBuilder</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Model</span>=<span style="color:#f472b6">"@employee"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Mode</span>=<span style="color:#f472b6">"FormMode.Wizard"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Steps</span>=<span style="color:#f472b6">"@steps"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">OnSubmit</span>=<span style="color:#f472b6">"@HandleSubmit"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">AutoSave</span>=<span style="color:#f472b6">"true"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">ValidateOnStep</span>=<span style="color:#f472b6">"true"</span> <span style="color:#c084fc">/&gt;</span></div>
+            </div>
+          </div>
+
+          <h3 class="text-sm font-semibold text-[var(--arc-text-muted)] uppercase tracking-wider mb-3">Key Parameters</h3>
+          <div class="space-y-2">
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Model</code>
+              <span class="text-[var(--arc-text-muted)]">Bound object; fields are inferred from data annotations</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Mode</code>
+              <span class="text-[var(--arc-text-muted)]">Single, Wizard, or Inline editing mode</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Steps</code>
+              <span class="text-[var(--arc-text-muted)]">List of wizard step definitions with field groupings</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">OnSubmit</code>
+              <span class="text-[var(--arc-text-muted)]">EventCallback fired after successful validation</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">AutoSave</code>
+              <span class="text-[var(--arc-text-muted)]">Persist form state to browser storage on field change</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NOTIFICATIONS SECTION -->
+  <section class="px-6 pb-16 demo-section hidden" id="tab-notifications">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-8 items-start">
+        <!-- Visual mockup -->
+        <div class="gradient-border">
+          <div class="bg-[#060012] rounded-2xl p-6">
+            <div class="text-sm font-semibold mb-5">Notification Stack</div>
+
+            <div class="space-y-3">
+              <!-- Success toast -->
+              <div class="flex items-start gap-3 p-3.5 rounded-xl bg-green-500/10 border border-green-500/20">
+                <div class="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-4 h-4 text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-green-300">Deployment Complete</div>
+                  <div class="text-xs text-green-400/60 mt-0.5">v2.4.1 deployed to production successfully</div>
+                </div>
+                <div class="text-xs text-green-400/40 shrink-0">2s ago</div>
+              </div>
+
+              <!-- Warning toast -->
+              <div class="flex items-start gap-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/20">
+                <div class="w-8 h-8 rounded-lg bg-amber-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-4 h-4 text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-amber-300">High Memory Usage</div>
+                  <div class="text-xs text-amber-400/60 mt-0.5">Server node-3 at 87% memory utilization</div>
+                </div>
+                <div class="text-xs text-amber-400/40 shrink-0">15s ago</div>
+              </div>
+
+              <!-- Error toast -->
+              <div class="flex items-start gap-3 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20">
+                <div class="w-8 h-8 rounded-lg bg-red-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-4 h-4 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-red-300">Payment Failed</div>
+                  <div class="text-xs text-red-400/60 mt-0.5">Invoice #4821 — card declined, retry in 30 min</div>
+                </div>
+                <div class="text-xs text-red-400/40 shrink-0">1m ago</div>
+              </div>
+
+              <!-- Info toast -->
+              <div class="flex items-start gap-3 p-3.5 rounded-xl bg-blue-500/10 border border-blue-500/20">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center shrink-0 mt-0.5">
+                  <svg class="w-4 h-4 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-blue-300">New Team Member</div>
+                  <div class="text-xs text-blue-400/60 mt-0.5">Sarah Chen joined the Engineering team</div>
+                </div>
+                <div class="text-xs text-blue-400/40 shrink-0">5m ago</div>
+              </div>
+            </div>
+
+            <!-- Auto-dismiss bar -->
+            <div class="mt-4 pt-3 border-t border-purple-500/10">
+              <div class="flex items-center justify-between text-xs text-[var(--arc-text-muted)]">
+                <span>Auto-dismiss in 5s</span>
+                <span>4 notifications</span>
+              </div>
+              <div class="h-1 rounded-full bg-white/5 mt-2 overflow-hidden">
+                <div class="h-full rounded-full bg-gradient-to-r from-purple-500 to-pink-500" style="width: 65%"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Code + parameters -->
+        <div>
+          <h2 class="text-2xl font-bold mb-2">Notifications</h2>
+          <p class="text-[var(--arc-text-muted)] mb-6">Toast notifications with auto-dismiss, stacking, 4 severity levels, custom positioning, and full ARIA live region support.</p>
+
+          <div class="gradient-border mb-6">
+            <div class="code-block text-sm !p-5">
+              <div class="text-[#6b6490] mb-2">// Inject and fire a toast</div>
+              <div><span style="color:#c084fc">@inject</span> <span style="color:#67e8f9">IArcToastService</span> <span style="color:#a78bfa">Toast</span></div>
+              <div class="mt-3"><span style="color:#c084fc">&lt;</span><span style="color:#67e8f9">ArcToastContainer</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Position</span>=<span style="color:#f472b6">"ToastPosition.TopRight"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">MaxVisible</span>=<span style="color:#f472b6">"5"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">AutoDismiss</span>=<span style="color:#f472b6">"TimeSpan.FromSeconds(5)"</span> <span style="color:#c084fc">/&gt;</span></div>
+              <div class="mt-3 text-[#6b6490]">// In your code:</div>
+              <div><span style="color:#a78bfa">Toast</span>.<span style="color:#67e8f9">Show</span>(<span style="color:#f472b6">"Deployed!"</span>,</div>
+              <div class="ml-4"><span style="color:#67e8f9">Severity</span>.<span style="color:#a78bfa">Success</span>);</div>
+            </div>
+          </div>
+
+          <h3 class="text-sm font-semibold text-[var(--arc-text-muted)] uppercase tracking-wider mb-3">Key Parameters</h3>
+          <div class="space-y-2">
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Position</code>
+              <span class="text-[var(--arc-text-muted)]">TopRight, TopLeft, BottomRight, BottomLeft, TopCenter, BottomCenter</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">MaxVisible</code>
+              <span class="text-[var(--arc-text-muted)]">Maximum toasts displayed simultaneously (overflow queued)</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">AutoDismiss</code>
+              <span class="text-[var(--arc-text-muted)]">Duration before automatic dismissal; null for sticky</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Severity</code>
+              <span class="text-[var(--arc-text-muted)]">Success, Warning, Error, or Info — sets icon and color</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- THEME SECTION -->
+  <section class="px-6 pb-16 demo-section hidden" id="tab-theme">
+    <div class="max-w-6xl mx-auto">
+      <div class="grid md:grid-cols-2 gap-8 items-start">
+        <!-- Visual mockup -->
+        <div class="gradient-border">
+          <div class="bg-[#060012] rounded-2xl p-6">
+            <div class="text-sm font-semibold mb-5">Theme Tokens</div>
+
+            <!-- Color swatches -->
+            <div class="grid grid-cols-5 gap-2 mb-6">
+              <div>
+                <div class="w-full aspect-square rounded-lg bg-[#8b5cf6] mb-1"></div>
+                <div class="text-[10px] text-[var(--arc-text-muted)] text-center">Primary</div>
+              </div>
+              <div>
+                <div class="w-full aspect-square rounded-lg bg-[#ec4899] mb-1"></div>
+                <div class="text-[10px] text-[var(--arc-text-muted)] text-center">Accent</div>
+              </div>
+              <div>
+                <div class="w-full aspect-square rounded-lg bg-[#22c55e] mb-1"></div>
+                <div class="text-[10px] text-[var(--arc-text-muted)] text-center">Success</div>
+              </div>
+              <div>
+                <div class="w-full aspect-square rounded-lg bg-[#f59e0b] mb-1"></div>
+                <div class="text-[10px] text-[var(--arc-text-muted)] text-center">Warning</div>
+              </div>
+              <div>
+                <div class="w-full aspect-square rounded-lg bg-[#ef4444] mb-1"></div>
+                <div class="text-[10px] text-[var(--arc-text-muted)] text-center">Danger</div>
+              </div>
+            </div>
+
+            <!-- Light / Dark toggle mockup -->
+            <div class="grid grid-cols-2 gap-3 mb-5">
+              <div class="rounded-xl p-4 bg-white/[0.03] border border-white/10">
+                <div class="text-xs text-[var(--arc-text-muted)] mb-2">Dark Mode</div>
+                <div class="space-y-1.5">
+                  <div class="h-2 rounded bg-white/10 w-full"></div>
+                  <div class="h-2 rounded bg-white/10 w-3/4"></div>
+                  <div class="h-2 rounded bg-purple-500/30 w-1/2"></div>
+                </div>
+                <div class="flex gap-1.5 mt-3">
+                  <div class="h-6 flex-1 rounded bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                  <div class="h-6 flex-1 rounded bg-white/10 border border-white/10"></div>
+                </div>
+              </div>
+              <div class="rounded-xl p-4 bg-gray-100 border border-gray-200">
+                <div class="text-xs text-gray-500 mb-2">Light Mode</div>
+                <div class="space-y-1.5">
+                  <div class="h-2 rounded bg-gray-300 w-full"></div>
+                  <div class="h-2 rounded bg-gray-300 w-3/4"></div>
+                  <div class="h-2 rounded bg-purple-300 w-1/2"></div>
+                </div>
+                <div class="flex gap-1.5 mt-3">
+                  <div class="h-6 flex-1 rounded bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                  <div class="h-6 flex-1 rounded bg-white border border-gray-300"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Density modes -->
+            <div class="text-xs text-[var(--arc-text-muted)] mb-2">Density Modes</div>
+            <div class="space-y-2">
+              <div class="flex items-center gap-3">
+                <span class="text-xs w-16 text-purple-400">Compact</span>
+                <div class="flex-1 flex gap-1.5">
+                  <div class="h-5 flex-1 rounded bg-white/5 border border-white/10 flex items-center px-2"><span class="text-[9px] text-[var(--arc-text-muted)]">Field</span></div>
+                  <div class="h-5 flex-1 rounded bg-white/5 border border-white/10 flex items-center px-2"><span class="text-[9px] text-[var(--arc-text-muted)]">Field</span></div>
+                  <div class="h-5 w-12 rounded bg-purple-500/30 flex items-center justify-center"><span class="text-[9px]">Save</span></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-xs w-16 text-purple-400">Normal</span>
+                <div class="flex-1 flex gap-1.5">
+                  <div class="h-7 flex-1 rounded bg-white/5 border border-white/10 flex items-center px-2"><span class="text-[10px] text-[var(--arc-text-muted)]">Field</span></div>
+                  <div class="h-7 flex-1 rounded bg-white/5 border border-white/10 flex items-center px-2"><span class="text-[10px] text-[var(--arc-text-muted)]">Field</span></div>
+                  <div class="h-7 w-14 rounded bg-purple-500/30 flex items-center justify-center"><span class="text-[10px]">Save</span></div>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-xs w-16 text-purple-400">Spacious</span>
+                <div class="flex-1 flex gap-1.5">
+                  <div class="h-9 flex-1 rounded bg-white/5 border border-white/10 flex items-center px-2"><span class="text-[11px] text-[var(--arc-text-muted)]">Field</span></div>
+                  <div class="h-9 flex-1 rounded bg-white/5 border border-white/10 flex items-center px-2"><span class="text-[11px] text-[var(--arc-text-muted)]">Field</span></div>
+                  <div class="h-9 w-16 rounded bg-purple-500/30 flex items-center justify-center"><span class="text-[11px]">Save</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Code + parameters -->
+        <div>
+          <h2 class="text-2xl font-bold mb-2">Theme Engine</h2>
+          <p class="text-[var(--arc-text-muted)] mb-6">CSS custom property tokens. Light and dark themes out of the box. 3 density modes. Tailwind CSS 4.x plugin included.</p>
+
+          <div class="gradient-border mb-6">
+            <div class="code-block text-sm !p-5">
+              <div class="text-[#6b6490] mb-2">// Configure theming at app startup</div>
+              <div><span style="color:#c084fc">&lt;</span><span style="color:#67e8f9">ArcThemeProvider</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Theme</span>=<span style="color:#f472b6">"ArcTheme.Dark"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">Density</span>=<span style="color:#f472b6">"Density.Normal"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">PrimaryColor</span>=<span style="color:#f472b6">"#8b5cf6"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">AccentColor</span>=<span style="color:#f472b6">"#ec4899"</span></div>
+              <div class="ml-4"><span style="color:#a78bfa">BorderRadius</span>=<span style="color:#f472b6">"8"</span><span style="color:#c084fc">&gt;</span></div>
+              <div class="ml-4 text-[#6b6490]">@* All Arcadia components inherit *@</div>
+              <div class="ml-4"><span style="color:#c084fc">&lt;</span><span style="color:#67e8f9">Router</span> <span style="color:#a78bfa">AppAssembly</span>=<span style="color:#f472b6">"..."</span> <span style="color:#c084fc">/&gt;</span></div>
+              <div><span style="color:#c084fc">&lt;/</span><span style="color:#67e8f9">ArcThemeProvider</span><span style="color:#c084fc">&gt;</span></div>
+            </div>
+          </div>
+
+          <h3 class="text-sm font-semibold text-[var(--arc-text-muted)] uppercase tracking-wider mb-3">Key Parameters</h3>
+          <div class="space-y-2">
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Theme</code>
+              <span class="text-[var(--arc-text-muted)]">Dark, Light, or Auto (follows system preference)</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">Density</code>
+              <span class="text-[var(--arc-text-muted)]">Compact, Normal, or Spacious — controls spacing and sizing</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">PrimaryColor</code>
+              <span class="text-[var(--arc-text-muted)]">Hex color; auto-generates full shade palette via CSS</span>
+            </div>
+            <div class="flex items-start gap-3 text-sm">
+              <code class="text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded shrink-0">BorderRadius</code>
+              <span class="text-[var(--arc-text-muted)]">Base border radius in pixels; all components scale from this</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RUN LOCALLY CTA -->
+  <section class="px-6 pb-24">
+    <div class="max-w-3xl mx-auto text-center">
+      <div class="gradient-border">
+        <div class="glass-card p-10 !border-0">
+          <h2 class="text-2xl font-bold mb-3">Want the full <span class="gradient-text">interactive</span> demo?</h2>
+          <p class="text-[var(--arc-text-muted)] mb-6">Run the demo app locally to try every component with live data, animations, and theme switching.</p>
+
+          <div class="bg-[#060012] rounded-xl p-4 mb-6 border border-purple-500/20 max-w-lg mx-auto">
+            <code class="text-sm text-purple-300 block mb-1 text-[var(--arc-text-muted)]"># Clone and run the interactive demo</code>
+            <code class="text-sm text-purple-300 block">git clone https://github.com/helixuidev/arcadia.git</code>
+            <code class="text-sm text-purple-300 block">cd arcadia</code>
+            <code class="text-sm text-purple-300 block">dotnet run --project samples/Arcadia.Demo.Server</code>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-4">
+            <a href="https://github.com/helixuidev/arcadia" class="btn-gradient !py-3 !px-7">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+              View on GitHub
+            </a>
+            <a href="/docs" class="btn-outline !py-3 !px-7">Read the Docs</a>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
@@ -70,11 +568,18 @@ import Layout from '../layouts/Layout.astro';
   </style>
 
   <script>
-    function switchDemo(route, btn) {
-      document.getElementById('demo-frame').src = 'http://localhost:5050' + route;
-      document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-    }
+    document.querySelectorAll('.demo-tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-tab');
+        // Update active tab
+        document.querySelectorAll('.demo-tab').forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        // Show/hide sections
+        document.querySelectorAll('.demo-section').forEach(s => s.classList.add('hidden'));
+        const section = document.getElementById('tab-' + target);
+        if (section) section.classList.remove('hidden');
+      });
+    });
   </script>
 
 </Layout>
