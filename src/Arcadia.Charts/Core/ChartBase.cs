@@ -131,12 +131,51 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
     [Parameter] public RenderFragment<T>? TooltipTemplate { get; set; }
 
     // ── Internals ────────────────────────────────────────
+    [Inject] protected Microsoft.JSInterop.IJSRuntime JSRuntime { get; set; } = default!;
+
     protected ChartPalette EffectivePalette => Palette ?? ChartPalette.Default;
     protected ChartLayoutEngine LayoutEngine { get; } = new();
+    protected ChartInteropService? Interop { get; private set; }
+    protected ElementReference ContainerRef;
 
     protected string EffectiveGridColor => GridColor ?? "var(--arcadia-color-border, #e2e8f0)";
 
     protected bool HasData => Data is not null && Data.Count > 0;
+
+    protected override void OnInitialized()
+    {
+        Interop = new ChartInteropService(JSRuntime);
+    }
+
+    /// <summary>Shows a default tooltip for a data point.</summary>
+    protected async Task ShowTooltipForPoint(string seriesName, double value, double mouseX, double mouseY)
+    {
+        if (Interop is null) return;
+        var html = $"<div style='font-weight:600;margin-bottom:2px'>{seriesName}</div>" +
+                   $"<div>{FormatValue(value, DataLabelFormatString)}</div>";
+        await Interop.ShowTooltipAsync(html, mouseX, mouseY);
+    }
+
+    /// <summary>Hides the tooltip.</summary>
+    protected async Task HideTooltipAction()
+    {
+        if (Interop is not null)
+            await Interop.HideTooltipAsync();
+    }
+
+    /// <summary>Exports chart as PNG.</summary>
+    public async Task ExportPngAsync(string filename = "chart.png")
+    {
+        if (Interop is not null)
+            await Interop.ExportPngAsync(ContainerRef, filename);
+    }
+
+    /// <summary>Exports chart as SVG.</summary>
+    public async Task ExportSvgFileAsync(string filename = "chart.svg")
+    {
+        if (Interop is not null)
+            await Interop.ExportSvgAsync(ContainerRef, filename);
+    }
 
     protected string ResolveColor(string? color, int seriesIndex)
     {

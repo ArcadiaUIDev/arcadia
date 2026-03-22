@@ -136,7 +136,8 @@ public partial class HelixBarChart<T> : ChartBase<T>
                         Color = color,
                         Value = value,
                         DataIndex = di,
-                        SeriesIndex = si
+                        SeriesIndex = si,
+                        SeriesName = series.Name
                     });
                 }
             }
@@ -163,7 +164,8 @@ public partial class HelixBarChart<T> : ChartBase<T>
                         Color = color,
                         Value = value,
                         DataIndex = di,
-                        SeriesIndex = si
+                        SeriesIndex = si,
+                        SeriesName = series.Name
                     });
                 }
             }
@@ -189,5 +191,6 @@ public partial class HelixBarChart<T> : ChartBase<T>
         public double Value { get; set; }
         public int DataIndex { get; set; }
         public int SeriesIndex { get; set; }
+        public string SeriesName { get; set; } = "";
     }
 }

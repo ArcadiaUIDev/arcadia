@@ -4,7 +4,7 @@
 
 @if (HasData && NameField is not null && ValueField is not null)
 {
-    <div class="arcadia-chart" style="@Style" @attributes="AdditionalAttributes">
+    <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         <svg width="@Width" height="@Height" viewBox="0 0 @Width @Height"
              role="figure" aria-label="@(AriaLabel ?? Title ?? "Funnel chart")">
 

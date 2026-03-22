@@ -4,10 +4,11 @@
 
 @if (Data is not null && Data.Count > 1 && XField is not null && Series is not null)
 {
-    <div class="arcadia-chart" style="@Style" @attributes="AdditionalAttributes">
+    <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         <svg width="@Width" height="@Height" viewBox="0 0 @Width @Height"
              role="figure" aria-label="@(AriaLabel ?? Title ?? "Line chart")"
-             class="@CssClass">
+             class="@CssClass"
+             @onmouseleave="HideTooltipAction">
 
             @if (!string.IsNullOrEmpty(Title))
             {
@@ -81,7 +82,9 @@
                     {
                         <circle cx="@F(pt.X)" cy="@F(pt.Y)" r="3" fill="@color"
                                 class="arcadia-chart__point @(AnimateOnLoad ? "arcadia-animate-point" : "")"
-                                style="@(AnimateOnLoad ? $"animation-delay: {pt.Index * 40}ms;" : "")" />
+                                style="@(AnimateOnLoad ? $"animation-delay: {pt.Index * 40}ms;" : "")"
+                                @onmouseover="@(e => ShowTooltipForPoint(series.Name, pt.Value, e.ClientX, e.ClientY))"
+                                @onmouseout="HideTooltipAction" />
                     }
                 }
 

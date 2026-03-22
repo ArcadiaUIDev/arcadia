@@ -14,7 +14,6 @@ public partial class HelixWaterfallChart<T> : ChartBase<T>
     [Parameter] public string NegativeColor { get; set; } = "var(--arcadia-color-danger, #dc2626)";
     [Parameter] public string TotalColor { get; set; } = "var(--arcadia-color-primary, #2563eb)";
 
-    private ElementReference _containerRef;
     private ChartLayoutResult _layout = new();
     private LinearScale? _yScale;
     private List<WaterfallBar> _bars = new();

@@ -4,7 +4,7 @@
 
 @if (Data is not null && Data.Count > 0 && XField is not null && YField is not null)
 {
-    <div class="arcadia-chart" style="@Style" @attributes="AdditionalAttributes">
+    <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         <svg width="@Width" height="@Height" viewBox="0 0 @Width @Height"
              role="figure" aria-label="@(AriaLabel ?? Title ?? "Scatter chart")"
              class="@CssClass">
