@@ -19,7 +19,8 @@
             {
                 var slice = _slices[i];
                 <path d="@slice.Path" fill="@slice.Color" stroke="var(--helix-color-surface, #fff)" stroke-width="2"
-                      class="helix-chart__pie-slice" />
+                      class="helix-chart__pie-slice @(AnimateOnLoad ? "helix-animate-point" : "")"
+                      style="@(AnimateOnLoad ? $"animation-delay: {i * 100}ms;" : "")" />
 
                 @if (ShowLabels && slice.Percent > 5)
                 {

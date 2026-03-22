@@ -48,7 +48,8 @@
 
                 @if (series.ShowArea && _areaPaths.ContainsKey(si))
                 {
-                    <path d="@_areaPaths[si]" fill="@color" opacity="@F(series.AreaOpacity)" />
+                    <path d="@_areaPaths[si]" fill="@color" opacity="@F(series.AreaOpacity)"
+                          class="@(AnimateOnLoad ? "helix-animate-area" : "")" />
                 }
 
                 @if (_paths.ContainsKey(si))
@@ -56,7 +57,7 @@
                     <path d="@_paths[si]" fill="none" stroke="@color" stroke-width="@F(series.StrokeWidth)"
                           stroke-linecap="round" stroke-linejoin="round"
                           stroke-dasharray="@(series.Dashed ? "6,4" : "")"
-                          class="helix-chart__line" />
+                          class="helix-chart__line @(AnimateOnLoad && !series.Dashed ? "helix-animate-line" : "")" />
                 }
 
                 @* Trendline *@
@@ -74,7 +75,9 @@
                 {
                     @foreach (var pt in _dataPoints[si])
                     {
-                        <circle cx="@F(pt.X)" cy="@F(pt.Y)" r="3" fill="@color" class="helix-chart__point" />
+                        <circle cx="@F(pt.X)" cy="@F(pt.Y)" r="3" fill="@color"
+                                class="helix-chart__point @(AnimateOnLoad ? "helix-animate-point" : "")"
+                                style="@(AnimateOnLoad ? $"animation-delay: {pt.Index * 40}ms;" : "")" />
                     }
                 }
 

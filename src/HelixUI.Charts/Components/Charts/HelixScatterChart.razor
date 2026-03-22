@@ -50,7 +50,8 @@
                 var color = ResolveColor(Color, 0);
 
                 <circle cx="@F(px)" cy="@F(py)" r="@F(size)" fill="@color" opacity="0.7"
-                        class="helix-chart__point" />
+                        class="helix-chart__point @(AnimateOnLoad ? "helix-animate-point" : "")"
+                        style="@(AnimateOnLoad ? $"animation-delay: {i * 20}ms;" : "")" />
 
                 @if (ShowDataLabels)
                 {

@@ -102,5 +102,153 @@
 /* Data Labels */
 .helix-chart__data-label { font-size: 10px; fill: var(--helix-color-text-muted, #64748b); pointer-events: none; }
 
+/* Candlestick Chart */
+.helix-candle__wick { transition: opacity var(--helix-duration-fast, 100ms); }
+.helix-candle__body { transition: opacity var(--helix-duration-fast, 100ms); }
+.helix-candle__body:hover { opacity: 0.8; filter: brightness(1.15); }
+
+/* ================================================================
+   ON-LOAD ANIMATIONS
+   Applied via .helix-animate-* classes when AnimateOnLoad=true.
+   Respects prefers-reduced-motion.
+   ================================================================ */
+
+/* Line draw animation — line draws itself left to right */
+.helix-animate-line {
+  stroke-dasharray: 5000;
+  stroke-dashoffset: 5000;
+  animation: helix-line-draw 1.2s var(--helix-ease-out, ease-out) forwards;
+}
+
+@keyframes helix-line-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Area fade in after line draws */
+.helix-animate-area {
+  opacity: 0;
+  animation: helix-fade-in 0.6s var(--helix-ease-out, ease-out) 0.8s forwards;
+}
+
+/* Bar grow from baseline */
+.helix-animate-bar {
+  transform-origin: bottom;
+  transform: scaleY(0);
+  animation: helix-bar-grow 0.5s var(--helix-ease-out, ease-out) forwards;
+}
+
+@keyframes helix-bar-grow {
+  to { transform: scaleY(1); }
+}
+
+/* Pie slice sweep */
+.helix-animate-pie {
+  stroke-dasharray: 2000;
+  stroke-dashoffset: 2000;
+  animation: helix-pie-sweep 1s var(--helix-ease-out, ease-out) forwards;
+}
+
+@keyframes helix-pie-sweep {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Scatter / point scale in */
+.helix-animate-point {
+  transform-origin: center;
+  transform: scale(0);
+  animation: helix-point-pop 0.3s var(--helix-ease-out, ease-out) forwards;
+}
+
+@keyframes helix-point-pop {
+  to { transform: scale(1); }
+}
+
+/* Candlestick appear */
+.helix-animate-candle {
+  opacity: 0;
+  transform-origin: center;
+  animation: helix-candle-appear 0.3s var(--helix-ease-out, ease-out) forwards;
+}
+
+@keyframes helix-candle-appear {
+  from { opacity: 0; transform: scaleY(0.3); }
+  to { opacity: 1; transform: scaleY(1); }
+}
+
+/* Gauge fill animation */
+.helix-animate-gauge {
+  animation: helix-gauge-fill 1.2s var(--helix-ease-out, ease-out) forwards;
+}
+
+/* Radar polygon draw */
+.helix-animate-radar {
+  stroke-dasharray: 3000;
+  stroke-dashoffset: 3000;
+  animation: helix-line-draw 1s var(--helix-ease-out, ease-out) forwards;
+}
+
+/* Radar fill fade in */
+.helix-animate-radar-fill {
+  opacity: 0;
+  animation: helix-fade-in 0.5s var(--helix-ease-out, ease-out) 0.6s forwards;
+}
+
+/* Heatmap cell pop */
+.helix-animate-heatmap {
+  transform-origin: center;
+  transform: scale(0);
+  animation: helix-point-pop 0.2s var(--helix-ease-out, ease-out) forwards;
+}
+
+/* Shared fade in */
+@keyframes helix-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* KPI value count up shimmer */
+.helix-animate-kpi {
+  animation: helix-fade-in 0.5s var(--helix-ease-out, ease-out) forwards;
+}
+
+/* Sparkline draw */
+.helix-animate-sparkline {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: helix-line-draw 0.8s var(--helix-ease-out, ease-out) forwards;
+}
+
+/* Progress bar fill */
+.helix-animate-progress .helix-progress__fill {
+  animation: helix-progress-fill 0.8s var(--helix-ease-out, ease-out) forwards;
+}
+
+@keyframes helix-progress-fill {
+  from { width: 0 !important; }
+}
+
+/* ================================================================
+   REDUCED MOTION — disable all animations
+   ================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  .helix-animate-line,
+  .helix-animate-area,
+  .helix-animate-bar,
+  .helix-animate-pie,
+  .helix-animate-point,
+  .helix-animate-candle,
+  .helix-animate-gauge,
+  .helix-animate-radar,
+  .helix-animate-radar-fill,
+  .helix-animate-heatmap,
+  .helix-animate-kpi,
+  .helix-animate-sparkline {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    stroke-dashoffset: 0 !important;
+  }
+}
+
 /* Screen reader only — chart data tables */
 .helix-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border-width: 0; }

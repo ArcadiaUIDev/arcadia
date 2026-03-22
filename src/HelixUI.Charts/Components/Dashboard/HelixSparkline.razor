@@ -10,12 +10,13 @@
 
     @if (ShowArea && _pathData is not null)
     {
-        <path d="@_areaPath" fill="@ResolvedColor" opacity="0.15" />
+        <path d="@_areaPath" fill="@ResolvedColor" opacity="0.15" class="helix-animate-area" />
     }
 
     @if (_pathData is not null)
     {
         <path d="@_pathData" fill="none" stroke="@ResolvedColor"
-              stroke-width="@StrokeWidth" stroke-linecap="round" stroke-linejoin="round" />
+              stroke-width="@StrokeWidth" stroke-linecap="round" stroke-linejoin="round"
+              class="helix-animate-sparkline" />
     }
 </svg>

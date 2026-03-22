@@ -34,7 +34,9 @@
             @foreach (var bar in _bars)
             {
                 <rect x="@F(bar.X)" y="@F(bar.Y)" width="@F(bar.Width)" height="@F(bar.Height)"
-                      rx="@(Rounded ? "3" : "0")" fill="@bar.Color" class="helix-chart__bar" />
+                      rx="@(Rounded ? "3" : "0")" fill="@bar.Color"
+                      class="helix-chart__bar @(AnimateOnLoad ? "helix-animate-bar" : "")"
+                      style="@(AnimateOnLoad ? $"animation-delay: {bar.DataIndex * 80 + bar.SeriesIndex * 40}ms;" : "")" />
 
                 @if (ShowDataLabels && bar.Height > 14)
                 {
