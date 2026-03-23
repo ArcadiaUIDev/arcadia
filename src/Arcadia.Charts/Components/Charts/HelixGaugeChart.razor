@@ -11,10 +11,10 @@
             <SvgText x="@(Width / 2)" y="20" text-anchor="middle" class="arcadia-chart__title">@Title</SvgText>
         }
 
-        @* Background track *@
+        @* Background track — thinner than value arc so it hides cleanly behind it *@
         <path d="@_trackPath" fill="none" stroke="@TrackColor"
-              stroke-width="@F(StrokeWidth)" stroke-linecap="round"
-              class="arcadia-gauge__track" />
+              stroke-width="@F(StrokeWidth - 2)" stroke-linecap="round"
+              opacity="0.3" class="arcadia-gauge__track" />
 
         @* Value arc *@
         @if (!string.IsNullOrEmpty(_valuePath))
