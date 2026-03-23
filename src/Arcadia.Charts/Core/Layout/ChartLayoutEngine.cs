@@ -80,39 +80,52 @@ public class ChartLayoutEngine
         var avgLabelWidth = input.XTickLabels.Average(l => TextMeasure.EstimateWidth(l, DefaultFontSize));
         var fitsHorizontally = (int)(input.Width / Math.Max(1, avgLabelWidth + 10));
 
+        // Cap at what actually fits without overlap (with 20% breathing room)
+        var comfortableFit = (int)(fitsHorizontally * 0.8);
         var maxTicks = tier switch
         {
-            ResponsiveTier.Wide => Math.Min(input.XTickLabels.Count, Math.Max(fitsHorizontally, 6)),
-            ResponsiveTier.Medium => Math.Min(input.XTickLabels.Count, Math.Min(fitsHorizontally, 12)),
-            ResponsiveTier.Narrow => Math.Min(input.XTickLabels.Count, 6),
+            ResponsiveTier.Wide => Math.Min(input.XTickLabels.Count, Math.Max(Math.Min(comfortableFit, 15), 4)),
+            ResponsiveTier.Medium => Math.Min(input.XTickLabels.Count, Math.Min(comfortableFit, 10)),
+            ResponsiveTier.Narrow => Math.Min(input.XTickLabels.Count, 5),
             _ => 3
         };
 
         // Start with all labels, progressively reduce
+        var totalCount = input.XTickLabels.Count;
         var labels = SelectLabels(input.XTickLabels, maxTicks);
-        var spacing = input.Width / Math.Max(1, labels.Count);
+        var dataSpacing = input.Width / Math.Max(1, totalCount);
 
         // Check if horizontal labels fit
-        var maxLabelWidth = labels.Max(l => TextMeasure.EstimateWidth(l, DefaultFontSize));
-        if (maxLabelWidth < spacing * 0.9)
+        var maxLabelWidth = labels.Max(l => TextMeasure.EstimateWidth(l.Label, DefaultFontSize));
+        if (maxLabelWidth < dataSpacing * labels.Count / Math.Max(1, labels.Count) * 0.9)
         {
-            // Horizontal fits
-            rotation = 0;
+            // Check actual spacing between selected labels
+            var minGap = double.MaxValue;
+            for (var i = 1; i < labels.Count; i++)
+                minGap = Math.Min(minGap, (labels[i].Index - labels[i - 1].Index) * dataSpacing);
+            if (maxLabelWidth < minGap * 0.9)
+                rotation = 0;
+            else if (tier >= ResponsiveTier.Medium)
+                rotation = 45;
+            else
+                rotation = 90;
         }
         else if (tier >= ResponsiveTier.Medium)
         {
             // Try 45° rotation
-            var rotatedSize = labels.Max(l => TextMeasure.EstimateRotated(l, DefaultFontSize, 45));
-            if (rotatedSize.Width < spacing * 0.9)
+            var rotatedSize = labels.Max(l => TextMeasure.EstimateRotated(l.Label, DefaultFontSize, 45));
+            var minGap = labels.Count > 1
+                ? Enumerable.Range(1, labels.Count - 1).Min(i => (labels[i].Index - labels[i - 1].Index) * dataSpacing)
+                : dataSpacing;
+            if (rotatedSize.Width < minGap * 0.9)
             {
                 rotation = 45;
             }
             else
             {
                 rotation = 90;
-                // At 90°, re-check if we need fewer labels
-                var rotated90 = labels.Max(l => TextMeasure.EstimateRotated(l, DefaultFontSize, 90));
-                if (rotated90.Width > spacing * 0.9)
+                var rotated90 = labels.Max(l => TextMeasure.EstimateRotated(l.Label, DefaultFontSize, 90));
+                if (rotated90.Width > minGap * 0.9)
                 {
                     labels = SelectLabels(input.XTickLabels, maxTicks / 2);
                 }
@@ -124,9 +137,9 @@ public class ChartLayoutEngine
             labels = SelectLabels(input.XTickLabels, 3);
         }
 
-        // Build tick marks with bounding boxes
+        // Build tick marks with bounding boxes at original data positions
         var resolvedRotation = rotation;
-        var ticks = BuildTickMarks(labels, spacing, resolvedRotation);
+        var ticks = BuildTickMarks(labels, totalCount, input.Width, resolvedRotation);
 
         // Post-build collision removal: iteratively remove overlapping ticks
         ticks = RemoveOverlappingTicks(ticks);
@@ -134,15 +147,17 @@ public class ChartLayoutEngine
         return ticks;
     }
 
-    private static List<TickMark> BuildTickMarks(List<string> labels, double spacing, double rotation)
+    private static List<TickMark> BuildTickMarks(List<(int Index, string Label)> labels, int totalCount, double width, double rotation)
     {
-        return labels.Select((label, i) =>
+        // Position labels at their original data index, not re-spaced
+        var dataSpacing = width / Math.Max(1, totalCount);
+        return labels.Select(item =>
         {
-            var x = spacing * i + spacing / 2;
-            var (w, h) = TextMeasure.EstimateRotated(label, DefaultFontSize, rotation);
+            var x = dataSpacing * item.Index + dataSpacing / 2;
+            var (w, h) = TextMeasure.EstimateRotated(item.Label, DefaultFontSize, rotation);
             return new TickMark
             {
-                Label = label,
+                Label = item.Label,
                 Position = x,
                 BoundingBox = new LabelBox(x - w / 2, 0, w, h)
             };
@@ -242,18 +257,18 @@ public class ChartLayoutEngine
         return new ChartMargins { Top = top, Right = right, Bottom = bottom, Left = left };
     }
 
-    private static List<string> SelectLabels(IReadOnlyList<string> all, int max)
+    private static List<(int Index, string Label)> SelectLabels(IReadOnlyList<string> all, int max)
     {
-        if (all.Count <= max) return all.ToList();
-        if (max <= 2) return new List<string> { all[0], all[^1] };
-        if (max == 3) return new List<string> { all[0], all[all.Count / 2], all[^1] };
+        if (all.Count <= max) return all.Select((l, i) => (i, l)).ToList();
+        if (max <= 2) return new List<(int, string)> { (0, all[0]), (all.Count - 1, all[^1]) };
+        if (max == 3) return new List<(int, string)> { (0, all[0]), (all.Count / 2, all[all.Count / 2]), (all.Count - 1, all[^1]) };
 
         var step = Math.Max(1, all.Count / max);
-        var selected = new List<string>();
+        var selected = new List<(int, string)>();
         for (var i = 0; i < all.Count; i += step)
-            selected.Add(all[i]);
-        if (selected[^1] != all[^1])
-            selected[^1] = all[^1]; // Always include last
+            selected.Add((i, all[i]));
+        if (selected[^1].Item2 != all[^1])
+            selected[^1] = (all.Count - 1, all[^1]); // Always include last
         return selected;
     }
 

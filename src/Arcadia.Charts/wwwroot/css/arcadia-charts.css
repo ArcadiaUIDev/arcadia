@@ -80,8 +80,8 @@
 .arcadia-catbar__legend-swatch { width: 8px; height: 8px; border-radius: 2px; flex-shrink: 0; }
 
 /* Charts */
-.arcadia-chart { position: relative; }
-.arcadia-chart__svg { font-family: var(--arcadia-font-sans, system-ui); }
+.arcadia-chart { position: relative; overflow: hidden; }
+.arcadia-chart__svg { font-family: var(--arcadia-font-sans, system-ui); overflow: visible; }
 .arcadia-chart__title { font-size: var(--arcadia-text-base, 1rem); font-weight: var(--arcadia-font-semibold, 600); fill: currentColor; }
 .arcadia-chart__tick-label { font-size: 11px; fill: currentColor; opacity: 0.7; }
 .arcadia-chart__line { transition: opacity var(--arcadia-duration-fast, 100ms); }
