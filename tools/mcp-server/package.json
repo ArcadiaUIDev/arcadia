@@ -1,0 +1,16 @@
+{
+  "name": "@arcadia/mcp-server",
+  "version": "1.0.0",
+  "description": "MCP server for Arcadia Controls — lets AI assistants generate Blazor chart code",
+  "type": "module",
+  "main": "index.js",
+  "bin": {
+    "arcadia-mcp": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  }
+}
