@@ -27,6 +27,9 @@
             <button class="gallery__nav-btn @(_tab == "gauge" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "gauge"'>Gauges</button>
             <button class="gallery__nav-btn @(_tab == "radar" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "radar"'>Radar</button>
             <button class="gallery__nav-btn @(_tab == "heatmap" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "heatmap"'>Heatmap</button>
+            <button class="gallery__nav-btn @(_tab == "interactive" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "interactive"'>Interactive</button>
+            <button class="gallery__nav-btn @(_tab == "streaming" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "streaming"'>Streaming</button>
+            <button class="gallery__nav-btn @(_tab == "advanced" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "advanced"'>Advanced</button>
 
             <div class="gallery__nav-group">Forms</div>
             <button class="gallery__nav-btn @(_tab == "fields" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "fields"'>Field Types</button>
@@ -270,6 +273,143 @@
             </div>
         }
 
+        @if (_tab == "interactive")
+        {
+            <div class="gallery__section-header">
+                <h1>Interactive Features</h1>
+                <p>Crosshair tracking, annotations, and export. Hover any chart to reveal PNG/SVG download buttons in the top-right corner.</p>
+                <div class="gallery__hint">💡 Hover the chart to see the crosshair · Export buttons appear top-right on hover</div>
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Crosshair + Annotations</div>
+                <div class="gallery__chart-container">
+                    <HelixLineChart TItem="MonthlySales" Data="@_monthlySales"
+                                    XField="@(d => (object)d.Month)" Series="@_lineSeries"
+                                    Height="380" Width="0" ShowPoints="true" ShowCrosshair="true"
+                                    Annotations="@_annotations" AnimateOnLoad="true" />
+                </div>
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Moving Average Trendline</div>
+                <div class="gallery__chart-container">
+                    <HelixLineChart TItem="MonthlySales" Data="@_monthlySales"
+                                    XField="@(d => (object)d.Month)" Series="@_maTrendSeries"
+                                    Height="380" Width="0" ShowPoints="true" AnimateOnLoad="true" />
+                </div>
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Null Handling — Gap vs Connect vs Zero</div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+                    <div>
+                        <div style="font-size: 0.75rem; opacity: 0.6; margin-bottom: 4px; text-align: center;">Gap (default)</div>
+                        <HelixLineChart TItem="NullablePoint" Data="@_nullData"
+                                        XField="@(d => (object)d.Label)" Series="@_nullSeries"
+                                        Height="180" Width="0" NullHandling="NullHandling.Gap" ShowPoints="true" AnimateOnLoad="false" />
+                    </div>
+                    <div>
+                        <div style="font-size: 0.75rem; opacity: 0.6; margin-bottom: 4px; text-align: center;">Connect</div>
+                        <HelixLineChart TItem="NullablePoint" Data="@_nullData"
+                                        XField="@(d => (object)d.Label)" Series="@_nullSeries"
+                                        Height="180" Width="0" NullHandling="NullHandling.Connect" ShowPoints="true" AnimateOnLoad="false" />
+                    </div>
+                    <div>
+                        <div style="font-size: 0.75rem; opacity: 0.6; margin-bottom: 4px; text-align: center;">Zero</div>
+                        <HelixLineChart TItem="NullablePoint" Data="@_nullData"
+                                        XField="@(d => (object)d.Label)" Series="@_nullSeries"
+                                        Height="180" Width="0" NullHandling="NullHandling.Zero" ShowPoints="true" AnimateOnLoad="false" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (_tab == "streaming")
+        {
+            <div class="gallery__section-header">
+                <h1>Live / Streaming Data</h1>
+                <p>Charts update in real-time via AppendPoint and SlidingWindow APIs. No page reload needed.</p>
+                <div class="gallery__hint">💡 Click "Add Point" to push live data · Sliding window keeps the last 20 points</div>
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Sliding Window — Last 20 Data Points</div>
+                <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                    <button class="gallery__toast-btn gallery__toast-btn--info" @onclick="AddStreamPoint">Add Point</button>
+                    <button class="gallery__toast-btn gallery__toast-btn--success" @onclick="StartAutoStream">Auto Stream</button>
+                    <button class="gallery__toast-btn" @onclick="StopAutoStream">Stop</button>
+                </div>
+                <div class="gallery__chart-container">
+                    <HelixLineChart @ref="_streamChart" TItem="StreamPoint" Data="@_streamData"
+                                    XField="@(d => (object)d.Time)" Series="@_streamSeries"
+                                    Height="340" Width="0" ShowPoints="true" SlidingWindow="20"
+                                    AnimateOnLoad="false" ShowCrosshair="true" />
+                </div>
+            </div>
+        }
+
+        @if (_tab == "advanced")
+        {
+            <div class="gallery__section-header">
+                <h1>Advanced Features</h1>
+                <p>Bubble charts, full-circle gauges, and more specialized visualizations.</p>
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Bubble Chart — Scatter with Size Dimension</div>
+                <div class="gallery__chart-container">
+                    <HelixScatterChart TItem="BubblePoint" Data="@_bubbleData"
+                                       XField="@(d => d.X)" YField="@(d => d.Y)"
+                                       SizeField="@(d => d.Size)"
+                                       Height="400" Width="0" Color="primary" PointSize="4"
+                                       Title="Market Cap vs Revenue (bubble = employees)" AnimateOnLoad="true" />
+                </div>
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Full-Circle Gauges</div>
+                <div class="gallery__gauge-row">
+                    <HelixGaugeChart Value="68" Min="0" Max="100" Label="Progress" Width="180" Height="180"
+                                     FullCircle="true" AnimateOnLoad="true" />
+                    <HelixGaugeChart Value="3.8" Min="0" Max="5" Label="Rating" Width="180" Height="180"
+                                     FullCircle="true" ValueFormatString="0.0" AnimateOnLoad="true" />
+                    <HelixGaugeChart Value="850" Min="0" Max="1000" Label="Score" Width="180" Height="180"
+                                     FullCircle="true" Thresholds="@_scoreThresholds" AnimateOnLoad="true" />
+                </div>
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Heatmap with Cell Values</div>
+                <div class="gallery__chart-container">
+                    <HelixHeatmap TItem="HeatmapPoint" Data="@_heatmapData"
+                                  XField="@(d => d.Day)" YField="@(d => d.Hour)"
+                                  ValueField="@(d => d.Count)"
+                                  ShowValues="true" Height="320" Width="0" />
+                </div>
+            </div>
+
+            <div class="gallery__showcase-row">
+                <div class="gallery__showcase">
+                    <div class="gallery__showcase-title">Pie — Exploded Padding</div>
+                    <div class="gallery__chart-container">
+                        <HelixPieChart TItem="BudgetItem" Data="@_budget"
+                                       NameField="@(d => d.Category)" ValueField="@(d => d.Amount)"
+                                       Height="300" Width="340" PaddingAngle="3" />
+                    </div>
+                </div>
+                <div class="gallery__showcase">
+                    <div class="gallery__showcase-title">Donut — Name + Value Labels</div>
+                    <div class="gallery__chart-container">
+                        <HelixPieChart TItem="BudgetItem" Data="@_budget"
+                                       NameField="@(d => d.Category)" ValueField="@(d => d.Amount)"
+                                       Height="300" Width="340" InnerRadius="60"
+                                       LabelFormat="PieLabelFormat.Name" />
+                    </div>
+                </div>
+            </div>
+        }
+
         @* ─── FORMS ─── *@
 
         @if (_tab == "fields")
@@ -438,9 +578,12 @@
     record QuarterlySales(string Quarter, double NorthAmerica, double Europe, double Asia);
     record BudgetItem(string Category, double Amount);
     record DataXY(double X, double Y);
+    record BubblePoint(double X, double Y, double Size);
     record SkillProfile(string Skill, double TeamA, double TeamB);
     record HeatmapPoint(string Day, string Hour, double Count);
     record StockCandle(string Date, double Open, double High, double Low, double Close, double MA5);
+    record NullablePoint(string Label, double Value);
+    record StreamPoint(string Time, double Value);
 
     double[] _revenueSparkline = { 42, 48, 45, 52, 49, 55, 58, 62, 59, 65, 68, 72 };
     double[] _usersSparkline = { 85, 82, 88, 84, 80, 78, 82, 79, 76, 74, 78, 72 };
@@ -456,8 +599,8 @@
     };
     List<SeriesConfig<MonthlySales>> _lineSeries = new()
     {
-        new() { Name = "Revenue", Field = d => d.Revenue, Color = "primary", ShowArea = true, AreaOpacity = 0.1 },
-        new() { Name = "Target", Field = d => d.Target, Color = "secondary", Dashed = true, StrokeWidth = 1.5 },
+        new() { Name = "Revenue", Field = d => d.Revenue, Color = "primary", ShowArea = true, AreaOpacity = 0.1, CurveType = "smooth" },
+        new() { Name = "Target", Field = d => d.Target, Color = "secondary", Dashed = true, StrokeWidth = 1.5, CurveType = "smooth" },
     };
     List<SeriesConfig<MonthlySales>> _comboSeries = new()
     {
@@ -523,6 +666,91 @@
     List<SeriesConfig<StockCandle>> _maSeries = new()
     {
         new() { Name = "MA(5)", Field = d => d.MA5, Color = "var(--arcadia-color-info)", StrokeWidth = 1.5 },
+    };
+
+    // ── Interactive tab data ──
+    List<ChartAnnotation> _annotations = new()
+    {
+        new() { DataIndex = 3, Label = "Launch", Color = "var(--arcadia-color-success)" },
+        new() { DataIndex = 7, Label = "Outage", Color = "var(--arcadia-color-danger)" },
+        new() { DataIndex = 10, Label = "Campaign", Color = "var(--arcadia-color-info)" },
+    };
+
+    List<SeriesConfig<MonthlySales>> _maTrendSeries = new()
+    {
+        new() { Name = "Revenue", Field = d => d.Revenue, Color = "primary", ShowArea = true, AreaOpacity = 0.08,
+                Trendline = new() { Type = TrendlineType.MovingAverage, MovingAveragePeriod = 3, Color = "var(--arcadia-color-warning)", Dashed = true } },
+    };
+
+    List<NullablePoint> _nullData = new()
+    {
+        new("A", 10), new("B", 25), new("C", double.NaN), new("D", double.NaN),
+        new("E", 30), new("F", 45), new("G", 35), new("H", double.NaN), new("I", 50), new("J", 40),
+    };
+    List<SeriesConfig<NullablePoint>> _nullSeries = new()
+    {
+        new() { Name = "Values", Field = d => d.Value, Color = "primary" },
+    };
+
+    // ── Streaming tab data ──
+    HelixLineChart<StreamPoint>? _streamChart;
+    List<StreamPoint> _streamData = new() { new("0s", 50), new("1s", 52) };
+    List<SeriesConfig<StreamPoint>> _streamSeries = new()
+    {
+        new() { Name = "Sensor", Field = d => d.Value, Color = "primary", ShowArea = true, AreaOpacity = 0.15, CurveType = "smooth" },
+    };
+    int _streamCounter = 2;
+    Random _streamRng = new(42);
+    double _streamValue = 52;
+    System.Threading.Timer? _autoStreamTimer;
+
+    void AddStreamPoint()
+    {
+        _streamValue += (_streamRng.NextDouble() - 0.48) * 8;
+        _streamValue = Math.Max(10, Math.Min(90, _streamValue));
+        var pt = new StreamPoint($"{_streamCounter++}s", Math.Round(_streamValue, 1));
+        if (_streamChart is not null && _streamData.Count >= 2)
+        {
+            _streamChart.AppendAndSlide(pt);
+        }
+        else
+        {
+            _streamData.Add(pt);
+            if (_streamData.Count > 20) _streamData.RemoveAt(0);
+            StateHasChanged();
+        }
+    }
+
+    void StartAutoStream()
+    {
+        _autoStreamTimer?.Dispose();
+        _autoStreamTimer = new System.Threading.Timer(_ =>
+        {
+            InvokeAsync(() => { AddStreamPoint(); });
+        }, null, 0, 500);
+    }
+
+    void StopAutoStream()
+    {
+        _autoStreamTimer?.Dispose();
+        _autoStreamTimer = null;
+    }
+
+    // ── Advanced tab data ──
+    List<BubblePoint> _bubbleData = Enumerable.Range(0, 25).Select(i =>
+    {
+        var rng = new Random(i + 100);
+        return new BubblePoint(
+            Math.Round(rng.NextDouble() * 200 + 50, 1),
+            Math.Round(rng.NextDouble() * 150 + 20, 1),
+            Math.Round(rng.NextDouble() * 20 + 3, 1));
+    }).ToList();
+
+    List<GaugeThreshold> _scoreThresholds = new()
+    {
+        new() { Value = 0, Color = "var(--arcadia-color-danger)" },
+        new() { Value = 400, Color = "var(--arcadia-color-warning)" },
+        new() { Value = 700, Color = "var(--arcadia-color-success)" },
     };
 
     protected override void OnInitialized()
