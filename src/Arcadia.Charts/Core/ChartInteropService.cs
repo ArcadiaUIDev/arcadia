@@ -7,7 +7,7 @@ namespace Arcadia.Charts.Core;
 /// JS interop service for chart tooltips, export, resize, and pan/zoom.
 /// Lazy-loads the chart-interop.js module on first use.
 /// </summary>
-public class ChartInteropService : IAsyncDisposable
+internal class ChartInteropService : IAsyncDisposable
 {
     private readonly IJSRuntime _js;
     private IJSObjectReference? _module;
@@ -124,14 +124,14 @@ public class ChartInteropService : IAsyncDisposable
 }
 
 /// <summary>Handler for container resize events.</summary>
-public interface IResizeHandler
+internal interface IResizeHandler
 {
     [JSInvokable]
     Task OnContainerResized(double width, double height);
 }
 
 /// <summary>Handler for pan/zoom events.</summary>
-public interface IPanZoomHandler
+internal interface IPanZoomHandler
 {
     [JSInvokable]
     Task OnZoomChanged(double zoom, double centerX, double centerY);

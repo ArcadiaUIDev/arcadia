@@ -4,7 +4,7 @@ namespace Arcadia.Charts.Core.Data;
 /// Largest Triangle Three Buckets (LTTB) downsampling algorithm.
 /// Reduces data point count while preserving visual shape — keeps peaks and valleys.
 /// </summary>
-public static class LttbDownsampler
+internal static class LttbDownsampler
 {
     /// <summary>
     /// Downsamples a data series to the target number of points.

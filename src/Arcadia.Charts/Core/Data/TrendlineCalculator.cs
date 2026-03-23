@@ -3,7 +3,7 @@ namespace Arcadia.Charts.Core.Data;
 /// <summary>
 /// Calculates trendline data points for chart overlays.
 /// </summary>
-public static class TrendlineCalculator
+internal static class TrendlineCalculator
 {
     /// <summary>
     /// Calculates linear regression (least squares) for a set of y-values.

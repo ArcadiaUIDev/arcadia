@@ -153,8 +153,8 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase, IAsyn
     [Inject] protected Microsoft.JSInterop.IJSRuntime JSRuntime { get; set; } = default!;
 
     protected ChartPalette EffectivePalette => Palette ?? ChartPalette.Default;
-    protected ChartLayoutEngine LayoutEngine { get; } = new();
-    protected ChartInteropService? Interop { get; private set; }
+    private protected ChartLayoutEngine LayoutEngine { get; } = new();
+    private protected ChartInteropService? Interop { get; set; }
     protected ElementReference ContainerRef;
     private bool _disposed;
 

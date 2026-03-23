@@ -4,7 +4,7 @@ namespace Arcadia.Charts.Core.Layout;
 /// Generates "nice" tick values for axes using an extended Wilkinson algorithm.
 /// Produces round numbers (1, 2, 5, 10, 20, 50, 100, etc.) that look natural.
 /// </summary>
-public static class TickGenerator
+internal static class TickGenerator
 {
     private static readonly double[] NiceNumbers = { 1, 2, 2.5, 5, 10 };
 

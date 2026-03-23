@@ -4,7 +4,7 @@ namespace Arcadia.Charts.Core.Layout;
 /// The anti-collision layout engine. Runs as a pure C# pass before SVG rendering.
 /// Resolves tick positions, label rotations, legend layout, and margins — guaranteeing no overlaps.
 /// </summary>
-public class ChartLayoutEngine
+internal class ChartLayoutEngine
 {
     private const double DefaultFontSize = 12;
     private const double TitleFontSize = 16;
@@ -280,7 +280,7 @@ public class ChartLayoutEngine
     }
 }
 
-public class ChartLayoutInput
+internal class ChartLayoutInput
 {
     public double Width { get; set; }
     public double Height { get; set; }
@@ -293,7 +293,7 @@ public class ChartLayoutInput
     public IReadOnlyList<string>? SeriesNames { get; set; }
 }
 
-public class ChartLayoutResult
+internal class ChartLayoutResult
 {
     public double TotalWidth { get; set; }
     public double TotalHeight { get; set; }
@@ -309,7 +309,7 @@ public class ChartLayoutResult
     public bool ShowDataLabels { get; set; } = true;
 }
 
-public struct ChartMargins
+internal struct ChartMargins
 {
     public double Top { get; set; }
     public double Right { get; set; }
@@ -317,7 +317,7 @@ public struct ChartMargins
     public double Left { get; set; }
 }
 
-public struct PlotArea
+internal struct PlotArea
 {
     public double X { get; set; }
     public double Y { get; set; }
@@ -325,7 +325,7 @@ public struct PlotArea
     public double Height { get; set; }
 }
 
-public class TickMark
+internal class TickMark
 {
     public string Label { get; set; } = string.Empty;
     public double Value { get; set; }
@@ -333,13 +333,13 @@ public class TickMark
     public LabelBox BoundingBox { get; set; }
 }
 
-public class LegendLayout
+internal class LegendLayout
 {
     public bool Visible { get; set; }
     public LegendMode Mode { get; set; }
     public int MaxItems { get; set; } = int.MaxValue;
 }
 
-public enum LegendMode { Horizontal, Wrapped, Vertical, Truncated }
+internal enum LegendMode { Horizontal, Wrapped, Vertical, Truncated }
 
-public enum ResponsiveTier { Compact, Narrow, Medium, Wide }
+internal enum ResponsiveTier { Compact, Narrow, Medium, Wide }

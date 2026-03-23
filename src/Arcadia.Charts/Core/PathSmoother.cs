@@ -3,7 +3,7 @@ namespace Arcadia.Charts.Core;
 /// <summary>
 /// Generates smooth SVG paths using Catmull-Rom to cubic Bezier conversion.
 /// </summary>
-public static class PathSmoother
+internal static class PathSmoother
 {
     /// <summary>
     /// Converts a series of points into a smooth SVG path using cubic Bezier curves.

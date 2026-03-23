@@ -4,7 +4,7 @@ namespace Arcadia.Charts.Core.Layout;
 /// Estimates text dimensions without DOM access.
 /// Calibrated for common sans-serif fonts at standard sizes.
 /// </summary>
-public static class TextMeasure
+internal static class TextMeasure
 {
     /// <summary>
     /// Average character width as a ratio to font size for sans-serif fonts.

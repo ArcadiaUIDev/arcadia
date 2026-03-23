@@ -3,7 +3,7 @@ namespace Arcadia.Charts.Core.Layout;
 /// <summary>
 /// AABB collision detection for label bounding boxes.
 /// </summary>
-public static class CollisionDetector
+internal static class CollisionDetector
 {
     /// <summary>
     /// Checks if two bounding boxes overlap.
@@ -53,7 +53,7 @@ public static class CollisionDetector
 /// <summary>
 /// Axis-aligned bounding box for a label.
 /// </summary>
-public readonly struct LabelBox
+internal readonly struct LabelBox
 {
     public double X { get; init; }
     public double Y { get; init; }

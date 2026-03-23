@@ -140,12 +140,13 @@ public class ChartLayoutEngineTests
     }
 
     [Theory]
-    [InlineData(800, ResponsiveTier.Wide)]
-    [InlineData(500, ResponsiveTier.Medium)]
-    [InlineData(350, ResponsiveTier.Narrow)]
-    [InlineData(200, ResponsiveTier.Compact)]
-    public void Calculate_ResponsiveTier(double width, ResponsiveTier expected)
+    [InlineData(800, (int)ResponsiveTier.Wide)]
+    [InlineData(500, (int)ResponsiveTier.Medium)]
+    [InlineData(350, (int)ResponsiveTier.Narrow)]
+    [InlineData(200, (int)ResponsiveTier.Compact)]
+    public void Calculate_ResponsiveTier(double width, int expectedTier)
     {
+        var expected = (ResponsiveTier)expectedTier;
         var result = _engine.Calculate(new ChartLayoutInput { Width = width, Height = 300 });
 
         result.Tier.Should().Be(expected);

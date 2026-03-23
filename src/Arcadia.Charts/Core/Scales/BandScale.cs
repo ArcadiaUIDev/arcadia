@@ -4,7 +4,7 @@ namespace Arcadia.Charts.Core.Scales;
 /// Maps discrete categories to equal-width bands within a pixel range.
 /// Used for bar chart category axes.
 /// </summary>
-public class BandScale
+internal class BandScale
 {
     private readonly List<string> _categories;
     public double RangeMin { get; }

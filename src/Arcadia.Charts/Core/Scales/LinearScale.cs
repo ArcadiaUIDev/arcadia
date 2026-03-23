@@ -3,7 +3,7 @@ namespace Arcadia.Charts.Core.Scales;
 /// <summary>
 /// Maps a continuous numeric data range to a pixel range.
 /// </summary>
-public class LinearScale
+internal class LinearScale
 {
     public double DomainMin { get; }
     public double DomainMax { get; }
