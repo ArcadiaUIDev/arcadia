@@ -294,16 +294,27 @@ public partial class HelixLineChart<T> : ChartBase<T>
         }
     }
 
-    /// <summary>Appends a point and removes the first (sliding window in one call).</summary>
+    /// <summary>Appends a point and removes the first (sliding window in one call). Animates the transition.</summary>
     public void AppendAndSlide(T item)
     {
         if (Data is IList<T> list)
         {
+            var wasAtCapacity = SlidingWindow > 0 && list.Count >= SlidingWindow;
             list.Add(item);
             if (list.Count > SlidingWindow && SlidingWindow > 0)
                 list.RemoveAt(0);
             OnParametersSet();
-            InvokeAsync(StateHasChanged);
+            InvokeAsync(async () =>
+            {
+                StateHasChanged();
+                // Trigger slide animation if we removed a point
+                if (wasAtCapacity && Interop is not null && Data is not null && Data.Count > 1)
+                {
+                    var stepWidth = _layout.PlotArea.Width / Data.Count;
+                    try { await Interop.SlideChartContentAsync(ContainerRef, stepWidth, 300); }
+                    catch { /* disposed */ }
+                }
+            });
         }
     }
 

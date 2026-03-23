@@ -249,6 +249,30 @@ export function resetZoom(containerEl, dotNetRef) {
   }
 }
 
+// ── Slide Animation for Streaming ────────────────────
+
+export function slideChartContent(containerEl, stepWidth, durationMs) {
+  const svg = containerEl.querySelector('svg[data-chart]');
+  if (!svg) return;
+  const group = svg.querySelector('.arcadia-slide-group');
+  if (!group) return;
+
+  // Start offset to the right by one step
+  group.style.transition = 'none';
+  group.style.transform = `translateX(${stepWidth}px)`;
+
+  // Force reflow, then animate to 0
+  group.getBoundingClientRect();
+  group.style.transition = `transform ${durationMs}ms ease-out`;
+  group.style.transform = 'translateX(0)';
+
+  // Clean up after animation
+  setTimeout(() => {
+    group.style.transition = '';
+    group.style.transform = '';
+  }, durationMs + 50);
+}
+
 // ── Get Element Bounds ───────────────────────────────
 
 export function getBounds(element) {

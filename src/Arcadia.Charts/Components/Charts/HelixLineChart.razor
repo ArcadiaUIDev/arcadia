@@ -47,7 +47,19 @@
                       class="arcadia-chart__tick-label">@tick.Label</SvgText>
             }
 
+            @* Clip path for slide animation *@
+            @if (SlidingWindow > 0)
+            {
+                <defs>
+                    <clipPath id="arcadia-slide-clip">
+                        <rect x="@F(_layout.PlotArea.X)" y="@F(_layout.PlotArea.Y - 10)"
+                              width="@F(_layout.PlotArea.Width)" height="@F(_layout.PlotArea.Height + 20)" />
+                    </clipPath>
+                </defs>
+            }
+
             @* Series *@
+            <g class="arcadia-slide-group" clip-path="@(SlidingWindow > 0 ? "url(#arcadia-slide-clip)" : "")">
             @for (var si = 0; si < Series.Count; si++)
             {
                 var series = Series[si];
@@ -118,6 +130,7 @@
                     }
                 }
             }
+            </g>
 
             @* Crosshair *@
             @if (ShowCrosshair)

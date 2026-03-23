@@ -102,6 +102,13 @@ public class ChartInteropService : IAsyncDisposable
         await module.InvokeVoidAsync("resetZoom", container, dotNetRef);
     }
 
+    /// <summary>Triggers a slide-left animation on the chart content for streaming updates.</summary>
+    public async ValueTask SlideChartContentAsync(ElementReference container, double stepWidth, int durationMs = 300)
+    {
+        var module = await GetModuleAsync();
+        await module.InvokeVoidAsync("slideChartContent", container, stepWidth, durationMs);
+    }
+
     public async ValueTask DisposeAsync()
     {
         if (_module is not null)
