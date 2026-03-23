@@ -15,5 +15,21 @@
 <body>
     <Routes @rendermode="Microsoft.AspNetCore.Components.Web.RenderMode.InteractiveServer" />
     <script src="_framework/blazor.web.js"></script>
+    <script>
+        // Suppress Blazor's "No interop methods are registered for renderer" errors
+        // that fire when mouse events hit elements being torn down during re-renders.
+        // This is a known Blazor Server issue — the errors are benign.
+        window.addEventListener('error', function(e) {
+            if (e.message && e.message.includes('No interop methods are registered for renderer')) {
+                e.preventDefault();
+                return true;
+            }
+        });
+        window.addEventListener('unhandledrejection', function(e) {
+            if (e.reason && e.reason.message && e.reason.message.includes('No interop methods are registered for renderer')) {
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>

@@ -1,0 +1,20 @@
+@page "/test/treemap"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent;">
+    <HelixTreemapChart TItem="DeptBudget" Data="@_data"
+                       NameField="@(d => d.Dept)" ValueField="@(d => d.Budget)"
+                       Height="400" Width="600" AnimateOnLoad="true"
+                       Title="Department Allocation" />
+</div>
+
+@code {
+    record DeptBudget(string Dept, double Budget);
+
+    List<DeptBudget> _data = new()
+    {
+        new("Engineering", 450000), new("Marketing", 180000), new("Sales", 220000),
+        new("Operations", 120000), new("HR", 80000), new("Design", 95000),
+    };
+}

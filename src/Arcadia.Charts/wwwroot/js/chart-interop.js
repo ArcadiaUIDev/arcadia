@@ -58,14 +58,27 @@ const observers = new Map();
 
 export function observeResize(element, dotNetRef) {
   if (!element) return;
-  
+
+  // Clean up any existing observer for this element
+  const existing = observers.get(element);
+  if (existing) {
+    existing.disconnect();
+    observers.delete(element);
+  }
+
   const observer = new ResizeObserver(entries => {
     for (const entry of entries) {
       const { width, height } = entry.contentRect;
-      dotNetRef.invokeMethodAsync('OnContainerResized', width, height);
+      try {
+        dotNetRef.invokeMethodAsync('OnContainerResized', width, height);
+      } catch (e) {
+        // DotNetRef was disposed — stop observing
+        observer.disconnect();
+        observers.delete(element);
+      }
     }
   });
-  
+
   observer.observe(element);
   observers.set(element, observer);
 }

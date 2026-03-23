@@ -56,7 +56,7 @@ public partial class HelixPieChart<T> : ChartBase<T>
 
         var cx = EffectiveWidth / 2;
         var cy = (Height + (string.IsNullOrEmpty(Title) ? 0 : 30)) / 2;
-        var outerRadius = OuterRadius ?? Math.Min(Width, Height) / 2 - 40;
+        var outerRadius = OuterRadius ?? Math.Min(EffectiveWidth, Height) / 2 - 40;
         var innerR = InnerRadius > 0 ? InnerRadius : 0;
 
         var startAngle = StartAngle * Math.PI / 180; // Convert degrees to radians

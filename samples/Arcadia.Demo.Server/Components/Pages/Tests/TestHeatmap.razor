@@ -1,0 +1,27 @@
+@page "/test/heatmap"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent;">
+    <HelixHeatmap TItem="HeatmapPoint" Data="@_data"
+                  XField="@(d => d.Day)" YField="@(d => d.Hour)"
+                  ValueField="@(d => d.Count)"
+                  Height="320" Width="600" AnimateOnLoad="true"
+                  Title="Commit Activity" />
+</div>
+
+@code {
+    record HeatmapPoint(string Day, string Hour, double Count);
+
+    List<HeatmapPoint> _data = new();
+
+    protected override void OnInitialized()
+    {
+        var days = new[] { "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun" };
+        var hours = new[] { "9am", "10am", "11am", "12pm", "1pm", "2pm", "3pm", "4pm", "5pm" };
+        var rng = new Random(42);
+        foreach (var day in days)
+            foreach (var hour in hours)
+                _data.Add(new HeatmapPoint(day, hour, rng.Next(0, (day is "Sat" or "Sun" ? 2 : 8) + 5)));
+    }
+}

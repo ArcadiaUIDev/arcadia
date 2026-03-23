@@ -8,7 +8,7 @@ namespace Arcadia.Charts.Core;
 /// Base class for all chart components. Provides common parameters,
 /// layout engine integration, and SVG container rendering.
 /// </summary>
-public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
+public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase, IAsyncDisposable
 {
     // ── Data ──────────────────────────────────────────────
     /// <summary>The data to visualize.</summary>
@@ -106,6 +106,16 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
     /// <summary>Format string for data labels.</summary>
     [Parameter] public string? DataLabelFormatString { get; set; }
 
+    // ── Pan/Zoom ─────────────────────────────────────
+    /// <summary>Enable mouse wheel zoom on the chart.</summary>
+    [Parameter] public bool EnableZoom { get; set; }
+
+    /// <summary>Enable click-drag pan on the chart.</summary>
+    [Parameter] public bool EnablePan { get; set; }
+
+    /// <summary>Zoom mode: "x" (horizontal only), "y" (vertical only), "xy" (both).</summary>
+    [Parameter] public string ZoomMode { get; set; } = "x";
+
     // ── Crosshair ──────────────────────────────────
     /// <summary>Whether to show a vertical crosshair line following the cursor.</summary>
     [Parameter] public bool ShowCrosshair { get; set; }
@@ -146,6 +156,7 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
     protected ChartLayoutEngine LayoutEngine { get; } = new();
     protected ChartInteropService? Interop { get; private set; }
     protected ElementReference ContainerRef;
+    private bool _disposed;
 
     protected string EffectiveGridColor => GridColor ?? "var(--arcadia-color-border, #e2e8f0)";
 
@@ -168,6 +179,7 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (_disposed) return;
         if (firstRender && IsResponsive && Interop is not null)
         {
             _resizeRef = DotNetObjectReference.Create(new ResizeCallbackHandler(this));
@@ -180,7 +192,11 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
         if (Math.Abs(width - _measuredWidth) > 1)
         {
             _measuredWidth = width;
-            InvokeAsync(StateHasChanged);
+            InvokeAsync(() =>
+            {
+                OnParametersSet(); // Recalculate layout with new EffectiveWidth
+                StateHasChanged();
+            });
         }
     }
 
@@ -200,18 +216,32 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
     /// <summary>Shows a default tooltip for a data point.</summary>
     protected async Task ShowTooltipForPoint(string seriesName, double value, double mouseX, double mouseY)
     {
-        if (Interop is null) return;
-        var formatted = FormatValue(value, YAxisFormatString ?? DataLabelFormatString);
-        var html = $"<div style='font-weight:600;margin-bottom:2px'>{seriesName}</div>" +
-                   $"<div>{formatted}</div>";
-        await Interop.ShowTooltipAsync(html, mouseX, mouseY);
+        if (_disposed || Interop is null) return;
+        try
+        {
+            var formatted = FormatValue(value, YAxisFormatString ?? DataLabelFormatString);
+            var html = $"<div style='font-weight:600;margin-bottom:2px'>{seriesName}</div>" +
+                       $"<div>{formatted}</div>";
+            await Interop.ShowTooltipAsync(html, mouseX, mouseY);
+        }
+#if NET6_0_OR_GREATER
+        catch (JSDisconnectedException) { }
+#endif
+        catch (ObjectDisposedException) { }
     }
 
     /// <summary>Hides the tooltip.</summary>
     protected async Task HideTooltipAction()
     {
-        if (Interop is not null)
+        if (_disposed || Interop is null) return;
+        try
+        {
             await Interop.HideTooltipAsync();
+        }
+#if NET6_0_OR_GREATER
+        catch (JSDisconnectedException) { }
+#endif
+        catch (ObjectDisposedException) { }
     }
 
     /// <summary>Exports chart as PNG.</summary>
@@ -251,5 +281,26 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
         if (formatString is not null)
             return value.ToString(formatString, FormatProvider);
         return value.ToString("G4");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _disposed = true;
+        try
+        {
+            if (IsResponsive && Interop is not null)
+                await Interop.UnobserveResizeAsync(ContainerRef);
+        }
+#if NET6_0_OR_GREATER
+        catch (JSDisconnectedException) { }
+#endif
+        catch (ObjectDisposedException) { }
+
+        if (Interop is not null)
+            await Interop.DisposeAsync();
+
+        _resizeRef?.Dispose();
+
+        GC.SuppressFinalize(this);
     }
 }

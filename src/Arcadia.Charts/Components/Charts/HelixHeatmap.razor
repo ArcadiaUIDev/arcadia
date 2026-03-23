@@ -4,9 +4,9 @@
 
 @if (Data is not null && Data.Count > 0 && XField is not null && YField is not null && ValueField is not null)
 {
-    <div class="arcadia-chart arcadia-heatmap" style="@Style" @attributes="AdditionalAttributes">
+    <div class="arcadia-chart arcadia-heatmap" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
-             role="figure" aria-label="@(AriaLabel ?? Title ?? "Heatmap")"
+             role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Heatmap")"
              class="@CssClass">
 
             @if (!string.IsNullOrEmpty(Title))

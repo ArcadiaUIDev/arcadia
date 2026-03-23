@@ -71,7 +71,7 @@ public partial class HelixHeatmap<T> : ChartBase<T>
 
         _plotX = maxYLabelWidth + 12;
         _plotY = titleOffset;
-        _plotWidth = Width - _plotX - legendWidth - 16;
+        _plotWidth = EffectiveWidth - _plotX - legendWidth - 16;
         _plotHeight = Height - _plotY - 30; // Room for X labels
 
         if (_plotWidth < 10) _plotWidth = 10;

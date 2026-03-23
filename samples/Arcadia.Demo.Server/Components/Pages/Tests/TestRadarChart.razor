@@ -1,0 +1,27 @@
+@page "/test/radar"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent;">
+    <HelixRadarChart TItem="SkillProfile" Data="@_data"
+                     LabelField="@(d => d.Skill)" Series="@_series"
+                     Height="420" Width="420" AnimateOnLoad="true"
+                     Title="Team Skills" ShowLegend="true" />
+</div>
+
+@code {
+    record SkillProfile(string Skill, double TeamA, double TeamB);
+
+    List<SkillProfile> _data = new()
+    {
+        new("C#", 90, 70), new("JavaScript", 65, 85), new("SQL", 80, 60),
+        new("DevOps", 50, 75), new("Design", 40, 80), new("Testing", 75, 65),
+    };
+
+    List<SeriesConfig<SkillProfile>> _series = new()
+    {
+        new() { Name = "Team A", Field = d => d.TeamA, Color = "primary" },
+        new() { Name = "Team B", Field = d => d.TeamB, Color = "success" },
+    };
+}

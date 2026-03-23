@@ -1,0 +1,29 @@
+@page "/test/line"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent;">
+    <HelixLineChart TItem="DataPoint" Data="@_data"
+                    XField="@(d => (object)d.Month)" Series="@_series"
+                    Height="400" Width="600" ShowPoints="true" AnimateOnLoad="true"
+                    Title="Monthly Revenue" ShowLegend="true" />
+</div>
+
+@code {
+    record DataPoint(string Month, double Revenue, double Target);
+
+    List<DataPoint> _data = new()
+    {
+        new("Jan", 45000, 50000), new("Feb", 52000, 50000), new("Mar", 48000, 52000),
+        new("Apr", 61000, 55000), new("May", 55000, 55000), new("Jun", 67000, 58000),
+        new("Jul", 72000, 60000), new("Aug", 68000, 62000), new("Sep", 75000, 65000),
+        new("Oct", 82000, 68000), new("Nov", 79000, 70000), new("Dec", 88000, 72000),
+    };
+
+    List<SeriesConfig<DataPoint>> _series = new()
+    {
+        new() { Name = "Revenue", Field = d => d.Revenue, Color = "primary", ShowArea = true, AreaOpacity = 0.1, CurveType = "smooth" },
+        new() { Name = "Target", Field = d => d.Target, Color = "secondary", Dashed = true, StrokeWidth = 1.5, CurveType = "smooth" },
+    };
+}

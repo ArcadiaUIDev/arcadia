@@ -59,7 +59,7 @@ public class LineChartApiTests : BunitContext
             .Add(c => c.Width, 800)
             .Add(c => c.Height, 400));
 
-        var svg = cut.Find("svg");
+        var svg = cut.Find("svg[data-chart]");
         svg.GetAttribute("width").Should().Be("800");
         svg.GetAttribute("height").Should().Be("400");
     }
@@ -73,7 +73,7 @@ public class LineChartApiTests : BunitContext
             .Add(c => c.Series, DefaultSeries)
             .Add(c => c.AriaLabel, "Revenue over time"));
 
-        cut.Find("svg").GetAttribute("aria-label").Should().Be("Revenue over time");
+        cut.Find("svg[data-chart]").GetAttribute("aria-label").Should().Be("Revenue over time");
     }
 
     [Fact]

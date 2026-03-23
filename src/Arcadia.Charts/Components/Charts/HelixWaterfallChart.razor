@@ -6,7 +6,7 @@
 {
     <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
-             role="figure" aria-label="@(AriaLabel ?? Title ?? "Waterfall chart")">
+             role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Waterfall chart")">
 
             @if (!string.IsNullOrEmpty(Title))
             {
@@ -38,7 +38,7 @@
                 {
                     <line x1="@F(_bars[i-1].X + _bars[i-1].W)" y1="@F(_bars[i-1].ConnectY)"
                           x2="@F(bar.X)" y2="@F(_bars[i-1].ConnectY)"
-                          stroke="var(--arcadia-color-border, #cbd5e1)" stroke-width="1" stroke-dasharray="3,3" />
+                          stroke="currentColor" opacity="0.2" stroke-width="1" stroke-dasharray="3,3" />
                 }
             }
 
@@ -50,7 +50,7 @@
 
             <line x1="@F(_layout.PlotArea.X)" y1="@F(_layout.PlotArea.Y + _layout.PlotArea.Height)"
                   x2="@F(_layout.PlotArea.X + _layout.PlotArea.Width)" y2="@F(_layout.PlotArea.Y + _layout.PlotArea.Height)"
-                  stroke="var(--arcadia-color-border, #cbd5e1)" stroke-width="1" />
+                  stroke="currentColor" opacity="0.2" stroke-width="1" />
         </svg>
 
         <table class="arcadia-sr-only" aria-label="Chart data">

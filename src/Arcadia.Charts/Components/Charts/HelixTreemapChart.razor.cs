@@ -25,7 +25,7 @@ public partial class HelixTreemapChart<T> : ChartBase<T>
 
         // Squarified treemap — simplified slice-and-dice
         var rects = Squarify(sorted.Select(x => ValueField(x.item) / total).ToList(),
-            8, topPad, Width - 16, Height - topPad - 8);
+            8, topPad, EffectiveWidth - 16, Height - topPad - 8);
 
         for (var i = 0; i < sorted.Count && i < rects.Count; i++)
         {

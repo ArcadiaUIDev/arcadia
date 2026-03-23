@@ -6,7 +6,7 @@
 {
     <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
-             role="figure" aria-label="@(AriaLabel ?? Title ?? "Funnel chart")">
+             role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Funnel chart")">
 
             @if (!string.IsNullOrEmpty(Title))
             {

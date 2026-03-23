@@ -31,15 +31,60 @@ jobs:
       - name: Build (all TFMs)
         run: dotnet build HelixUI.sln --configuration Release --no-restore
 
-      - name: Run tests
-        run: dotnet test HelixUI.sln --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx"
+      - name: Run unit tests
+        run: dotnet test tests/Arcadia.Tests.Unit/Arcadia.Tests.Unit.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=unit-results.trx"
 
-      - name: Upload test results
+      - name: Upload unit test results
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: test-results
+          name: unit-test-results
           path: '**/TestResults/*.trx'
+
+  e2e-tests:
+    name: E2E Visual Regression
+    runs-on: ubuntu-latest
+    needs: build-and-test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Build E2E project
+        run: dotnet build tests/Arcadia.Tests.E2E/Arcadia.Tests.E2E.csproj --configuration Release
+
+      - name: Install Playwright browsers
+        run: pwsh tests/Arcadia.Tests.E2E/bin/Release/net9.0/playwright.ps1 install --with-deps chromium
+
+      - name: Build and start demo server
+        run: |
+          dotnet build samples/Arcadia.Demo.Server/Arcadia.Demo.Server.csproj --configuration Release --framework net9.0
+          ASPNETCORE_URLS=http://localhost:5050 dotnet run --project samples/Arcadia.Demo.Server/Arcadia.Demo.Server.csproj --configuration Release --framework net9.0 --no-build &
+          for i in $(seq 1 30); do curl -s http://localhost:5050 > /dev/null && break || sleep 2; done
+
+      - name: Run E2E tests
+        run: dotnet test tests/Arcadia.Tests.E2E/Arcadia.Tests.E2E.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=e2e-results.trx"
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+
+      - name: Upload E2E test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: e2e-test-results
+          path: '**/TestResults/*.trx'
+
+      - name: Upload screenshot diffs
+        uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: screenshot-diffs
+          path: '**/TestResults/**/*.png'
 
   pack:
     name: Pack NuGet

@@ -1,0 +1,43 @@
+@page "/test/candlestick"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent;">
+    <HelixCandlestickChart TItem="StockCandle" Data="@_data"
+                           LabelField="@(d => d.Date)"
+                           OpenField="@(d => d.Open)" HighField="@(d => d.High)"
+                           LowField="@(d => d.Low)" CloseField="@(d => d.Close)"
+                           OverlaySeries="@_maSeries"
+                           Height="420" Width="600" AnimateOnLoad="true"
+                           Title="ACME Corp — 30 Day" />
+</div>
+
+@code {
+    record StockCandle(string Date, double Open, double High, double Low, double Close, double MA5);
+
+    List<StockCandle> _data = new();
+    List<SeriesConfig<StockCandle>> _maSeries = new()
+    {
+        new() { Name = "MA(5)", Field = d => d.MA5, Color = "var(--arcadia-color-info)", StrokeWidth = 1.5 },
+    };
+
+    protected override void OnInitialized()
+    {
+        var rng = new Random(123);
+        var price = 142.50;
+        var closes = new List<double>();
+        for (var i = 0; i < 30; i++)
+        {
+            var change = (rng.NextDouble() - 0.48) * 4;
+            var open = price; var close = price + change;
+            var high = Math.Max(open, close) + rng.NextDouble() * 2;
+            var low = Math.Min(open, close) - rng.NextDouble() * 2;
+            closes.Add(close);
+            var ma5 = closes.Count >= 5 ? closes.Skip(closes.Count - 5).Take(5).Average() : double.NaN;
+            _data.Add(new StockCandle(new DateTime(2026, 2, 20).AddDays(i).ToString("MMM d"),
+                Math.Round(open, 2), Math.Round(high, 2), Math.Round(low, 2), Math.Round(close, 2), Math.Round(ma5, 2)));
+            price = close;
+        }
+    }
+}

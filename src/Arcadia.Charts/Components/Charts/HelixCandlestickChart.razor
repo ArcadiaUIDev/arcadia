@@ -4,9 +4,9 @@
 
 @if (Data is not null && Data.Count > 0 && OpenField is not null && HighField is not null && LowField is not null && CloseField is not null)
 {
-    <div class="arcadia-chart" style="@Style" @attributes="AdditionalAttributes">
+    <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
-             role="figure" aria-label="@(AriaLabel ?? Title ?? "Candlestick chart")"
+             role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Candlestick chart")"
              class="@CssClass">
 
             @if (!string.IsNullOrEmpty(Title))
@@ -20,7 +20,7 @@
                 {
                     var y = _yScale!.Scale(tick.Value);
                     <line x1="@F(_layout.PlotArea.X)" y1="@F(y)" x2="@F(_layout.PlotArea.X + _layout.PlotArea.Width)" y2="@F(y)"
-                          stroke="var(--arcadia-color-border, #e2e8f0)" stroke-width="1" stroke-dasharray="4,4" />
+                          stroke="currentColor" opacity="0.12" stroke-width="1" stroke-dasharray="4,4" />
                 }
             }
 
@@ -77,10 +77,10 @@
             @* Axis lines *@
             <line x1="@F(_layout.PlotArea.X)" y1="@F(_layout.PlotArea.Y + _layout.PlotArea.Height)"
                   x2="@F(_layout.PlotArea.X + _layout.PlotArea.Width)" y2="@F(_layout.PlotArea.Y + _layout.PlotArea.Height)"
-                  stroke="var(--arcadia-color-border, #cbd5e1)" stroke-width="1" />
+                  stroke="currentColor" opacity="0.2" stroke-width="1" />
             <line x1="@F(_layout.PlotArea.X)" y1="@F(_layout.PlotArea.Y)"
                   x2="@F(_layout.PlotArea.X)" y2="@F(_layout.PlotArea.Y + _layout.PlotArea.Height)"
-                  stroke="var(--arcadia-color-border, #cbd5e1)" stroke-width="1" />
+                  stroke="currentColor" opacity="0.2" stroke-width="1" />
         </svg>
 
         @if (_layout.Legend.Visible && OverlaySeries is { Count: > 0 })

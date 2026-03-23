@@ -1,0 +1,23 @@
+@page "/test/funnel"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent;">
+    <HelixFunnelChart TItem="FunnelStage" Data="@_data"
+                      NameField="@(d => d.Stage)" ValueField="@(d => d.Count)"
+                      Height="400" Width="500" AnimateOnLoad="true"
+                      Title="Conversion Funnel" />
+</div>
+
+@code {
+    record FunnelStage(string Stage, double Count);
+
+    List<FunnelStage> _data = new()
+    {
+        new("Visitors", 10000),
+        new("Signups", 4200),
+        new("Trials", 1800),
+        new("Paid", 720),
+        new("Enterprise", 180),
+    };
+}

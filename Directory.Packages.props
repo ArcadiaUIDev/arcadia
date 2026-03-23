@@ -16,6 +16,12 @@
     <PackageVersion Include="FluentAssertions" Version="7.0.0" />
     <PackageVersion Include="Moq" Version="4.20.0" />
 
+    <!-- E2E / Playwright -->
+    <PackageVersion Include="Microsoft.Playwright.NUnit" Version="1.49.0" />
+    <PackageVersion Include="NUnit" Version="4.3.2" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.6.0" />
+    <PackageVersion Include="NUnit3TestAdapter" Version="4.6.0" />
+
     <!-- Validation -->
     <PackageVersion Include="FluentValidation" Version="11.10.0" />
   </ItemGroup>

@@ -6,7 +6,7 @@
 {
     <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
-             role="figure" aria-label="@(AriaLabel ?? Title ?? "Radar chart")"
+             role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Radar chart")"
              class="@CssClass">
 
             @if (!string.IsNullOrEmpty(Title))
@@ -25,7 +25,7 @@
                     ringPoints.Add($"{F(p.X)},{F(p.Y)}");
                 }
                 <polygon points="@string.Join(" ", ringPoints)"
-                         fill="none" stroke="var(--arcadia-color-border, #e2e8f0)" stroke-width="1" opacity="0.5" />
+                         fill="none" stroke="currentColor" stroke-width="1" opacity="0.15" />
             }
 
             @* Axis lines *@
@@ -34,7 +34,7 @@
                 var localI = i;
                 var end = GetAxisEndpoint(localI);
                 <line x1="@F(_cx)" y1="@F(_cy)" x2="@F(end.X)" y2="@F(end.Y)"
-                      stroke="var(--arcadia-color-border, #e2e8f0)" stroke-width="1" />
+                      stroke="currentColor" opacity="0.12" stroke-width="1" />
             }
 
             @* Series polygons *@

@@ -1,0 +1,22 @@
+@page "/test/gauge"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent; display: flex; gap: 24px; flex-wrap: wrap;">
+    <HelixGaugeChart Value="73" Min="0" Max="100" Label="CPU" Width="200" Height="160"
+                     Thresholds="@_thresholds" AnimateOnLoad="true" />
+    <HelixGaugeChart Value="42" Min="0" Max="100" Label="Memory" Width="200" Height="160"
+                     ValueFormatString="0'%'" AnimateOnLoad="true" />
+    <HelixGaugeChart Value="91" Min="0" Max="100" Label="Disk" Width="200" Height="160"
+                     Thresholds="@_thresholds" AnimateOnLoad="true" />
+</div>
+
+@code {
+    List<GaugeThreshold> _thresholds = new()
+    {
+        new() { Value = 0, Color = "var(--arcadia-color-success)" },
+        new() { Value = 60, Color = "var(--arcadia-color-warning)" },
+        new() { Value = 85, Color = "var(--arcadia-color-danger)" },
+    };
+}

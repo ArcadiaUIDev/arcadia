@@ -3,7 +3,7 @@
 
 <div class="arcadia-chart arcadia-gauge" style="@Style" @attributes="AdditionalAttributes">
     <svg width="@Width" height="@Height" viewBox="0 0 @Width @Height"
-         role="figure" aria-label="@(AriaLabel ?? Title ?? $"Gauge: {_displayValue}")"
+         role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? $"Gauge: {_displayValue}")"
          class="@CssClass">
 
         @if (!string.IsNullOrEmpty(Title))
@@ -21,7 +21,8 @@
         {
             <path d="@_valuePath" fill="none" stroke="@_valueColor"
                   stroke-width="@F(StrokeWidth)" stroke-linecap="round"
-                  class="arcadia-gauge__value @(AnimateOnLoad ? "arcadia-animate-line" : "")" />
+                  style="@(AnimateOnLoad ? $"stroke-dasharray:{F(_pathLength)};stroke-dashoffset:{F(_pathLength)};" : "")"
+                  class="arcadia-gauge__value @(AnimateOnLoad ? "arcadia-animate-gauge" : "")" />
         }
 
         @* Center value text *@

@@ -1,0 +1,28 @@
+@page "/test/bar"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent;">
+    <HelixBarChart TItem="QuarterlySales" Data="@_data"
+                   XField="@(d => (object)d.Quarter)" Series="@_series"
+                   Height="400" Width="600" AnimateOnLoad="true"
+                   Title="Quarterly Revenue by Region" ShowLegend="true" />
+</div>
+
+@code {
+    record QuarterlySales(string Quarter, double NorthAmerica, double Europe, double Asia);
+
+    List<QuarterlySales> _data = new()
+    {
+        new("Q1", 145000, 98000, 72000), new("Q2", 183000, 112000, 89000),
+        new("Q3", 215000, 134000, 105000), new("Q4", 268000, 156000, 128000),
+    };
+
+    List<SeriesConfig<QuarterlySales>> _series = new()
+    {
+        new() { Name = "North America", Field = d => d.NorthAmerica, Color = "primary" },
+        new() { Name = "Europe", Field = d => d.Europe, Color = "success" },
+        new() { Name = "Asia", Field = d => d.Asia, Color = "warning" },
+    };
+}

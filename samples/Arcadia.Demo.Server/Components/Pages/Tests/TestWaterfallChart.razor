@@ -1,0 +1,23 @@
+@page "/test/waterfall"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent;">
+    <HelixWaterfallChart TItem="WaterfallItem" Data="@_data"
+                         CategoryField="@(d => d.Category)" ValueField="@(d => d.Amount)"
+                         Height="400" Width="600" AnimateOnLoad="true"
+                         Title="Revenue Waterfall" />
+</div>
+
+@code {
+    record WaterfallItem(string Category, double Amount);
+
+    List<WaterfallItem> _data = new()
+    {
+        new("Revenue", 500000),
+        new("COGS", -180000),
+        new("OpEx", -120000),
+        new("Marketing", -65000),
+        new("Tax", -40000),
+    };
+}

@@ -1,0 +1,20 @@
+@page "/test/pie"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Components.Charts
+
+<div style="padding: 24px; background: transparent;">
+    <HelixPieChart TItem="BudgetItem" Data="@_data"
+                   NameField="@(d => d.Category)" ValueField="@(d => d.Amount)"
+                   Height="400" Width="400" AnimateOnLoad="true"
+                   Title="Department Budget" ShowLegend="true" />
+</div>
+
+@code {
+    record BudgetItem(string Category, double Amount);
+
+    List<BudgetItem> _data = new()
+    {
+        new("Engineering", 450000), new("Marketing", 180000), new("Sales", 220000),
+        new("Operations", 120000), new("HR", 80000),
+    };
+}

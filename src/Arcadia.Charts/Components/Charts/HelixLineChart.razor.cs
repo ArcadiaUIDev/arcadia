@@ -158,8 +158,17 @@ public partial class HelixLineChart<T> : ChartBase<T>
             foreach (var segment in segments)
             {
                 if (segment.Count < 2) continue;
-                var points = segment.Select(p => $"{F(p.X)},{F(p.Y)}").ToList();
-                pathParts.Add("M" + string.Join(" L", points));
+
+                if (series.CurveType == "smooth")
+                {
+                    var pts = segment.Select(p => (p.X, p.Y)).ToList();
+                    pathParts.Add(PathSmoother.SmoothPath(pts));
+                }
+                else
+                {
+                    var points = segment.Select(p => $"{F(p.X)},{F(p.Y)}").ToList();
+                    pathParts.Add("M" + string.Join(" L", points));
+                }
             }
 
             if (pathParts.Count > 0)
@@ -262,6 +271,44 @@ public partial class HelixLineChart<T> : ChartBase<T>
     }
 
     internal string FormatDataLabel(double value) => FormatValue(value, DataLabelFormatString);
+
+    /// <summary>Appends a data point for live/streaming data. Triggers re-render.</summary>
+    public void AppendPoint(T item)
+    {
+        if (Data is IList<T> list)
+        {
+            list.Add(item);
+            OnParametersSet();
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    /// <summary>Removes the first data point (for sliding window). Triggers re-render.</summary>
+    public void RemoveFirst()
+    {
+        if (Data is IList<T> list && list.Count > 0)
+        {
+            list.RemoveAt(0);
+            OnParametersSet();
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    /// <summary>Appends a point and removes the first (sliding window in one call).</summary>
+    public void AppendAndSlide(T item)
+    {
+        if (Data is IList<T> list)
+        {
+            list.Add(item);
+            if (list.Count > SlidingWindow && SlidingWindow > 0)
+                list.RemoveAt(0);
+            OnParametersSet();
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    /// <summary>Maximum number of points to keep in sliding window mode. 0 = no limit.</summary>
+    [Parameter] public int SlidingWindow { get; set; }
 
     private double _crosshairX;
     private bool _crosshairVisible;

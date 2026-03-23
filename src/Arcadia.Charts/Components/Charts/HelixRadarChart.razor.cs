@@ -51,9 +51,9 @@ public partial class HelixRadarChart<T> : ChartBase<T>
 
         // Calculate center and radius
         var titleOffset = string.IsNullOrEmpty(Title) ? 0 : 30;
-        _cx = Width / 2;
+        _cx = EffectiveWidth / 2;
         _cy = (Height + titleOffset) / 2;
-        _radius = Math.Min(Width, Height) / 2 - 50;
+        _radius = Math.Min(EffectiveWidth, Height) / 2 - 50;
 
         // Find max value across all series
         _maxValue = Series.SelectMany(s => Data.Select(d => s.Field(d))).Max();
