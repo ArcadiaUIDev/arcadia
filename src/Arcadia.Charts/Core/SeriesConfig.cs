@@ -41,6 +41,9 @@ public class SeriesConfig<T>
     /// <summary>Curve type for line charts: "linear", "smooth", "step".</summary>
     public string CurveType { get; set; } = "linear";
 
+    /// <summary>Series rendering type: "line" (default), "bar", or "area". Used in combo charts.</summary>
+    public string SeriesType { get; set; } = "line";
+
     /// <summary>Whether this series is visible. Can be toggled via legend.</summary>
     public bool Visible { get; set; } = true;
 

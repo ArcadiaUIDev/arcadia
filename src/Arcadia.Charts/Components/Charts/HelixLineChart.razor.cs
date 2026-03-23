@@ -263,6 +263,26 @@ public partial class HelixLineChart<T> : ChartBase<T>
 
     internal string FormatDataLabel(double value) => FormatValue(value, DataLabelFormatString);
 
+    private double _crosshairX;
+    private bool _crosshairVisible;
+
+    private Task HandleMouseMove(Microsoft.AspNetCore.Components.Web.MouseEventArgs e)
+    {
+        if (ShowCrosshair)
+        {
+            _crosshairX = e.OffsetX;
+            _crosshairVisible = _crosshairX >= _layout.PlotArea.X && _crosshairX <= _layout.PlotArea.X + _layout.PlotArea.Width;
+            StateHasChanged();
+        }
+        return Task.CompletedTask;
+    }
+
+    private async Task HandleMouseLeave()
+    {
+        _crosshairVisible = false;
+        await HideTooltipAction();
+    }
+
     private void ToggleSeries(int index)
     {
         if (Series is not null && index >= 0 && index < Series.Count)

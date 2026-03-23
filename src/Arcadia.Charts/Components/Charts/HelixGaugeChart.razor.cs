@@ -55,7 +55,10 @@ public partial class HelixGaugeChart : Arcadia.Core.Base.HelixComponentBase
     /// <summary>Whether to animate on load.</summary>
     [Parameter] public bool AnimateOnLoad { get; set; } = true;
 
+    [Parameter] public int AnimationDuration { get; set; } = 800;
+
     private double _cx;
+    private double _pathLength;
     private double _cy;
     private double _radius;
     private string _trackPath = "";
@@ -96,6 +99,7 @@ public partial class HelixGaugeChart : Arcadia.Core.Base.HelixComponentBase
 
         _trackPath = BuildArc(_cx, _cy, _radius, startAngle, endAngleFull, FullCircle);
         _valuePath = ratio > 0.001 ? BuildArc(_cx, _cy, _radius, startAngle, endAngleValue, ratio > 0.999 && FullCircle) : "";
+        _pathLength = Math.Abs(endAngleValue - startAngle) * _radius;
 
         // Determine color from thresholds
         _valueColor = ResolveThresholdColor(clampedValue);

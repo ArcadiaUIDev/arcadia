@@ -308,3 +308,8 @@
 /* Responsive chart container */
 .arcadia-chart { position: relative; width: 100%; }
 .arcadia-chart svg { max-width: 100%; height: auto; }
+
+/* Gauge sweep animation */
+@keyframes arcadia-gauge-sweep {
+  to { stroke-dashoffset: 0; }
+}

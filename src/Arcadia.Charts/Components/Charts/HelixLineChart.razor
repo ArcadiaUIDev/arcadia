@@ -8,7 +8,8 @@
         <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
              role="figure" aria-label="@(AriaLabel ?? Title ?? "Line chart")"
              class="@CssClass"
-             @onmouseleave="HideTooltipAction">
+             @onmouseleave="HandleMouseLeave"
+             @onmousemove="HandleMouseMove">
 
             @if (!string.IsNullOrEmpty(Title))
             {
@@ -58,7 +59,7 @@
                           class="@(AnimateOnLoad ? "arcadia-animate-area" : "")" />
                 }
 
-                @if (_paths.ContainsKey(si))
+                @if (_paths.ContainsKey(si) && series.SeriesType != "bar")
                 {
                     <path d="@_paths[si]" fill="none" stroke="@color" stroke-width="@F(series.StrokeWidth)"
                           stroke-linecap="round" stroke-linejoin="round"
@@ -76,8 +77,26 @@
                           opacity="0.6" class="arcadia-chart__trendline" />
                 }
 
+                @* Bar series rendering (for combo charts) *@
+                @if (series.SeriesType == "bar" && _dataPoints.ContainsKey(si))
+                {
+                    var barWidth = (_layout.PlotArea.Width / Data.Count) * 0.6;
+                    var zeroY = _yScale!.Scale(0);
+                    @foreach (var pt in _dataPoints[si])
+                    {
+                        var barX = pt.X - barWidth / 2;
+                        var barY = Math.Min(pt.Y, zeroY);
+                        var barH = Math.Abs(pt.Y - zeroY);
+                        <rect x="@F(barX)" y="@F(barY)" width="@F(barWidth)" height="@F(Math.Max(1, barH))"
+                              rx="3" fill="@color" opacity="0.8"
+                              class="arcadia-chart__bar @(AnimateOnLoad ? "arcadia-animate-bar" : "")"
+                              @onmouseover="@(e => ShowTooltipForPoint(series.Name, pt.Value, e.ClientX, e.ClientY))"
+                              @onmouseout="HideTooltipAction" />
+                    }
+                }
+
                 @* Data points *@
-                @if (ShowPoints && _dataPoints.ContainsKey(si))
+                @if (ShowPoints && _dataPoints.ContainsKey(si) && series.SeriesType != "bar")
                 {
                     @foreach (var pt in _dataPoints[si])
                     {
@@ -95,6 +114,33 @@
                     @foreach (var pt in _dataPoints[si])
                     {
                         <SvgText x="@F(pt.X)" y="@F(pt.Y - 8)" text-anchor="middle" class="arcadia-chart__data-label">@FormatDataLabel(pt.Value)</SvgText>
+                    }
+                }
+            }
+
+            @* Crosshair *@
+            @if (ShowCrosshair)
+            {
+                <line x1="@F(_crosshairX)" y1="@F(_layout.PlotArea.Y)" x2="@F(_crosshairX)" y2="@F(_layout.PlotArea.Y + _layout.PlotArea.Height)"
+                      stroke="var(--arcadia-color-text-muted, #94a3b8)" stroke-width="1" stroke-dasharray="3,3"
+                      opacity="@(_crosshairVisible ? "0.6" : "0")" />
+            }
+
+            @* Annotations *@
+            @if (Annotations is not null)
+            {
+                @foreach (var ann in Annotations)
+                {
+                    if (ann.DataIndex >= 0 && ann.DataIndex < Data.Count)
+                    {
+                        var ax = _layout.PlotArea.X + (ann.DataIndex + 0.5) * (_layout.PlotArea.Width / Data.Count);
+                        @if (ann.ShowLine)
+                        {
+                            <line x1="@F(ax)" y1="@F(_layout.PlotArea.Y)" x2="@F(ax)" y2="@F(_layout.PlotArea.Y + _layout.PlotArea.Height)"
+                                  stroke="@ann.Color" stroke-width="1" stroke-dasharray="4,3" opacity="0.7" />
+                        }
+                        <SvgText x="@F(ax)" y="@F(_layout.PlotArea.Y - 6)" text-anchor="middle"
+                              style="@($"font-size:10px; fill:{ann.Color}; font-weight:600;")">@ann.Label</SvgText>
                     }
                 }
             }

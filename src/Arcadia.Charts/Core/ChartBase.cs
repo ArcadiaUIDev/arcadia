@@ -106,6 +106,14 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
     /// <summary>Format string for data labels.</summary>
     [Parameter] public string? DataLabelFormatString { get; set; }
 
+    // ── Crosshair ──────────────────────────────────
+    /// <summary>Whether to show a vertical crosshair line following the cursor.</summary>
+    [Parameter] public bool ShowCrosshair { get; set; }
+
+    // ── Annotations ─────────────────────────────────
+    /// <summary>Annotations to display on the chart (markers, labels at specific data points).</summary>
+    [Parameter] public List<ChartAnnotation>? Annotations { get; set; }
+
     // ── Events ───────────────────────────────────────────
     /// <summary>Fired when a data point is clicked. Receives the data item.</summary>
     [Parameter] public EventCallback<T> OnPointClick { get; set; }
