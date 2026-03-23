@@ -208,13 +208,12 @@
             </div>
 
             <div class="gallery__showcase">
-                <div class="gallery__showcase-title">ACME Corp — 30 Day Price with MA(5)</div>
+                <div class="gallery__showcase-title">ACME Corp — 30 Day Price</div>
                 <div class="gallery__chart-container">
                     <HelixCandlestickChart TItem="StockCandle" Data="@_stockData"
                                             LabelField="@(d => d.Date)"
                                             OpenField="@(d => d.Open)" HighField="@(d => d.High)"
                                             LowField="@(d => d.Low)" CloseField="@(d => d.Close)"
-                                            OverlaySeries="@_maSeries"
                                             Height="420" Width="0" />
                 </div>
             </div>
@@ -714,12 +713,14 @@
         _streamValue += (_streamRng.NextDouble() - 0.48) * 8;
         _streamValue = Math.Max(10, Math.Min(90, _streamValue));
         var pt = new StreamPoint($"{_streamCounter++}s", Math.Round(_streamValue, 1));
-        if (_streamChart is not null && _streamData.Count >= 2)
+        if (_streamChart is not null)
         {
+            // AppendAndSlide handles add + remove + re-render + animation
             _streamChart.AppendAndSlide(pt);
         }
         else
         {
+            // Chart not yet rendered — add to list directly
             _streamData.Add(pt);
             if (_streamData.Count > 20) _streamData.RemoveAt(0);
             StateHasChanged();
@@ -732,7 +733,7 @@
         _autoStreamTimer = new System.Threading.Timer(_ =>
         {
             InvokeAsync(() => { AddStreamPoint(); });
-        }, null, 0, 500);
+        }, null, 0, 700); // Interval > animation duration (300ms) to avoid overlap
     }
 
     void StopAutoStream()
