@@ -31,6 +31,16 @@ jobs:
       - name: Build (all TFMs)
         run: dotnet build HelixUI.sln --configuration Release --no-restore
 
+      - name: Check docs updated with API changes
+        if: github.event_name == 'pull_request'
+        run: |
+          # If any public API files changed, warn if no doc files changed
+          SRC_CHANGED=$(git diff --name-only origin/main...HEAD -- 'src/**/*.cs' 'src/**/*.razor' | head -1)
+          DOC_CHANGED=$(git diff --name-only origin/main...HEAD -- 'website/src/pages/docs/**' | head -1)
+          if [ -n "$SRC_CHANGED" ] && [ -z "$DOC_CHANGED" ]; then
+            echo "::warning::Source files changed but no documentation was updated. Please check if public API docs need updating in website/src/pages/docs/"
+          fi
+
       - name: Run unit tests
         run: dotnet test tests/Arcadia.Tests.Unit/Arcadia.Tests.Unit.csproj --configuration Release --no-build --verbosity normal --logger "trx;LogFileName=unit-results.trx"
 

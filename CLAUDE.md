@@ -70,6 +70,14 @@ Multi-targets .NET 5 through .NET 10. Supports Blazor Server, WebAssembly, and A
 - AG Grid (JS, for DataGrid wrapper only)
 - Tailwind CSS 4.x (for Theme package)
 
+## Documentation Rules
+- **Every new or changed public API must have documentation updated in the same commit**
+- New `[Parameter]` → update the component's doc page in `website/src/pages/docs/`
+- New component → create doc page AND add to `DocsLayout.astro` sidebar nav AND update the overview page
+- Changed behavior → update the relevant doc section
+- Doc pages live in `website/src/pages/docs/` as `.mdx` files
+- Charts overview (`website/src/pages/docs/charts/index.mdx`) must list ALL chart types
+
 ## Git Conventions
 - Branch naming: `feature/<component>/<description>`, `fix/<component>/<description>`
 - Conventional commits: `feat(datagrid): add column sorting`
