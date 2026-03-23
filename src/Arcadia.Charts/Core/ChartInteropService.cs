@@ -66,7 +66,7 @@ public class ChartInteropService : IAsyncDisposable
     // ── Resize ───────────────────────────────────────
 
     /// <summary>Observes container resize events.</summary>
-    public async ValueTask ObserveResizeAsync(ElementReference element, DotNetObjectReference<IResizeHandler> dotNetRef)
+    public async ValueTask ObserveResizeAsync<THandler>(ElementReference element, DotNetObjectReference<THandler> dotNetRef) where THandler : class
     {
         var module = await GetModuleAsync();
         await module.InvokeVoidAsync("observeResize", element, dotNetRef);

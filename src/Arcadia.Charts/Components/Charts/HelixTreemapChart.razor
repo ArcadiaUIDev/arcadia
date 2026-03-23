@@ -5,12 +5,12 @@
 @if (HasData && NameField is not null && ValueField is not null)
 {
     <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
-        <svg width="@Width" height="@Height" viewBox="0 0 @Width @Height"
+        <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
              role="figure" aria-label="@(AriaLabel ?? Title ?? "Treemap chart")">
 
             @if (!string.IsNullOrEmpty(Title))
             {
-                <SvgText x="@(Width / 2)" y="20" text-anchor="middle" class="arcadia-chart__title">@Title</SvgText>
+                <SvgText x="@(EffectiveWidth / 2)" y="20" text-anchor="middle" class="arcadia-chart__title">@Title</SvgText>
             }
 
             @for (var i = 0; i < _cells.Count; i++)

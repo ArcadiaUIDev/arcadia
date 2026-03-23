@@ -5,13 +5,13 @@
 @if (Data is not null && Data.Count > 0 && OpenField is not null && HighField is not null && LowField is not null && CloseField is not null)
 {
     <div class="arcadia-chart" style="@Style" @attributes="AdditionalAttributes">
-        <svg width="@Width" height="@Height" viewBox="0 0 @Width @Height"
+        <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
              role="figure" aria-label="@(AriaLabel ?? Title ?? "Candlestick chart")"
              class="@CssClass">
 
             @if (!string.IsNullOrEmpty(Title))
             {
-                <SvgText x="@(Width / 2)" y="20" text-anchor="middle" class="arcadia-chart__title">@Title</SvgText>
+                <SvgText x="@(EffectiveWidth / 2)" y="20" text-anchor="middle" class="arcadia-chart__title">@Title</SvgText>
             }
 
             @if (ShowGrid)

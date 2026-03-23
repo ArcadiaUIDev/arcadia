@@ -94,7 +94,7 @@
                 <div class="gallery__chart-container">
                     <HelixLineChart TItem="MonthlySales" Data="@_monthlySales"
                                     XField="@(d => (object)d.Month)" Series="@_lineSeries"
-                                    Height="380" Width="780" ShowPoints="true" AnimateOnLoad="true" />
+                                    Height="380" Width="0" ShowPoints="true" AnimateOnLoad="true" />
                 </div>
             </div>
 
@@ -103,7 +103,7 @@
                 <div class="gallery__chart-container">
                     <HelixLineChart TItem="MonthlySales" Data="@_monthlySales"
                                     XField="@(d => (object)d.Month)" Series="@_trendSeries"
-                                    Height="380" Width="780" ShowDataLabels="true" />
+                                    Height="380" Width="0" ShowDataLabels="true" />
                 </div>
             </div>
         }
@@ -121,7 +121,7 @@
                 <div class="gallery__chart-container">
                     <HelixBarChart TItem="QuarterlySales" Data="@_quarterlySales"
                                    XField="@(d => (object)d.Quarter)" Series="@_barSeries"
-                                   Height="380" Width="780" />
+                                   Height="380" Width="0" />
                 </div>
             </div>
 
@@ -130,7 +130,7 @@
                 <div class="gallery__chart-container">
                     <HelixBarChart TItem="QuarterlySales" Data="@_quarterlySales"
                                    XField="@(d => (object)d.Quarter)" Series="@_barSeries"
-                                   Height="380" Width="780" Stacked="true" />
+                                   Height="380" Width="0" Stacked="true" />
                 </div>
             </div>
         }
@@ -174,7 +174,7 @@
                 <div class="gallery__chart-container">
                     <HelixScatterChart TItem="DataXY" Data="@_scatterData"
                                        XField="@(d => d.X)" YField="@(d => d.Y)"
-                                       Height="400" Width="780" Color="primary" PointSize="6" />
+                                       Height="400" Width="0" Color="primary" PointSize="6" />
                 </div>
             </div>
         }
@@ -194,7 +194,7 @@
                                             OpenField="@(d => d.Open)" HighField="@(d => d.High)"
                                             LowField="@(d => d.Low)" CloseField="@(d => d.Close)"
                                             OverlaySeries="@_maSeries"
-                                            Height="420" Width="780" />
+                                            Height="420" Width="0" />
                 </div>
             </div>
         }
@@ -229,7 +229,7 @@
                 <div class="gallery__chart-container">
                     <HelixRadarChart TItem="SkillProfile" Data="@_skillData"
                                      LabelField="@(d => d.Skill)" Series="@_radarSeries"
-                                     Height="420" Width="460" />
+                                     Height="420" Width="0" />
                 </div>
             </div>
         }
@@ -247,7 +247,7 @@
                     <HelixHeatmap TItem="HeatmapPoint" Data="@_heatmapData"
                                   XField="@(d => d.Day)" YField="@(d => d.Hour)"
                                   ValueField="@(d => d.Count)"
-                                  Height="320" Width="780" />
+                                  Height="320" Width="0" />
                 </div>
             </div>
         }

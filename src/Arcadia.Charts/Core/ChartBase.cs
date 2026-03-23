@@ -1,3 +1,4 @@
+using Microsoft.JSInterop;
 using Microsoft.AspNetCore.Components;
 using Arcadia.Charts.Core.Layout;
 
@@ -145,6 +146,47 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase
     protected override void OnInitialized()
     {
         Interop = new ChartInteropService(JSRuntime);
+    }
+
+    private DotNetObjectReference<ResizeCallbackHandler>? _resizeRef;
+
+    /// <summary>Whether the chart is in responsive mode (Width=0).</summary>
+    protected bool IsResponsive => Width <= 0;
+
+    /// <summary>The actual rendered width (either fixed or measured from container).</summary>
+    protected double EffectiveWidth => _measuredWidth > 0 ? _measuredWidth : (Width > 0 ? Width : 600);
+
+    private double _measuredWidth;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && IsResponsive && Interop is not null)
+        {
+            _resizeRef = DotNetObjectReference.Create(new ResizeCallbackHandler(this));
+            await Interop.ObserveResizeAsync(ContainerRef, _resizeRef);
+        }
+    }
+
+    private void OnResized(double width, double height)
+    {
+        if (Math.Abs(width - _measuredWidth) > 1)
+        {
+            _measuredWidth = width;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private class ResizeCallbackHandler : IResizeHandler
+    {
+        private readonly ChartBase<T> _chart;
+        public ResizeCallbackHandler(ChartBase<T> chart) => _chart = chart;
+
+        [Microsoft.JSInterop.JSInvokable]
+        public Task OnContainerResized(double width, double height)
+        {
+            _chart.OnResized(width, height);
+            return Task.CompletedTask;
+        }
     }
 
     /// <summary>Shows a default tooltip for a data point.</summary>

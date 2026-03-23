@@ -5,18 +5,18 @@
 @if (Data is not null && Data.Count > 1 && XField is not null && Series is not null)
 {
     <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
-        <svg width="@Width" height="@Height" viewBox="0 0 @Width @Height"
+        <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
              role="figure" aria-label="@(AriaLabel ?? Title ?? "Line chart")"
              class="@CssClass"
              @onmouseleave="HideTooltipAction">
 
             @if (!string.IsNullOrEmpty(Title))
             {
-                <SvgText x="@(Width / 2)" y="20" text-anchor="middle" class="arcadia-chart__title">@Title</SvgText>
+                <SvgText x="@(EffectiveWidth / 2)" y="20" text-anchor="middle" class="arcadia-chart__title">@Title</SvgText>
             }
             @if (!string.IsNullOrEmpty(Subtitle))
             {
-                <SvgText x="@(Width / 2)" y="36" text-anchor="middle" class="arcadia-chart__subtitle">@Subtitle</SvgText>
+                <SvgText x="@(EffectiveWidth / 2)" y="36" text-anchor="middle" class="arcadia-chart__subtitle">@Subtitle</SvgText>
             }
 
             @* Grid lines *@

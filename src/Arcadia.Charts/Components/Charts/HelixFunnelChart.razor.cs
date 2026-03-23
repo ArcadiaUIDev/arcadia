@@ -21,8 +21,8 @@ public partial class HelixFunnelChart<T> : ChartBase<T>
         var topPad = string.IsNullOrEmpty(Title) ? 20 : 44;
         var availableHeight = Height - topPad - 20;
         var stageHeight = availableHeight / Data!.Count;
-        var cx = Width / 2;
-        var maxHalfWidth = (Width - 80) / 2;
+        var cx = EffectiveWidth / 2;
+        var maxHalfWidth = (EffectiveWidth - 80) / 2;
 
         for (var i = 0; i < Data!.Count; i++)
         {

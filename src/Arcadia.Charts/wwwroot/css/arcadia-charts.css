@@ -304,3 +304,7 @@
 /* Treemap */
 .arcadia-treemap__cell { transition: opacity 0.15s ease; }
 .arcadia-treemap__cell:hover { opacity: 0.85; filter: brightness(1.1); }
+
+/* Responsive chart container */
+.arcadia-chart { position: relative; width: 100%; }
+.arcadia-chart svg { max-width: 100%; height: auto; }

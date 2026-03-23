@@ -51,7 +51,7 @@ public partial class HelixLineChart<T> : ChartBase<T>
 
         _layout = LayoutEngine.Calculate(new ChartLayoutInput
         {
-            Width = Width,
+            Width = EffectiveWidth,
             Height = Height,
             Title = Title,
             XAxisTitle = XAxisTitle,

@@ -54,7 +54,7 @@ public partial class HelixPieChart<T> : ChartBase<T>
         var total = Data.Sum(ValueField);
         if (total <= 0) return;
 
-        var cx = Width / 2;
+        var cx = EffectiveWidth / 2;
         var cy = (Height + (string.IsNullOrEmpty(Title) ? 0 : 30)) / 2;
         var outerRadius = OuterRadius ?? Math.Min(Width, Height) / 2 - 40;
         var innerR = InnerRadius > 0 ? InnerRadius : 0;

@@ -54,7 +54,7 @@ public partial class HelixCandlestickChart<T> : ChartBase<T>
 
         _layout = LayoutEngine.Calculate(new ChartLayoutInput
         {
-            Width = Width,
+            Width = EffectiveWidth,
             Height = Height,
             Title = Title,
             XTickLabels = labels,

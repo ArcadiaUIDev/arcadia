@@ -42,7 +42,7 @@ public partial class HelixWaterfallChart<T> : ChartBase<T>
 
         _layout = LayoutEngine.Calculate(new ChartLayoutInput
         {
-            Width = Width, Height = Height, Title = Title,
+            Width = EffectiveWidth, Height = Height, Title = Title,
             XTickLabels = labels, YMin = yMin, YMax = yMax
         });
 
