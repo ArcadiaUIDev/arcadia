@@ -10,7 +10,8 @@ interface Props {
   tags?: string[];
 }
 
-const { title, description, date, author = 'Arcadia Team', readTime = '8 min read', tags = [] } = Astro.props;
+const props = Astro.props.frontmatter || Astro.props;
+const { title, description, date, author = 'Arcadia Team', readTime = '8 min read', tags = [] } = props;
 const siteUrl = 'https://arcadiaui.com';
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
 const dateStr = String(date);
