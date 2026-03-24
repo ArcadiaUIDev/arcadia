@@ -1,0 +1,162 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: MCP Server
+description: AI-assisted chart code generation for Arcadia Controls via the Model Context Protocol.
+---
+
+# MCP Server
+
+Arcadia Controls includes an [MCP (Model Context Protocol)](https://modelcontextprotocol.io) server that lets AI assistants generate Blazor chart code from natural language descriptions.
+
+When connected to Claude Code, Claude Desktop, VS Code Copilot, or any MCP-compatible AI tool, you can say things like:
+
+> "Create a line chart showing monthly revenue vs target with smooth curves and area fill"
+
+And get production-ready Blazor code with data models, series config, and chart markup — instantly.
+
+## Setup
+
+### Claude Code
+
+```bash
+claude mcp add arcadia-controls node /path/to/helixui/tools/mcp-server/index.js
+```
+
+### Claude Desktop
+
+Add to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "arcadia-controls": {
+      "command": "node",
+      "args": ["/path/to/helixui/tools/mcp-server/index.js"]
+    }
+  }
+}
+```
+
+### VS Code (with MCP extension)
+
+Add to `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "arcadia-controls": {
+      "command": "node",
+      "args": ["./tools/mcp-server/index.js"]
+    }
+  }
+}
+```
+
+## Available Tools
+
+### `generate_chart`
+
+Generates complete Blazor Razor code for any of the 12 chart types.
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `chartType` | string | yes | One of: line, bar, pie, scatter, candlestick, radar, gauge, heatmap, funnel, treemap, waterfall, rose |
+| `title` | string | no | Chart title |
+| `dataDescription` | string | yes | Describe the data shape |
+| `features` | string[] | no | Optional features (see below) |
+| `seriesCount` | number | no | Number of data series (default: 1) |
+| `width` | number | no | Chart width in pixels (0 = responsive, default: 0) |
+| `height` | number | no | Chart height in pixels (default: 350) |
+
+**Available features:**
+
+`area-fill`, `stacked`, `smooth-curves`, `trendline`, `annotations`, `crosshair`, `streaming`, `data-labels`, `donut`, `bubble`, `full-circle`, `thresholds`, `dashed`, `combo`, `legend`
+
+**Example prompt:**
+
+> "Generate a bar chart titled 'Quarterly Revenue' with 2 series, stacked"
+
+**Example output:**
+
+```razor
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+
+<HelixBarChart TItem="DataRecord" Data="@_data"
+               XField="@(d => (object)d.Label)" Series="@_series"
+               Height="350" Width="0" Stacked="true"
+               Title="Quarterly Revenue" AnimateOnLoad="true" />
+
+@code {
+    record DataRecord(string Label, double ValueA, double ValueB);
+
+    List<DataRecord> _data = new()
+    {
+        new("Q1", 145, 98), new("Q2", 183, 112),
+        new("Q3", 215, 134), new("Q4", 268, 156),
+    };
+
+    List<SeriesConfig<DataRecord>> _series = new()
+    {
+        new() { Name = "Series A", Field = d => d.ValueA, Color = "primary" },
+        new() { Name = "Series B", Field = d => d.ValueB, Color = "success" },
+    };
+}
+```
+
+### `suggest_chart_type`
+
+Describe your data and get recommendations for the best chart type.
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataDescription` | string | yes | Describe what data you have and what you want to show |
+
+**Example prompt:**
+
+> "I have monthly sales data for 3 regions over 2 years and want to see the trend"
+
+**Response:** Suggests line chart with `smooth-curves` and `area-fill` features.
+
+### `list_chart_types`
+
+Returns an overview of all 12 chart types with their components and use cases. No parameters needed.
+
+### `get_chart_docs`
+
+Get detailed API reference for a specific chart type including all parameters and a code example.
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `chartType` | string | yes | The chart type to get docs for |
+
+## Supported Chart Types
+
+| Type | Description |
+|------|-------------|
+| `line` | Time series, trends, area fill, trendlines, streaming |
+| `bar` | Categorical comparisons, grouped or stacked |
+| `pie` | Part-of-whole proportions, donut mode |
+| `scatter` | Correlations, distributions, bubble sizing |
+| `candlestick` | Financial OHLC price data |
+| `radar` | Multi-dimensional comparisons |
+| `gauge` | Single KPI values, semi-circle or full-circle |
+| `heatmap` | 2D frequency/density grids |
+| `funnel` | Conversion funnels, pipelines |
+| `treemap` | Hierarchical proportional data |
+| `waterfall` | Cumulative gain/loss flows |
+| `rose` | Cyclical/directional data |
+
+## Tips
+
+- Use `suggest_chart_type` first if you're not sure which chart fits your data
+- Set `width: 0` for responsive charts that fill their container
+- Combine features like `["smooth-curves", "area-fill", "crosshair"]` for rich interactive charts
+- The generated code includes sample data — replace it with your actual data model
+- All generated charts include the export toolbar (PNG/SVG) automatically
