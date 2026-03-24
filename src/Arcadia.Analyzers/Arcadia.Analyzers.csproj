@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <IsPackable>true</IsPackable>
+    <PackageId>Arcadia.Analyzers</PackageId>
+    <Description>Roslyn analyzers for Arcadia Controls — compile-time warnings for common chart configuration mistakes.</Description>
+    <DevelopmentDependencyIncludesAssets>runtime; build; native; contentfiles; analyzers</DevelopmentDependencyIncludesAssets>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../../icon.png" Pack="true" PackagePath="/" />
+    <None Include="README.md" Pack="true" PackagePath="/" />
+  </ItemGroup>
+</Project>
