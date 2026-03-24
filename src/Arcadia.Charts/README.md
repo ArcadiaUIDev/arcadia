@@ -1,6 +1,6 @@
 <p align="center">
   <strong>Arcadia.Charts</strong><br>
-  <em>14 chart types + 7 dashboard widgets for Blazor — 244KB total, zero JavaScript</em>
+  <em>16 chart types + 7 dashboard widgets for Blazor — 244KB total, zero JavaScript</em>
 </p>
 
 ## Why Arcadia Charts?
@@ -10,11 +10,11 @@
 - **Responsive** — charts fill their container automatically. Set `Width="0"` and done.
 - **Accessible** — WCAG 2.1 AA: screen reader tables, `prefers-reduced-motion`, keyboard nav
 
-## 14 Chart Types
+## 16 Chart Types
 
-Line · Bar · Pie · Donut · Scatter · Bubble · Candlestick · Radar · Gauge · Heatmap · Funnel · Treemap · Waterfall · Rose
+Line · Bar · Pie · Donut · Scatter · Bubble · Candlestick · Radar · Gauge · Heatmap · Funnel · Treemap · Waterfall · Rose · Sankey · Chord
 
-4 charts are **free forever** (MIT). Pro adds 10 more for $299/dev/year.
+4 charts are **free forever** (MIT). Pro adds 12 more for $299/dev/year.
 
 ## 60-Second Quick Start
 

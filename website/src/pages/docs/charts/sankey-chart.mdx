@@ -1,0 +1,197 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+title: Sankey Chart
+description: Blazor Sankey diagram component for flow visualization — energy flows, budget allocation, traffic funnels, and material flows with SVG rendering.
+---
+
+# Sankey Chart
+
+A Sankey diagram visualizes flows between nodes (categories or stages). Links connect nodes with widths proportional to the flow quantity. Commonly used for energy flows, budget allocation, website traffic funnels, and material flows.
+
+The Sankey chart uses a `Data` (nodes) + `Links` model instead of the typical `Data` + field selectors used by other chart types.
+
+## Basic Usage
+
+```razor
+<ArcadiaSankeyChart Data="@nodes" Links="@links"
+                   Height="500" Width="0"
+                   Title="Energy Flow" />
+
+@code {
+    List<SankeyNode> nodes = new()
+    {
+        new() { Id = "coal", Label = "Coal" },
+        new() { Id = "gas", Label = "Gas" },
+        new() { Id = "solar", Label = "Solar" },
+        new() { Id = "electricity", Label = "Electricity" },
+        new() { Id = "heat", Label = "Heat" },
+        new() { Id = "residential", Label = "Residential" },
+        new() { Id = "commercial", Label = "Commercial" },
+    };
+
+    List<SankeyLink> links = new()
+    {
+        new() { SourceId = "coal", TargetId = "electricity", Value = 120 },
+        new() { SourceId = "coal", TargetId = "heat", Value = 80 },
+        new() { SourceId = "gas", TargetId = "electricity", Value = 90 },
+        new() { SourceId = "gas", TargetId = "heat", Value = 60 },
+        new() { SourceId = "solar", TargetId = "electricity", Value = 50 },
+        new() { SourceId = "electricity", TargetId = "residential", Value = 160 },
+        new() { SourceId = "electricity", TargetId = "commercial", Value = 100 },
+        new() { SourceId = "heat", TargetId = "residential", Value = 80 },
+        new() { SourceId = "heat", TargetId = "commercial", Value = 60 },
+    };
+}
+```
+
+## Multi-Level Flow
+
+The Sankey chart supports any number of levels. The layout algorithm automatically assigns columns based on the flow topology:
+
+```razor
+<ArcadiaSankeyChart Data="@nodes" Links="@links"
+                   Height="520" Width="0"
+                   Title="Energy Flow" Subtitle="Sources to Applications"
+                   ShowLabels="true" AnimateOnLoad="true" />
+```
+
+## Custom Colors
+
+Override colors on individual nodes or links:
+
+```razor
+@code {
+    List<SankeyNode> nodes = new()
+    {
+        new() { Id = "solar", Label = "Solar", Color = "#f59e0b" },
+        new() { Id = "wind", Label = "Wind", Color = "#22c55e" },
+        new() { Id = "grid", Label = "Grid" },
+    };
+
+    List<SankeyLink> links = new()
+    {
+        new() { SourceId = "solar", TargetId = "grid", Value = 50 },
+        new() { SourceId = "wind", TargetId = "grid", Value = 40,
+                Color = "#16a34a" },  // override link color
+    };
+}
+```
+
+## Palettes
+
+Use any built-in palette to theme all nodes at once:
+
+```razor
+<ArcadiaSankeyChart Data="@nodes" Links="@links"
+                   Palette="ChartPalette.Pastel" />
+```
+
+Available palettes: `Default`, `Cool`, `Warm`, `Monochrome`, `Pastel`, `Vibrant`, `Accessible`.
+
+## Events
+
+### OnLinkClick
+
+Fired when a link path is clicked. Receives a `SankeyLinkClickEventArgs`:
+
+```razor
+<ArcadiaSankeyChart Data="@nodes" Links="@links"
+                   OnLinkClick="HandleClick" />
+
+@code {
+    void HandleClick(SankeyLinkClickEventArgs e)
+    {
+        Console.WriteLine($"{e.SourceLabel} -> {e.TargetLabel}: {e.Value}");
+    }
+}
+```
+
+| Property | Type | Description |
+|---|---|---|
+| `SourceId` | `string` | Source node ID |
+| `TargetId` | `string` | Target node ID |
+| `SourceLabel` | `string` | Source node display label |
+| `TargetLabel` | `string` | Target node display label |
+| `Value` | `double` | Flow value |
+
+## Data Model
+
+### SankeyNode
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Id` | `string` | Unique identifier for the node |
+| `Label` | `string` | Display label (falls back to `Id` if null) |
+| `Color` | `string?` | Optional color override (CSS color or hex) |
+
+### SankeyLink
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `SourceId` | `string` | ID of the source node |
+| `TargetId` | `string` | ID of the target node |
+| `Value` | `double` | Flow quantity (determines link width). Must be > 0. |
+| `Color` | `string?` | Optional color override (defaults to source node color) |
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `Data` | `IReadOnlyList<SankeyNode>?` | null | The nodes in the diagram |
+| `Links` | `IReadOnlyList<SankeyLink>?` | null | The links connecting nodes |
+| `Width` | `double` | 0 | Chart width in pixels (0 = responsive) |
+| `Height` | `double` | 400 | Chart height in pixels |
+| `NodeWidth` | `double` | 20 | Width of node rectangles |
+| `NodePadding` | `double` | 15 | Vertical padding between nodes |
+| `Title` | `string?` | null | Chart title |
+| `Subtitle` | `string?` | null | Subtitle (rendered below title) |
+| `AnimateOnLoad` | `bool` | true | Animate links on initial render |
+| `ShowLabels` | `bool` | true | Show node labels |
+| `ShowValues` | `bool` | true | Show value labels on links |
+| `Palette` | `ChartPalette?` | null | Color palette for nodes |
+| `ShowToolbar` | `bool` | true | Show PNG/SVG export toolbar |
+| `Loading` | `bool` | false | Show loading skeleton |
+| `NoDataMessage` | `string?` | "No data available" | Custom empty-state message |
+| `AriaLabel` | `string?` | null | Screen reader label |
+| `OnLinkClick` | `EventCallback<SankeyLinkClickEventArgs>` | — | Fired when a link is clicked |
+| `DataLabelFormatString` | `string?` | null | Format string for tooltip values |
+| `TooltipTemplate` | `RenderFragment<SankeyNode>?` | null | Custom tooltip content |
+
+Plus all [shared ChartBase parameters](/docs/charts) (Class, Style, AdditionalAttributes, FormatProvider, etc.).
+
+## Layout Algorithm
+
+The component uses a topological Sankey layout:
+
+1. **Column assignment** — Nodes with no incoming links start at column 0. Each link pushes the target node to `max(source column + 1, current column)`, creating a left-to-right flow.
+2. **Cycle handling** — If cycles exist (A -> B -> C -> A), affected nodes are placed in a fallback column after all resolved nodes.
+3. **Node height** — Proportional to the larger of total incoming or outgoing flow, scaled to fit available height.
+4. **Vertical stacking** — Within each column, nodes stack top-to-bottom with configurable padding.
+5. **Link curves** — Cubic bezier paths connect source right-edge to target left-edge, with height proportional to the link value.
+
+## Input Validation
+
+The component silently handles invalid data:
+
+- **Negative or zero values** — Links with `Value <= 0` are skipped
+- **Self-links** — Links where `SourceId == TargetId` are skipped
+- **Invalid node IDs** — Links referencing non-existent nodes are skipped
+- **Duplicate node IDs** — Only the first node with a given ID is used
+- **Null labels** — Falls back to the node's `Id`
+- **Cycles** — Nodes in cycles are placed after resolved columns (no crash)
+
+## Use Cases
+
+- **Energy flows** — Visualize how energy sources distribute through sectors to end consumers
+- **Budget allocation** — Show how funds flow from revenue sources through departments to expenses
+- **Website traffic** — Map user journeys from acquisition channels through pages to conversions
+- **Material flows** — Track raw materials through manufacturing stages to finished products
+- **Supply chain** — Visualize goods movement from suppliers through warehouses to customers
+
+## Accessibility
+
+- `role="figure"` and `aria-label` on the SVG element (defaults to title, then "Sankey diagram")
+- Hidden `<table>` with Source, Target, and Value columns for screen readers
+- Animations respect `prefers-reduced-motion: reduce`
+- Export toolbar is keyboard-accessible
+- `FormatProvider` support for localized number formatting in tooltips

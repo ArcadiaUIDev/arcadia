@@ -32,6 +32,8 @@
             <button class="gallery__nav-btn @(_tab == "rangearea" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "rangearea"'>Range Area</button>
             <button class="gallery__nav-btn @(_tab == "interactive" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "interactive"'>Interactive</button>
             <button class="gallery__nav-btn @(_tab == "streaming" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "streaming"'>Streaming</button>
+            <button class="gallery__nav-btn @(_tab == "sankey" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "sankey"'>Sankey</button>
+            <button class="gallery__nav-btn @(_tab == "chord" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "chord"'>Chord</button>
             <button class="gallery__nav-btn @(_tab == "advanced" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "advanced"'>Advanced</button>
 
             <div class="gallery__nav-group">Forms</div>
@@ -435,6 +437,69 @@
                                     XField="@(d => (object)d.Time)" Series="@_streamSeries"
                                     Height="340" Width="0" ShowPoints="true" SlidingWindow="20"
                                     AnimateOnLoad="false" ShowCrosshair="true" />
+                </div>
+            </div>
+        }
+
+        @if (_tab == "sankey")
+        {
+            <div class="gallery__section-header">
+                <h1>Sankey Diagram</h1>
+                <p>Visualize flows between stages. Link width is proportional to the flow quantity. Hover for tooltips, click links for events.</p>
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Energy Flow — 4-Level Sankey</div>
+                <div class="gallery__chart-container">
+                    <ArcadiaSankeyChart Data="@_sankeyNodes" Links="@_sankeyLinks"
+                                       Height="520" Width="0" Title="Energy Flow"
+                                       ShowLabels="true" ShowValues="true" AnimateOnLoad="true"
+                                       OnLinkClick="HandleSankeyClick" />
+                </div>
+                @if (_sankeyClicked is not null)
+                {
+                    <div class="gallery__hint" style="margin-top: 8px;">Clicked: @_sankeyClicked</div>
+                }
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Compact — Website Traffic Flow</div>
+                <div class="gallery__chart-container">
+                    <ArcadiaSankeyChart Data="@_trafficNodes" Links="@_trafficLinks"
+                                       Height="350" Width="0" Title="Website Traffic Sources"
+                                       NodeWidth="16" NodePadding="12"
+                                       Palette="ChartPalette.Pastel" AnimateOnLoad="true" />
+                </div>
+            </div>
+        }
+
+        @if (_tab == "chord")
+        {
+            <div class="gallery__section-header">
+                <h1>Chord Diagram</h1>
+                <p>Circular relationship visualization. Nodes arranged on a ring, ribbons connect them with width proportional to flow. Hover a ribbon to highlight it.</p>
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Global Trade Flow — 6 Countries</div>
+                <div class="gallery__chart-container" style="display:flex;justify-content:center;">
+                    <ArcadiaChordChart Data="@_chordNodes" Links="@_chordLinks"
+                                      Height="500" Width="500" Title="Global Trade Flow"
+                                      ShowLabels="true" AnimateOnLoad="true"
+                                      OnChordClick="HandleChordClick" />
+                </div>
+                @if (_chordClicked is not null)
+                {
+                    <div class="gallery__hint" style="margin-top: 8px;">Clicked: @_chordClicked</div>
+                }
+            </div>
+
+            <div class="gallery__showcase">
+                <div class="gallery__showcase-title">Team Communication — Vibrant Palette</div>
+                <div class="gallery__chart-container" style="display:flex;justify-content:center;">
+                    <ArcadiaChordChart Data="@_teamNodes" Links="@_teamLinks"
+                                      Height="420" Width="420" Title="Team Communication"
+                                      Palette="ChartPalette.Vibrant" AnimateOnLoad="true" />
                 </div>
             </div>
         }
@@ -875,6 +940,149 @@
         _autoStreamTimer?.Dispose();
         _autoStreamTimer = null;
     }
+
+    // ── Sankey tab data ──
+    string? _sankeyClicked;
+
+    void HandleSankeyClick(SankeyLinkClickEventArgs e)
+    {
+        _sankeyClicked = $"{e.SourceLabel} → {e.TargetLabel}: {e.Value:N0}";
+    }
+
+    List<SankeyNode> _sankeyNodes = new()
+    {
+        new() { Id = "coal", Label = "Coal" },
+        new() { Id = "gas", Label = "Gas" },
+        new() { Id = "solar", Label = "Solar" },
+        new() { Id = "wind", Label = "Wind" },
+        new() { Id = "nuclear", Label = "Nuclear" },
+        new() { Id = "electricity", Label = "Electricity" },
+        new() { Id = "heat", Label = "Heat" },
+        new() { Id = "transport", Label = "Transport" },
+        new() { Id = "residential", Label = "Residential" },
+        new() { Id = "commercial", Label = "Commercial" },
+        new() { Id = "industrial", Label = "Industrial" },
+        new() { Id = "lighting", Label = "Lighting" },
+        new() { Id = "hvac", Label = "HVAC" },
+        new() { Id = "appliances", Label = "Appliances" },
+        new() { Id = "machinery", Label = "Machinery" },
+        new() { Id = "offices", Label = "Offices" },
+        new() { Id = "datacenters", Label = "Data Centers" },
+    };
+
+    List<SankeyLink> _sankeyLinks = new()
+    {
+        new() { SourceId = "coal", TargetId = "electricity", Value = 120 },
+        new() { SourceId = "coal", TargetId = "heat", Value = 80 },
+        new() { SourceId = "gas", TargetId = "electricity", Value = 90 },
+        new() { SourceId = "gas", TargetId = "heat", Value = 60 },
+        new() { SourceId = "gas", TargetId = "transport", Value = 30 },
+        new() { SourceId = "solar", TargetId = "electricity", Value = 50 },
+        new() { SourceId = "wind", TargetId = "electricity", Value = 40 },
+        new() { SourceId = "nuclear", TargetId = "electricity", Value = 100 },
+        new() { SourceId = "electricity", TargetId = "residential", Value = 160 },
+        new() { SourceId = "electricity", TargetId = "commercial", Value = 120 },
+        new() { SourceId = "electricity", TargetId = "industrial", Value = 120 },
+        new() { SourceId = "heat", TargetId = "residential", Value = 80 },
+        new() { SourceId = "heat", TargetId = "industrial", Value = 60 },
+        new() { SourceId = "transport", TargetId = "commercial", Value = 15 },
+        new() { SourceId = "transport", TargetId = "industrial", Value = 15 },
+        new() { SourceId = "residential", TargetId = "lighting", Value = 60 },
+        new() { SourceId = "residential", TargetId = "hvac", Value = 110 },
+        new() { SourceId = "residential", TargetId = "appliances", Value = 70 },
+        new() { SourceId = "commercial", TargetId = "lighting", Value = 40 },
+        new() { SourceId = "commercial", TargetId = "offices", Value = 55 },
+        new() { SourceId = "commercial", TargetId = "datacenters", Value = 40 },
+        new() { SourceId = "industrial", TargetId = "machinery", Value = 120 },
+        new() { SourceId = "industrial", TargetId = "hvac", Value = 35 },
+        new() { SourceId = "industrial", TargetId = "lighting", Value = 40 },
+    };
+
+    List<SankeyNode> _trafficNodes = new()
+    {
+        new() { Id = "google", Label = "Google" },
+        new() { Id = "social", Label = "Social" },
+        new() { Id = "direct", Label = "Direct" },
+        new() { Id = "referral", Label = "Referral" },
+        new() { Id = "landing", Label = "Landing Page" },
+        new() { Id = "blog", Label = "Blog" },
+        new() { Id = "pricing", Label = "Pricing" },
+        new() { Id = "signup", Label = "Sign Up" },
+        new() { Id = "bounce", Label = "Bounce" },
+    };
+
+    List<SankeyLink> _trafficLinks = new()
+    {
+        new() { SourceId = "google", TargetId = "landing", Value = 5000 },
+        new() { SourceId = "google", TargetId = "blog", Value = 2000 },
+        new() { SourceId = "social", TargetId = "landing", Value = 1500 },
+        new() { SourceId = "social", TargetId = "blog", Value = 3000 },
+        new() { SourceId = "direct", TargetId = "landing", Value = 1200 },
+        new() { SourceId = "direct", TargetId = "pricing", Value = 800 },
+        new() { SourceId = "referral", TargetId = "blog", Value = 1000 },
+        new() { SourceId = "referral", TargetId = "landing", Value = 600 },
+        new() { SourceId = "landing", TargetId = "pricing", Value = 4500 },
+        new() { SourceId = "landing", TargetId = "bounce", Value = 3800 },
+        new() { SourceId = "blog", TargetId = "pricing", Value = 2800 },
+        new() { SourceId = "blog", TargetId = "bounce", Value = 3200 },
+        new() { SourceId = "pricing", TargetId = "signup", Value = 3200 },
+        new() { SourceId = "pricing", TargetId = "bounce", Value = 4900 },
+    };
+
+    // ── Chord tab data ──
+    string? _chordClicked;
+
+    void HandleChordClick(ChordClickEventArgs e)
+    {
+        _chordClicked = $"{e.SourceLabel} ↔ {e.TargetLabel}: {e.Value:N0}";
+    }
+
+    List<ChordNode> _chordNodes = new()
+    {
+        new() { Id = "us", Label = "United States" },
+        new() { Id = "cn", Label = "China" },
+        new() { Id = "de", Label = "Germany" },
+        new() { Id = "jp", Label = "Japan" },
+        new() { Id = "uk", Label = "United Kingdom" },
+        new() { Id = "kr", Label = "South Korea" },
+    };
+
+    List<ChordLink> _chordLinks = new()
+    {
+        new() { SourceId = "us", TargetId = "cn", Value = 120 },
+        new() { SourceId = "us", TargetId = "de", Value = 60 },
+        new() { SourceId = "us", TargetId = "jp", Value = 75 },
+        new() { SourceId = "us", TargetId = "uk", Value = 55 },
+        new() { SourceId = "us", TargetId = "kr", Value = 40 },
+        new() { SourceId = "cn", TargetId = "de", Value = 45 },
+        new() { SourceId = "cn", TargetId = "jp", Value = 90 },
+        new() { SourceId = "cn", TargetId = "kr", Value = 70 },
+        new() { SourceId = "de", TargetId = "uk", Value = 50 },
+        new() { SourceId = "de", TargetId = "jp", Value = 30 },
+        new() { SourceId = "jp", TargetId = "kr", Value = 55 },
+        new() { SourceId = "uk", TargetId = "kr", Value = 20 },
+    };
+
+    List<ChordNode> _teamNodes = new()
+    {
+        new() { Id = "eng", Label = "Engineering" },
+        new() { Id = "design", Label = "Design" },
+        new() { Id = "pm", Label = "Product" },
+        new() { Id = "sales", Label = "Sales" },
+        new() { Id = "support", Label = "Support" },
+    };
+
+    List<ChordLink> _teamLinks = new()
+    {
+        new() { SourceId = "eng", TargetId = "design", Value = 80 },
+        new() { SourceId = "eng", TargetId = "pm", Value = 60 },
+        new() { SourceId = "eng", TargetId = "support", Value = 25 },
+        new() { SourceId = "design", TargetId = "pm", Value = 45 },
+        new() { SourceId = "design", TargetId = "sales", Value = 15 },
+        new() { SourceId = "pm", TargetId = "sales", Value = 90 },
+        new() { SourceId = "pm", TargetId = "support", Value = 35 },
+        new() { SourceId = "sales", TargetId = "support", Value = 50 },
+    };
 
     // ── Advanced tab data ──
     List<BubblePoint> _bubbleData = Enumerable.Range(0, 25).Select(i =>

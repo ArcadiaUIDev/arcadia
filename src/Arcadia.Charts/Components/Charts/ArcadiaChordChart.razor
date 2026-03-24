@@ -1,0 +1,93 @@
+@namespace Arcadia.Charts.Components.Charts
+@inherits Arcadia.Charts.Core.ChartBase<Arcadia.Charts.Core.ChordNode>
+
+<div class="arcadia-chart @(AwaitingMeasurement || Loading ? "arcadia-chart--loading" : "")" @ref="ContainerRef" style="@GetContainerStyle()" @attributes="AdditionalAttributes">
+@if (AwaitingMeasurement) {
+}
+else if (HasData) {
+    @if (ShowToolbar) { <ChartToolbar OnExportPng="@(() => ExportPngAsync())" OnExportSvg="@(() => ExportSvgFileAsync())" /> }
+    <svg width="@SvgWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
+         role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Chord diagram")">
+
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            <SvgText x="@(EffectiveWidth / 2)" y="24" text-anchor="middle" class="arcadia-chart__title">@Title</SvgText>
+        }
+        @if (!string.IsNullOrEmpty(Subtitle) && !string.IsNullOrEmpty(Title))
+        {
+            <SvgText x="@(EffectiveWidth / 2)" y="42" text-anchor="middle" class="arcadia-chart__subtitle">@Subtitle</SvgText>
+        }
+
+        @* Chord ribbons (drawn first so arcs render on top) *@
+        @for (var i = 0; i < _chords.Count; i++)
+        {
+            var chord = _chords[i];
+            var idx = i;
+            <path d="@chord.Path" fill="@chord.Color" opacity="@F(ChordOpacity)"
+                  class="arcadia-chart__chord-ribbon @(AnimateOnLoad ? "arcadia-animate-chord" : "")"
+                  style="@(AnimateOnLoad ? $"animation-delay: {idx * 40}ms;" : "")"
+                  @onmouseover="@(e => ShowChordTooltip(chord, e.ClientX, e.ClientY))"
+                  @onmouseout="HideTooltipAction"
+                  @onclick="@(() => HandleChordClick(chord))" />
+        }
+
+        @* Outer ring arcs *@
+        @foreach (var arc in _arcs)
+        {
+            <path d="@BuildArcPath(_cx, _cy, arc.OuterR, arc.InnerR, arc.StartAngle, arc.EndAngle)"
+                  fill="@arc.Color" class="arcadia-chart__chord-arc" />
+        }
+
+        @* Labels — skip arcs too small to label *@
+        @if (ShowLabels)
+        {
+            @foreach (var arc in _arcs)
+            {
+                if (!ShouldShowLabel(arc)) continue;
+                var pos = GetLabelPosition(arc);
+                <SvgText x="@F(pos.x)" y="@F(pos.y)"
+                      text-anchor="@pos.anchor" dominant-baseline="middle"
+                      class="arcadia-chart__chord-label"
+                      transform="@($"rotate({F(pos.rotation)}, {F(pos.x)}, {F(pos.y)})")">@arc.Label</SvgText>
+            }
+        }
+    </svg>
+
+    @* Screen reader table *@
+    <table class="arcadia-sr-only" aria-label="Chord diagram data">
+        <thead><tr><th>Source</th><th>Target</th><th>Value</th></tr></thead>
+        <tbody>
+            @foreach (var chord in _chords)
+            {
+                <tr><td>@chord.SourceLabel</td><td>@chord.TargetLabel</td><td>@FormatSrValue(chord.Value)</td></tr>
+            }
+        </tbody>
+    </table>
+
+    @if (RenderTooltipTemplate is not null) { @RenderTooltipTemplate }
+}
+else
+{
+    <NoDataState Message="@(NoDataMessage ?? "No data available")" Height="@Height" />
+}
+</div>
+
+@code {
+    private async Task ShowChordTooltip(LayoutChord chord, double mouseX, double mouseY)
+    {
+        var html = $"<div style='font-weight:600;margin-bottom:2px'>{chord.SourceLabel} &harr; {chord.TargetLabel}</div>" +
+                   $"<div>{FormatValue(chord.Value, DataLabelFormatString)}</div>";
+
+        if (TooltipTemplate is not null && Data is not null)
+        {
+            var sourceNode = Data.FirstOrDefault(n => n.Id == chord.SourceId);
+            if (sourceNode is not null)
+            {
+                await ShowTooltipOrTemplate(sourceNode, html, mouseX, mouseY);
+                return;
+            }
+        }
+
+        await ShowTooltipForPoint($"{chord.SourceLabel} ↔ {chord.TargetLabel}", chord.Value, mouseX, mouseY);
+    }
+}

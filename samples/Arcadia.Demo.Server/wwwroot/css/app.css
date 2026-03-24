@@ -394,7 +394,10 @@ html, body { margin: 0; padding: 0; }
 
 .gallery__title {
   font-size: 0.95rem; font-weight: 700; margin: 0 0 2px 4px;
-  color: var(--g-text-head);
+  background: linear-gradient(135deg, #a78bfa, #d946ef, #818cf8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 .gallery__subtitle {
   font-size: 0.65rem; color: var(--g-text-faint);

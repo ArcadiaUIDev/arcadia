@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <PackageId>Arcadia.Charts</PackageId>
-    <Description>12 Blazor chart types (Line, Bar, Pie, Scatter, Candlestick, Radar, Gauge, Heatmap, Funnel, Treemap, Waterfall, Rose) + 7 dashboard widgets. Pure SVG rendering, zero JS dependencies. arcadiaui.com</Description>
+    <Description>16 Blazor chart types (Line, Bar, Pie, Scatter, Candlestick, Radar, Gauge, Heatmap, Funnel, Treemap, Waterfall, Rose, Sankey, Chord, Range Area, Box Plot) + 7 dashboard widgets. Pure SVG rendering, zero JS dependencies. arcadiaui.com</Description>
     <IsPackable>true</IsPackable>
   </PropertyGroup>
 

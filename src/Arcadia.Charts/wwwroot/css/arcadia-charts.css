@@ -101,11 +101,21 @@
 .arcadia-chart__legend-item { display: flex; align-items: center; gap: 4px; font-size: var(--arcadia-text-xs, 0.75rem); color: inherit; opacity: 0.8; }
 .arcadia-chart__legend-swatch { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
 
-/* Radar Chart */
-.arcadia-chart__radar-fill { transition: opacity var(--arcadia-duration-fast, 100ms); }
-.arcadia-chart__radar-fill:hover { opacity: 0.4; }
-.arcadia-chart__radar-line { transition: opacity var(--arcadia-duration-fast, 100ms); }
-.arcadia-chart__radar-line:hover { opacity: 0.9; }
+/* Radar Chart — highlight-one, dim-the-rest on hover */
+.arcadia-chart__radar-fill {
+  transition: opacity var(--arcadia-duration-fast, 100ms);
+  pointer-events: all;
+}
+.arcadia-chart__radar-line {
+  transition: opacity var(--arcadia-duration-fast, 100ms);
+  pointer-events: stroke;
+}
+/* When any radar fill is hovered, dim all fills and lines */
+svg:has(.arcadia-chart__radar-fill:hover) .arcadia-chart__radar-fill { opacity: 0.05 !important; }
+svg:has(.arcadia-chart__radar-fill:hover) .arcadia-chart__radar-line { opacity: 0.15 !important; }
+/* Un-dim the hovered fill and its adjacent line (next sibling) */
+svg .arcadia-chart__radar-fill:hover { opacity: 0.35 !important; }
+svg .arcadia-chart__radar-fill:hover + .arcadia-chart__radar-line { opacity: 1 !important; }
 
 /* Gauge Chart */
 .arcadia-gauge__track { opacity: 1; }
@@ -146,10 +156,12 @@
   to { stroke-dashoffset: 0; }
 }
 
-/* Area fade in after line draws */
+/* Area fade in after line draws — respects inline opacity */
+@keyframes arcadia-area-fade {
+  from { opacity: 0; }
+}
 .arcadia-animate-area {
-  opacity: 0;
-  animation: arcadia-fade-in 0.6s var(--arcadia-ease-out, ease-out) 0.8s forwards;
+  animation: arcadia-area-fade 0.6s var(--arcadia-ease-out, ease-out) 0.8s;
 }
 
 /* Bar grow — fade in + slide up */
@@ -213,10 +225,9 @@
   animation: arcadia-line-draw 1s var(--arcadia-ease-out, ease-out) forwards;
 }
 
-/* Radar fill fade in */
+/* Radar fill fade in — respects inline opacity */
 .arcadia-animate-radar-fill {
-  opacity: 0;
-  animation: arcadia-fade-in 0.5s var(--arcadia-ease-out, ease-out) 0.6s forwards;
+  animation: arcadia-area-fade 0.5s var(--arcadia-ease-out, ease-out) 0.6s;
 }
 
 /* Heatmap cell pop */
@@ -244,6 +255,53 @@
   animation: arcadia-line-draw 0.8s var(--arcadia-ease-out, ease-out) forwards;
 }
 
+/* Sankey link fade in — respects inline opacity */
+.arcadia-animate-sankey {
+  animation: arcadia-area-fade 0.5s var(--arcadia-ease-out, ease-out);
+}
+
+/* Sankey node/link styling */
+.arcadia-chart__sankey-link {
+  cursor: pointer;
+  transition: opacity var(--arcadia-transition-fast, 0.15s) ease;
+}
+.arcadia-chart__sankey-link:hover {
+  opacity: 0.55 !important;
+  filter: brightness(var(--arcadia-chart-hover-brightness, 1.05));
+}
+.arcadia-chart__sankey-node {
+  transition: opacity var(--arcadia-transition-fast, 0.15s) ease;
+}
+
+/* Chord Diagram — highlight-one, dim-the-rest on hover */
+.arcadia-chart__chord-ribbon {
+  cursor: pointer;
+  transition: opacity var(--arcadia-transition-fast, 0.15s) ease,
+              filter var(--arcadia-transition-fast, 0.15s) ease;
+}
+/* When a ribbon is hovered, bring it to full opacity */
+.arcadia-chart__chord-ribbon:hover {
+  opacity: 1 !important;
+}
+.arcadia-chart__chord-arc {
+  transition: opacity var(--arcadia-transition-fast, 0.15s) ease;
+}
+.arcadia-chart__chord-arc:hover { opacity: 0.85; }
+.arcadia-chart__chord-label {
+  font-size: 10px;
+  fill: currentColor;
+  opacity: 0.85;
+  pointer-events: none;
+}
+
+/* Chord animation — fades from 0 to the element's inline opacity, not to 1 */
+@keyframes arcadia-chord-fade {
+  from { opacity: 0; }
+}
+.arcadia-animate-chord {
+  animation: arcadia-chord-fade 0.5s var(--arcadia-ease-out, ease-out);
+}
+
 /* Progress bar fill */
 .arcadia-animate-progress .arcadia-progress__fill {
   animation: arcadia-progress-fill 0.8s var(--arcadia-ease-out, ease-out) forwards;
@@ -268,7 +326,9 @@
   .arcadia-animate-radar-fill,
   .arcadia-animate-heatmap,
   .arcadia-animate-kpi,
-  .arcadia-animate-sparkline {
+  .arcadia-animate-sparkline,
+  .arcadia-animate-sankey,
+  .arcadia-animate-chord {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;

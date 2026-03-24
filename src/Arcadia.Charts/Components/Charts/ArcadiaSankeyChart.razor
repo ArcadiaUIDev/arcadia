@@ -1,0 +1,91 @@
+@namespace Arcadia.Charts.Components.Charts
+@inherits Arcadia.Charts.Core.ChartBase<Arcadia.Charts.Core.SankeyNode>
+
+<div class="arcadia-chart @(AwaitingMeasurement || Loading ? "arcadia-chart--loading" : "")" @ref="ContainerRef" style="@GetContainerStyle()" @attributes="AdditionalAttributes">
+@if (AwaitingMeasurement) {
+}
+else if (HasData) {
+    @if (ShowToolbar) { <ChartToolbar OnExportPng="@(() => ExportPngAsync())" OnExportSvg="@(() => ExportSvgFileAsync())" /> }
+    <svg width="@SvgWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
+         role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Sankey diagram")">
+
+        @if (!string.IsNullOrEmpty(Title))
+        {
+            <SvgText x="@(EffectiveWidth / 2)" y="24" text-anchor="middle" class="arcadia-chart__title">@Title</SvgText>
+        }
+        @if (!string.IsNullOrEmpty(Subtitle) && !string.IsNullOrEmpty(Title))
+        {
+            <SvgText x="@(EffectiveWidth / 2)" y="42" text-anchor="middle" class="arcadia-chart__subtitle">@Subtitle</SvgText>
+        }
+
+        @* Links (drawn first so nodes render on top) *@
+        @for (var i = 0; i < _layoutLinks.Count; i++)
+        {
+            var link = _layoutLinks[i];
+            var idx = i;
+            <path d="@link.Path" fill="@link.Color" opacity="0.3"
+                  class="arcadia-chart__sankey-link @(AnimateOnLoad ? "arcadia-animate-sankey" : "")"
+                  style="@(AnimateOnLoad ? $"animation-delay: {idx * 60}ms;" : "")"
+                  @onmouseover="@(e => ShowSankeyTooltip(link, e.ClientX, e.ClientY))"
+                  @onmouseout="HideTooltipAction"
+                  @onclick="@(() => HandleLinkClick(link))" />
+        }
+
+        @* Nodes *@
+        @foreach (var node in _layoutNodes)
+        {
+            <rect x="@F(node.X)" y="@F(node.Y)" width="@F(node.Width)" height="@F(node.Height)"
+                  rx="3" ry="3" fill="@node.Color" class="arcadia-chart__sankey-node" />
+
+            @if (ShowLabels)
+            {
+                var isLastColumn = node.Column == _columnCount - 1;
+                var labelX = isLastColumn ? node.X - 6 : node.X + node.Width + 6;
+                var anchor = isLastColumn ? "end" : "start";
+                var labelY = node.Y + node.Height / 2;
+
+                <SvgText x="@F(labelX)" y="@F(labelY)" text-anchor="@anchor"
+                      dominant-baseline="middle" class="arcadia-chart__data-label"
+                      style="font-size: 11px;">@node.Label</SvgText>
+            }
+        }
+    </svg>
+
+    @* Screen reader table *@
+    <table class="arcadia-sr-only" aria-label="Sankey diagram data">
+        <thead><tr><th>Source</th><th>Target</th><th>Value</th></tr></thead>
+        <tbody>
+            @foreach (var link in _layoutLinks)
+            {
+                <tr><td>@link.SourceLabel</td><td>@link.TargetLabel</td><td>@FormatSrValue(link.Value)</td></tr>
+            }
+        </tbody>
+    </table>
+
+    @if (RenderTooltipTemplate is not null) { @RenderTooltipTemplate }
+}
+else
+{
+    <NoDataState Message="@(NoDataMessage ?? "No data available")" Height="@Height" />
+}
+</div>
+
+@code {
+    private async Task ShowSankeyTooltip(LayoutLink link, double mouseX, double mouseY)
+    {
+        var html = $"<div style='font-weight:600;margin-bottom:2px'>{link.SourceLabel} &rarr; {link.TargetLabel}</div>" +
+                   $"<div>{FormatValue(link.Value, DataLabelFormatString)}</div>";
+
+        if (TooltipTemplate is not null && Data is not null)
+        {
+            var sourceNode = Data.FirstOrDefault(n => n.Id == link.SourceId);
+            if (sourceNode is not null)
+            {
+                await ShowTooltipOrTemplate(sourceNode, html, mouseX, mouseY);
+                return;
+            }
+        }
+
+        await ShowTooltipForPoint($"{link.SourceLabel} → {link.TargetLabel}", link.Value, mouseX, mouseY);
+    }
+}

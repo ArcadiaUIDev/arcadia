@@ -1,0 +1,68 @@
+@page "/test/sankey"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Components.Charts
+@using Arcadia.Charts.Core
+
+<div style="padding: 24px; background: transparent;">
+    <ArcadiaSankeyChart Data="@_nodes" Links="@_links"
+                       Height="550" Width="1100" AnimateOnLoad="true"
+                       Title="Energy Flow" ShowLabels="true" ShowValues="true" />
+</div>
+
+@code {
+    List<SankeyNode> _nodes = new()
+    {
+        // Sources
+        new() { Id = "coal", Label = "Coal" },
+        new() { Id = "gas", Label = "Gas" },
+        new() { Id = "solar", Label = "Solar" },
+        new() { Id = "wind", Label = "Wind" },
+        new() { Id = "nuclear", Label = "Nuclear" },
+        // Sectors
+        new() { Id = "electricity", Label = "Electricity" },
+        new() { Id = "heat", Label = "Heat" },
+        new() { Id = "transport", Label = "Transport" },
+        // End Use
+        new() { Id = "residential", Label = "Residential" },
+        new() { Id = "commercial", Label = "Commercial" },
+        new() { Id = "industrial", Label = "Industrial" },
+        // Applications
+        new() { Id = "lighting", Label = "Lighting" },
+        new() { Id = "hvac", Label = "HVAC" },
+        new() { Id = "appliances", Label = "Appliances" },
+        new() { Id = "machinery", Label = "Machinery" },
+        new() { Id = "offices", Label = "Offices" },
+        new() { Id = "datacenters", Label = "Data Centers" },
+    };
+
+    List<SankeyLink> _links = new()
+    {
+        // Sources → Sectors
+        new() { SourceId = "coal", TargetId = "electricity", Value = 120 },
+        new() { SourceId = "coal", TargetId = "heat", Value = 80 },
+        new() { SourceId = "gas", TargetId = "electricity", Value = 90 },
+        new() { SourceId = "gas", TargetId = "heat", Value = 60 },
+        new() { SourceId = "gas", TargetId = "transport", Value = 30 },
+        new() { SourceId = "solar", TargetId = "electricity", Value = 50 },
+        new() { SourceId = "wind", TargetId = "electricity", Value = 40 },
+        new() { SourceId = "nuclear", TargetId = "electricity", Value = 100 },
+        // Sectors → End Use
+        new() { SourceId = "electricity", TargetId = "residential", Value = 160 },
+        new() { SourceId = "electricity", TargetId = "commercial", Value = 120 },
+        new() { SourceId = "electricity", TargetId = "industrial", Value = 120 },
+        new() { SourceId = "heat", TargetId = "residential", Value = 80 },
+        new() { SourceId = "heat", TargetId = "industrial", Value = 60 },
+        new() { SourceId = "transport", TargetId = "commercial", Value = 15 },
+        new() { SourceId = "transport", TargetId = "industrial", Value = 15 },
+        // End Use → Applications
+        new() { SourceId = "residential", TargetId = "lighting", Value = 60 },
+        new() { SourceId = "residential", TargetId = "hvac", Value = 110 },
+        new() { SourceId = "residential", TargetId = "appliances", Value = 70 },
+        new() { SourceId = "commercial", TargetId = "lighting", Value = 40 },
+        new() { SourceId = "commercial", TargetId = "offices", Value = 55 },
+        new() { SourceId = "commercial", TargetId = "datacenters", Value = 40 },
+        new() { SourceId = "industrial", TargetId = "machinery", Value = 120 },
+        new() { SourceId = "industrial", TargetId = "hvac", Value = 35 },
+        new() { SourceId = "industrial", TargetId = "lighting", Value = 40 },
+    };
+}

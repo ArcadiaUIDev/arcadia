@@ -7,7 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped<ThemeService>();
+builder.Services.AddScoped<ThemeService>(_ => new ThemeService(new DarkTheme()));
 builder.Services.AddScoped<ToastService>();
 
 var app = builder.Build();

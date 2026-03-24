@@ -1,0 +1,171 @@
+---
+layout: ../../../layouts/DocsLayout.astro
+title: Chord Chart
+description: Blazor chord diagram component for visualizing relationships and flows between entities in a circular layout with SVG rendering.
+---
+
+# Chord Chart
+
+A chord diagram arranges entities (nodes) around a circular ring and draws curved ribbons between them to show relationships or flows. The width of each ribbon is proportional to the flow magnitude. Ideal for visualizing trade flows, communication patterns, dependencies, and any many-to-many relationship data.
+
+The Chord chart uses a `Data` (nodes) + `Links` model, the same pattern as the [Sankey Chart](/docs/charts/sankey-chart).
+
+## Basic Usage
+
+```razor
+<ArcadiaChordChart Data="@nodes" Links="@links"
+                   Height="500" Width="500"
+                   Title="Team Communication" />
+
+@code {
+    List<ChordNode> nodes = new()
+    {
+        new() { Id = "eng", Label = "Engineering" },
+        new() { Id = "design", Label = "Design" },
+        new() { Id = "pm", Label = "Product" },
+        new() { Id = "sales", Label = "Sales" },
+    };
+
+    List<ChordLink> links = new()
+    {
+        new() { SourceId = "eng", TargetId = "design", Value = 80 },
+        new() { SourceId = "eng", TargetId = "pm", Value = 60 },
+        new() { SourceId = "design", TargetId = "pm", Value = 45 },
+        new() { SourceId = "pm", TargetId = "sales", Value = 90 },
+        new() { SourceId = "eng", TargetId = "sales", Value = 20 },
+    };
+}
+```
+
+## Custom Colors
+
+Override colors on individual nodes or links:
+
+```razor
+@code {
+    List<ChordNode> nodes = new()
+    {
+        new() { Id = "us", Label = "US", Color = "#3b82f6" },
+        new() { Id = "eu", Label = "EU", Color = "#22c55e" },
+        new() { Id = "asia", Label = "Asia", Color = "#f59e0b" },
+    };
+
+    List<ChordLink> links = new()
+    {
+        new() { SourceId = "us", TargetId = "eu", Value = 120 },
+        new() { SourceId = "us", TargetId = "asia", Value = 90,
+                Color = "#ef4444" },  // override link color
+        new() { SourceId = "eu", TargetId = "asia", Value = 75 },
+    };
+}
+```
+
+## Palettes
+
+```razor
+<ArcadiaChordChart Data="@nodes" Links="@links"
+                   Palette="ChartPalette.Vibrant" />
+```
+
+Available: `Default`, `Cool`, `Warm`, `Monochrome`, `Pastel`, `Vibrant`, `Accessible`.
+
+## Events
+
+### OnChordClick
+
+Fired when a chord ribbon is clicked. Receives a `ChordClickEventArgs`:
+
+```razor
+<ArcadiaChordChart Data="@nodes" Links="@links"
+                   OnChordClick="HandleClick" />
+
+@code {
+    void HandleClick(ChordClickEventArgs e)
+    {
+        Console.WriteLine($"{e.SourceLabel} <-> {e.TargetLabel}: {e.Value}");
+    }
+}
+```
+
+| Property | Type | Description |
+|---|---|---|
+| `SourceId` | `string` | Source node ID |
+| `TargetId` | `string` | Target node ID |
+| `SourceLabel` | `string` | Source node display label |
+| `TargetLabel` | `string` | Target node display label |
+| `Value` | `double` | Flow value |
+
+## Data Model
+
+### ChordNode
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `Id` | `string` | Unique identifier for the node |
+| `Label` | `string` | Display label (falls back to `Id` if null) |
+| `Color` | `string?` | Optional color override |
+
+### ChordLink
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `SourceId` | `string` | ID of the source node |
+| `TargetId` | `string` | ID of the target node |
+| `Value` | `double` | Flow magnitude (determines ribbon width). Must be > 0. |
+| `Color` | `string?` | Optional color override (defaults to source node color) |
+
+## Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `Data` | `IReadOnlyList<ChordNode>?` | null | The nodes on the ring |
+| `Links` | `IReadOnlyList<ChordLink>?` | null | The chord connections |
+| `Width` | `double` | 0 | Chart width (0 = responsive) |
+| `Height` | `double` | 300 | Chart height |
+| `InnerRadius` | `double?` | null | Inner ring radius (null = 70% of outer) |
+| `OuterRadius` | `double?` | null | Outer ring radius (null = auto from dims) |
+| `PadAngle` | `double` | 2.0 | Gap between arc segments in degrees |
+| `ChordOpacity` | `double` | 0.6 | Ribbon fill opacity |
+| `Title` | `string?` | null | Chart title |
+| `Subtitle` | `string?` | null | Subtitle below title |
+| `ShowLabels` | `bool` | true | Show labels on the outer ring |
+| `AnimateOnLoad` | `bool` | true | Animate ribbons on first render |
+| `ShowToolbar` | `bool` | true | PNG/SVG export toolbar |
+| `Loading` | `bool` | false | Loading skeleton state |
+| `NoDataMessage` | `string?` | "No data available" | Custom empty-state message |
+| `AriaLabel` | `string?` | null | Screen reader label |
+| `OnChordClick` | `EventCallback<ChordClickEventArgs>` | — | Ribbon click event |
+| `Palette` | `ChartPalette?` | null | Color palette |
+
+Plus all [shared ChartBase parameters](/docs/charts).
+
+## Layout Algorithm
+
+1. **Total flow** — Each node's total flow = sum of all link values where that node is source or target.
+2. **Angular allocation** — The full circle (2PI) minus padding gaps is divided proportionally by each node's total flow.
+3. **Arc segments** — Each node gets an annular arc segment on the outer ring.
+4. **Chord sub-spans** — For each link, angular sub-spans are allocated on both the source and target arcs, proportional to the link value relative to each node's total.
+5. **Ribbon paths** — Quadratic bezier curves through the center connect the two arc sub-spans, forming the characteristic ribbon shape.
+
+## Input Validation
+
+- **Negative or zero values** — Links with `Value <= 0` are skipped
+- **Self-links** — Links where `SourceId == TargetId` are skipped
+- **Invalid node IDs** — Links referencing non-existent nodes are skipped
+- **Duplicate node IDs** — Only the first node with a given ID is used
+- **Null labels** — Falls back to the node's `Id`
+
+## Use Cases
+
+- **Trade flows** — Imports/exports between countries
+- **Communication patterns** — Message volume between teams or departments
+- **Dependencies** — Module or package interdependencies
+- **Migration** — Population movement between regions
+- **Collaboration** — Co-authorship or shared work between groups
+
+## Accessibility
+
+- `role="figure"` and `aria-label` on the SVG element
+- Hidden `<table>` with Source, Target, and Value columns for screen readers
+- Animations respect `prefers-reduced-motion: reduce`
+- `FormatProvider` support for localized number formatting

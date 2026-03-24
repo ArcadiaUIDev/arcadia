@@ -1,0 +1,38 @@
+@page "/test/chord"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Components.Charts
+@using Arcadia.Charts.Core
+
+<div style="padding: 24px; background: transparent;">
+    <ArcadiaChordChart Data="@_nodes" Links="@_links"
+                       Height="600" Width="600" AnimateOnLoad="true"
+                       Title="Global Trade Flow" ShowLabels="true" />
+</div>
+
+@code {
+    List<ChordNode> _nodes = new()
+    {
+        new() { Id = "us", Label = "United States" },
+        new() { Id = "cn", Label = "China" },
+        new() { Id = "de", Label = "Germany" },
+        new() { Id = "jp", Label = "Japan" },
+        new() { Id = "uk", Label = "United Kingdom" },
+        new() { Id = "kr", Label = "South Korea" },
+    };
+
+    List<ChordLink> _links = new()
+    {
+        new() { SourceId = "us", TargetId = "cn", Value = 120 },
+        new() { SourceId = "us", TargetId = "de", Value = 60 },
+        new() { SourceId = "us", TargetId = "jp", Value = 75 },
+        new() { SourceId = "us", TargetId = "uk", Value = 55 },
+        new() { SourceId = "us", TargetId = "kr", Value = 40 },
+        new() { SourceId = "cn", TargetId = "de", Value = 45 },
+        new() { SourceId = "cn", TargetId = "jp", Value = 90 },
+        new() { SourceId = "cn", TargetId = "kr", Value = 70 },
+        new() { SourceId = "de", TargetId = "uk", Value = 50 },
+        new() { SourceId = "de", TargetId = "jp", Value = 30 },
+        new() { SourceId = "jp", TargetId = "kr", Value = 55 },
+        new() { SourceId = "uk", TargetId = "kr", Value = 20 },
+    };
+}

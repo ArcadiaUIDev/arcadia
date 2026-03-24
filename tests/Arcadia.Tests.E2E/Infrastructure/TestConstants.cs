@@ -9,7 +9,7 @@ public static class TestConstants
     public static readonly string[] AllChartTypes =
     {
         "line", "bar", "pie", "scatter", "radar", "gauge",
-        "candlestick", "funnel", "heatmap", "treemap", "waterfall"
+        "candlestick", "funnel", "heatmap", "treemap", "waterfall", "sankey", "chord"
     };
 
     public static class Viewports
