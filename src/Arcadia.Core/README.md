@@ -1,35 +1,32 @@
-# Arcadia.Core
+<p align="center">
+  <strong>Arcadia.Core</strong><br>
+  <em>The foundation of Arcadia Controls — base classes, theming, and accessibility for Blazor</em>
+</p>
 
-Shared base classes, theming engine, and accessibility utilities for the Arcadia Controls component library.
+## You probably don't need to install this directly
 
-## Install
+Arcadia.Core is automatically pulled in when you install `Arcadia.Charts`, `Arcadia.FormBuilder`, or any other Arcadia package. Install it directly only if you're building custom components that extend the Arcadia base classes.
 
 ```bash
 dotnet add package Arcadia.Core
 ```
 
-## What's Included
+## What's Inside
 
-- **HelixComponentBase** — base class with Class, Style, AdditionalAttributes for all Arcadia components
-- **HelixInputBase\<T\>** — base for form inputs with Value/ValueChanged/ValueExpression two-way binding
-- **CssBuilder / StyleBuilder** — fluent CSS class and inline style construction
-- **Accessibility utilities** — FocusTrap, LiveRegion, AriaHelper, KeyboardNavigation, WCAG 2.1 AA compliance
-- **IdGenerator** — unique IDs for aria-describedby, label-for linking
+| Module | What it does |
+|--------|-------------|
+| `ArcadiaComponentBase` | Base class with `Class`, `Style`, `AdditionalAttributes` — every Arcadia component inherits this |
+| `ArcadiaInputBase<T>` | Two-way binding base (`Value`/`ValueChanged`/`ValueExpression`) for form inputs |
+| `CssBuilder` / `StyleBuilder` | Fluent API for building CSS classes and inline styles without string concatenation |
+| `FocusTrap` | Traps keyboard focus inside modals/dialogs for accessibility |
+| `LiveRegion` | ARIA live region for screen reader announcements |
+| `IdGenerator` | Unique IDs for `aria-describedby` and `label[for]` linking |
 
-## Usage
+## Why it matters
 
-Arcadia.Core is automatically included as a dependency of all Arcadia component packages. Install it directly only if building custom components that extend the Arcadia base classes:
+- **Zero external dependencies** — only `Microsoft.AspNetCore.Components`
+- **WCAG 2.1 AA** — accessibility baked into the base classes, not bolted on
+- **Multi-target** — .NET 5, 6, 7, 8, 9, 10
+- **All render modes** — Server, WASM, Auto, SSR
 
-```razor
-@inherits HelixComponentBase
-
-<div class="@CssClass" @attributes="AdditionalAttributes">
-    @ChildContent
-</div>
-```
-
-## Key Features
-
-Zero external dependencies · Nullable reference types · IAsyncDisposable lifecycle · Multi-target .NET 5–10 · All Blazor render modes
-
-**[Docs](https://arcadiaui.com/docs)** · **[Demo](https://arcadiaui.com/playground/)** · **[GitHub](https://github.com/ArcadiaUIDev/arcadia)**
+**[Documentation](https://arcadiaui.com/docs)** · **[GitHub](https://github.com/ArcadiaUIDev/arcadia)**

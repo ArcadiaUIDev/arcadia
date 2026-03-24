@@ -1,41 +1,44 @@
-# Arcadia.Theme
+<p align="center">
+  <strong>Arcadia.Theme</strong><br>
+  <em>Design tokens, dark/light themes, and CSS custom properties for Blazor</em>
+</p>
 
-Design tokens, CSS custom properties, and dark/light theme support for Arcadia Controls.
-
-## Install
+## Quick Start
 
 ```bash
 dotnet add package Arcadia.Theme
 ```
 
-## Quick Start
-
-Add the stylesheet to your `App.razor` or `_Host.cshtml`:
-
+Add one line to your `App.razor`:
 ```html
-<link rel="stylesheet" href="_content/Arcadia.Theme/arcadia-theme.css" />
+<link href="_content/Arcadia.Theme/css/arcadia.css" rel="stylesheet" />
 ```
 
-Wrap your app in the theme provider and toggle themes programmatically:
+That's it. You get 80+ CSS custom properties, dark mode, and density variants.
+
+## What You Get
+
+**Colors** — `--arcadia-color-primary`, `--arcadia-color-success`, `--arcadia-color-danger`, and 20+ semantic color tokens that adapt to light/dark mode automatically.
+
+**Spacing** — Consistent spacing scale from `--arcadia-spacing-1` (4px) to `--arcadia-spacing-16` (64px).
+
+**Typography** — Font sizes, weights, and line heights via `--arcadia-text-sm`, `--arcadia-font-bold`, etc.
+
+**Dark Mode** — Wrap your app in `<ThemeProvider>` and call `ThemeService.ToggleTheme()`. All Arcadia components adapt instantly.
+
+```csharp
+// Program.cs
+builder.Services.AddScoped<ThemeService>();
+```
 
 ```razor
 <ThemeProvider>
-    @Body
+    <Router ... />
 </ThemeProvider>
-
-@inject ThemeService Theme
-<button @onclick="() => Theme.SetMode(ThemeMode.Dark)">Dark Mode</button>
 ```
 
-## What's Included
+## Tailwind CSS Compatible
 
-- **Design tokens** — colors, spacing, typography, border radius, elevation as CSS custom properties
-- **Light and dark themes** — automatic OS detection with manual override, WCAG 2.1 AA contrast ratios
-- **Three density modes** — compact, default, comfortable
-- **Tailwind CSS 4.x plugin** — tokens map to Tailwind utilities with zero conflicts
+All tokens map to Tailwind utility classes via the Arcadia Tailwind plugin. Use `bg-arcadia-primary` alongside standard Tailwind classes.
 
-## Key Features
-
-CSS custom properties · OS-level dark mode detection · Programmatic theme switching · Custom theme creation · Multi-target .NET 5–10
-
-**[Docs](https://arcadiaui.com/docs/theming)** · **[Demo](https://arcadiaui.com/playground/)** · **[GitHub](https://github.com/ArcadiaUIDev/arcadia)**
+**[Docs](https://arcadiaui.com/docs/theme)** · **[GitHub](https://github.com/ArcadiaUIDev/arcadia)**

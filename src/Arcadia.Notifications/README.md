@@ -1,47 +1,46 @@
-# Arcadia.Notifications
+<p align="center">
+  <strong>Arcadia.Notifications</strong><br>
+  <em>Toast notifications for Blazor — fire and forget</em>
+</p>
 
-Toast notifications and notification center for Blazor — auto-dismiss, stacking, real-time via SignalR.
-
-## Install
+## Quick Start
 
 ```bash
 dotnet add package Arcadia.Notifications
 ```
 
-## Quick Start
-
-Register the service in `Program.cs`:
-
 ```csharp
+// Program.cs
 builder.Services.AddScoped<ToastService>();
 ```
 
-Add the toast container to your layout:
-
-```razor
-<HelixToastContainer Position="ToastPosition.TopRight" />
+```html
+<link href="_content/Arcadia.Notifications/css/arcadia-notifications.css" rel="stylesheet" />
 ```
 
-Show notifications from any component:
+```razor
+<!-- In your layout -->
+<ArcadiaToastContainer Position="ToastPosition.TopRight" />
+```
+
+Then anywhere in your app:
 
 ```csharp
-@inject ToastService ToastService
+@inject ToastService Toast
 
-ToastService.ShowSuccess("Record saved successfully.");
-ToastService.ShowError("Connection lost.");
-ToastService.ShowWarning("Disk space running low.");
-ToastService.ShowInfo("New version available.");
+Toast.ShowSuccess("Saved!");
+Toast.ShowError("Something went wrong.");
+Toast.ShowWarning("Check your input.");
+Toast.ShowInfo("New update available.");
 ```
 
 ## Features
 
-- **Toast types** — Success, Error, Warning, Info, Custom
-- **Notification center** — bell icon with unread count, dropdown panel, grouping by type/date
-- **Real-time** — SignalR integration for live notification delivery
-- **Configurable** — auto-dismiss duration, max visible, stacking, click-to-dismiss
+- **4 severity levels** — Success, Error, Warning, Info with distinct colors
+- **Auto-dismiss** — configurable duration, or persist until clicked
+- **Stacking** — multiple toasts stack vertically with smooth animations
+- **Positioning** — TopRight, TopLeft, BottomRight, BottomLeft, TopCenter, BottomCenter
+- **Custom titles** — `Toast.ShowSuccess("Saved!", "Changes Applied")`
+- **Dismiss all** — `Toast.DismissAll()`
 
-## Key Features
-
-Auto-dismiss · Stacking with max limit · Notification history · Action buttons · ARIA live region accessible · All Blazor render modes · .NET 5–10
-
-**[Docs](https://arcadiaui.com/docs/notifications)** · **[Demo](https://arcadiaui.com/playground/)** · **[GitHub](https://github.com/ArcadiaUIDev/arcadia)**
+**[Docs](https://arcadiaui.com/docs/notifications)** · **[GitHub](https://github.com/ArcadiaUIDev/arcadia)**

@@ -1,46 +1,52 @@
-# Arcadia.FormBuilder
-
-Dynamic form generation for Blazor — 21 field types, schema-driven and model-driven modes, multi-step wizards.
-
-## Install
-
-```bash
-dotnet add package Arcadia.FormBuilder
-```
+<p align="center">
+  <strong>Arcadia.FormBuilder</strong><br>
+  <em>21 field types, schema-driven forms, and multi-step wizards for Blazor</em>
+</p>
 
 ## Quick Start
 
-Generate a form from a JSON schema:
+```bash
+dotnet add package Arcadia.FormBuilder
+dotnet add package Arcadia.Theme
+```
 
+```html
+<link href="_content/Arcadia.FormBuilder/css/arcadia-forms.css" rel="stylesheet" />
+```
+
+## Three Ways to Build Forms
+
+**1. Individual fields** — drop in exactly what you need:
+```razor
+<TextField Label="Name" @bind-Value="name" Required="true" />
+<SelectField Label="Country" @bind-Value="country" Options="@countries" />
+<DateField Label="Birthday" @bind-Value="dob" />
+```
+
+**2. Schema-driven** — define the form as data, render it dynamically:
+```razor
+<ArcadiaFormBuilder Schema="@schema" State="@state" OnValidSubmit="HandleSubmit" />
+```
+
+**3. Model-driven** — annotate a C# class, get a form:
 ```csharp
-var schema = new FormSchema
+public class ContactForm
 {
-    Title = "Contact Form",
-    Fields = new()
-    {
-        new() { Name = "name", Type = FieldType.Text, Label = "Name", Required = true },
-        new() { Name = "email", Type = FieldType.Text, Label = "Email",
-                Validation = new() { Pattern = "email" } },
-    }
-};
+    [ArcadiaField(Type = FieldType.Text, Label = "Name")]
+    [Required]
+    public string Name { get; set; }
+}
 ```
 
-```razor
-<HelixFormBuilder Schema="@schema" OnValidSubmit="HandleSubmit" />
-```
+## 21 Field Types
 
-Or generate directly from a C# model with DataAnnotations:
+Text · Password · Email · TextArea · Number · Select · Radio · Checkbox · Switch · Date · Time · DateTime · Slider · Rating · Color · File · Masked · Autocomplete · Tags · RichText · Hidden
 
-```razor
-<HelixFormBuilder TModel="ContactForm" Model="@contact" OnValidSubmit="HandleSubmit" />
-```
+## Features
 
-## Field Types
+- **Validation** — built-in rules, FluentValidation, async validators
+- **Conditional fields** — show/hide fields based on other field values
+- **Wizard mode** — multi-step forms with progress bar and per-step validation
+- **Accessibility** — all fields have proper labels, error messages, and ARIA attributes
 
-Text · Number · Email · Select · MultiSelect · Checkbox · Radio · Toggle · Date · DateTime · Time · File Upload · TextArea · Autocomplete · Switch · Slider · Rating · Color Picker · Rich Text · Repeater · Hidden
-
-## Key Features
-
-Schema-driven & model-driven · Multi-step wizard with per-step validation · Conditional field visibility · Async validation · Auto-save with undo/redo · WCAG 2.1 AA accessible · All Blazor render modes · .NET 5–10
-
-**[Docs](https://arcadiaui.com/docs/form-builder)** · **[Demo](https://arcadiaui.com/playground/)** · **[GitHub](https://github.com/ArcadiaUIDev/arcadia)**
+**[Docs](https://arcadiaui.com/docs/forms)** · **[GitHub](https://github.com/ArcadiaUIDev/arcadia)**
