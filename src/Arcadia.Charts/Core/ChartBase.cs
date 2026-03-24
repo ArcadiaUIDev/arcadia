@@ -175,8 +175,11 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
     /// <summary>Whether the chart is in responsive mode (Width=0).</summary>
     protected bool IsResponsive => Width <= 0;
 
-    /// <summary>The actual rendered width (either fixed or measured from container).</summary>
+    /// <summary>The actual rendered width used for layout calculations.</summary>
     protected double EffectiveWidth => _measuredWidth > 0 ? _measuredWidth : (Width > 0 ? Width : 600);
+
+    /// <summary>The SVG width attribute — "100%" in responsive mode, pixel value otherwise.</summary>
+    protected string SvgWidth => IsResponsive && _measuredWidth <= 0 ? "100%" : EffectiveWidth.ToString("F0");
 
     private double _measuredWidth;
 

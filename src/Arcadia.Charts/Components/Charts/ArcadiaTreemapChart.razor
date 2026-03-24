@@ -6,7 +6,7 @@
 {
     <div class="arcadia-chart @(Loading ? "arcadia-chart--loading" : "")" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         @if (ShowToolbar) { <ChartToolbar OnExportPng="@(() => ExportPngAsync())" OnExportSvg="@(() => ExportSvgFileAsync())" /> }
-        <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
+        <svg width="@SvgWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
              role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Treemap chart")">
 
             @if (!string.IsNullOrEmpty(Title))
