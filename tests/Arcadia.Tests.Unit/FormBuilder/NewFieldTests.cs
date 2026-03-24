@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Arcadia.Tests.Unit.FormBuilder;
 
-public class NewFieldTests : BunitContext
+public class NewFieldTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void PasswordField_Renders_HiddenByDefault()

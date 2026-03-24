@@ -602,7 +602,7 @@ public record RenderCandle(string Day, double Open, double High, double Low, dou
 public record RenderHeatCell(string Col, string Row, double Value);
 public record RenderRadarItem(string Axis, double A, double B);
 
-public class LineChartRenderingTests : BunitContext
+public class LineChartRenderingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static List<SeriesConfig<RenderPoint>> MakeSeries(params string[] names)
     {
@@ -747,7 +747,7 @@ public class LineChartRenderingTests : BunitContext
     }
 }
 
-public class BarChartRenderingTests : BunitContext
+public class BarChartRenderingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static List<SeriesConfig<RenderPoint>> MakeSeries(params string[] names)
     {
@@ -869,7 +869,7 @@ public class BarChartRenderingTests : BunitContext
     }
 }
 
-public class PieChartRenderingTests : BunitContext
+public class PieChartRenderingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void EmptyData_DoesNotCrash()
@@ -951,7 +951,7 @@ public class PieChartRenderingTests : BunitContext
     }
 }
 
-public class ScatterChartRenderingTests : BunitContext
+public class ScatterChartRenderingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void EmptyData_DoesNotCrash()
@@ -1018,7 +1018,7 @@ public class ScatterChartRenderingTests : BunitContext
     }
 }
 
-public class CandlestickRenderingTests : BunitContext
+public class CandlestickRenderingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Doji_BodyHeightAtLeast1()
@@ -1084,7 +1084,7 @@ public class CandlestickRenderingTests : BunitContext
     }
 }
 
-public class GaugeRenderingTests : BunitContext
+public class GaugeRenderingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void ValueAtMin_MinimalArc()
@@ -1147,7 +1147,7 @@ public class GaugeRenderingTests : BunitContext
     }
 }
 
-public class HeatmapRenderingTests : BunitContext
+public class HeatmapRenderingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void EmptyData_DoesNotCrash()
@@ -1198,7 +1198,7 @@ public class HeatmapRenderingTests : BunitContext
     }
 }
 
-public class RadarChartRenderingTests : BunitContext
+public class RadarChartRenderingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static List<SeriesConfig<RenderRadarItem>> MakeSeries()
     {
@@ -1277,7 +1277,7 @@ public class RadarChartRenderingTests : BunitContext
 // 4. SVG Coordinate Validation
 // ──────────────────────────────────────────────────────────────────────
 
-public class SvgCoordinateValidationTests : BunitContext
+public class SvgCoordinateValidationTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static readonly Regex NumberPattern = new(@"-?\d+\.?\d*", RegexOptions.Compiled);
     private static readonly Regex PathDPattern = new(@"d=""([^""]+)""", RegexOptions.Compiled);

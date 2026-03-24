@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Arcadia.Tests.Unit.Notifications;
 
-public class ArcadiaToastTests : BunitContext
+public class ArcadiaToastTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Theory]
     [InlineData(ToastLevel.Info, "arcadia-toast--info")]

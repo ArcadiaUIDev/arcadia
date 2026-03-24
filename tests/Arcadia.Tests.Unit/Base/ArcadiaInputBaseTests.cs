@@ -47,7 +47,7 @@ public class TestNumericInput : Arcadia.Core.Base.ArcadiaInputBase<int>
     }
 }
 
-public class ArcadiaInputBaseTests : BunitContext
+public class ArcadiaInputBaseTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Renders_WithValue()

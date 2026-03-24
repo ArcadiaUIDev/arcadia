@@ -11,7 +11,7 @@ public record SalesPoint(string Month, double Revenue, double Target);
 public record PieSlice(string Name, double Value);
 public record XYPoint(double X, double Y);
 
-public class LineChartApiTests : BunitContext
+public class LineChartApiTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static readonly List<SalesPoint> SampleData = new()
     {
@@ -241,7 +241,7 @@ public class LineChartApiTests : BunitContext
     }
 }
 
-public class BarChartApiTests : BunitContext
+public class BarChartApiTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static readonly List<SalesPoint> SampleData = new()
     {
@@ -326,7 +326,7 @@ public class BarChartApiTests : BunitContext
     }
 }
 
-public class PieChartApiTests : BunitContext
+public class PieChartApiTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static readonly List<PieSlice> SampleData = new()
     {
@@ -453,7 +453,7 @@ public class PieChartApiTests : BunitContext
     }
 }
 
-public class ScatterChartApiTests : BunitContext
+public class ScatterChartApiTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static readonly List<XYPoint> SampleData = Enumerable.Range(0, 20)
         .Select(i => new XYPoint(i * 5.0, 10 + i * 2.0 + (i % 3)))
@@ -500,7 +500,7 @@ public class ScatterChartApiTests : BunitContext
     }
 }
 
-public class CandlestickChartApiTests : BunitContext
+public class CandlestickChartApiTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static readonly List<CandlePoint> SampleData = new()
     {

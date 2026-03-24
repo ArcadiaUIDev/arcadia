@@ -18,8 +18,8 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
     /// <summary>Chart height in pixels.</summary>
     [Parameter] public double Height { get; set; } = 300;
 
-    /// <summary>Chart width in pixels.</summary>
-    [Parameter] public double Width { get; set; } = 600;
+    /// <summary>Chart width in pixels. 0 = responsive (fills container). Default is responsive.</summary>
+    [Parameter] public double Width { get; set; } = 0;
 
     // ── Titles ───────────────────────────────────────────
     /// <summary>Chart title.</summary>
@@ -187,17 +187,24 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
         if (_disposed) return;
         if (firstRender && Interop is not null)
         {
-            if (IsResponsive)
+            try
             {
-                _resizeRef = DotNetObjectReference.Create(new ResizeCallbackHandler(this));
-                await Interop.ObserveResizeAsync(ContainerRef, _resizeRef);
-            }
+                if (IsResponsive)
+                {
+                    _resizeRef = DotNetObjectReference.Create(new ResizeCallbackHandler(this));
+                    await Interop.ObserveResizeAsync(ContainerRef, _resizeRef);
+                }
 
-            if (EnableZoom || EnablePan)
-            {
-                _panZoomRef = DotNetObjectReference.Create(new PanZoomCallbackHandler(this));
-                await Interop.EnablePanZoomAsync(ContainerRef, _panZoomRef, ZoomMode);
+                if (EnableZoom || EnablePan)
+                {
+                    _panZoomRef = DotNetObjectReference.Create(new PanZoomCallbackHandler(this));
+                    await Interop.EnablePanZoomAsync(ContainerRef, _panZoomRef, ZoomMode);
+                }
             }
+            catch (Microsoft.JSInterop.JSException) { }
+#if NET6_0_OR_GREATER
+            catch (JSDisconnectedException) { }
+#endif
         }
     }
 

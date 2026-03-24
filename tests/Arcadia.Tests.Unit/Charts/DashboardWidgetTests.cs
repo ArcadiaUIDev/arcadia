@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Arcadia.Tests.Unit.Charts;
 
-public class SparklineTests : BunitContext
+public class SparklineTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Renders_SvgWithPath()
@@ -49,7 +49,7 @@ public class SparklineTests : BunitContext
     }
 }
 
-public class DeltaIndicatorTests : BunitContext
+public class DeltaIndicatorTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Increase_ShowsUpArrow()
@@ -74,7 +74,7 @@ public class DeltaIndicatorTests : BunitContext
     }
 }
 
-public class ProgressBarTests : BunitContext
+public class ProgressBarTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Renders_WithCorrectWidth()
@@ -110,7 +110,7 @@ public class ProgressBarTests : BunitContext
     }
 }
 
-public class KpiCardTests : BunitContext
+public class KpiCardTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Renders_TitleAndValue()

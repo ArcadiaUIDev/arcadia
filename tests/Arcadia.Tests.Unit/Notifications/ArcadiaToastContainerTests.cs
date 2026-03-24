@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Arcadia.Tests.Unit.Notifications;
 
-public class ArcadiaToastContainerTests : BunitContext
+public class ArcadiaToastContainerTests : Arcadia.Tests.Unit.ChartTestBase
 {
     public ArcadiaToastContainerTests()
     {

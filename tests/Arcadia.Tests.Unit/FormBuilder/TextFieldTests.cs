@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Arcadia.Tests.Unit.FormBuilder;
 
-public class TextFieldTests : BunitContext
+public class TextFieldTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Renders_WithLabel()

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Arcadia.Tests.Unit.FormBuilder;
 
-public class WizardTests : BunitContext
+public class WizardTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Renders_StepNavigation()

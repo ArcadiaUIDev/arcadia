@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Arcadia.Tests.Unit.Theme;
 
-public class ThemeProviderTests : BunitContext
+public class ThemeProviderTests : Arcadia.Tests.Unit.ChartTestBase
 {
     public ThemeProviderTests()
     {

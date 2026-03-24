@@ -26,7 +26,7 @@ public class TestComponent : Arcadia.Core.Base.ArcadiaComponentBase
     }
 }
 
-public class ArcadiaComponentBaseTests : BunitContext
+public class ArcadiaComponentBaseTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Renders_WithClassParameter()

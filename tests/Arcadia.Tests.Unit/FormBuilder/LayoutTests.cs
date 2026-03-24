@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Arcadia.Tests.Unit.FormBuilder;
 
-public class LayoutTests : BunitContext
+public class LayoutTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void FormDivider_Renders_Separator()

@@ -9,7 +9,7 @@ namespace Arcadia.Tests.Unit.Charts;
 public record RadarData(string Axis, double Speed, double Power, double Defense);
 public record HeatmapData(string Day, string Hour, double Value);
 
-public class RadarChartTests : BunitContext
+public class RadarChartTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static readonly List<RadarData> TestData = new()
     {
@@ -138,7 +138,7 @@ public class RadarChartTests : BunitContext
     }
 }
 
-public class GaugeChartTests : BunitContext
+public class GaugeChartTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Renders_SvgWithArc()
@@ -258,7 +258,7 @@ public class GaugeChartTests : BunitContext
     }
 }
 
-public class HeatmapTests : BunitContext
+public class HeatmapTests : Arcadia.Tests.Unit.ChartTestBase
 {
     private static readonly List<HeatmapData> TestData = new()
     {

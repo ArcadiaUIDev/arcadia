@@ -66,7 +66,7 @@ public class TrendlineCalculatorTests
     }
 }
 
-public class TrendlineRenderingTests : BunitContext
+public class TrendlineRenderingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void LineChart_Renders_LinearTrendline()
@@ -142,7 +142,7 @@ public class TrendlineRenderingTests : BunitContext
     }
 }
 
-public class StackedBarTests : BunitContext
+public class StackedBarTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void StackedBar_Renders_StackedBars()
@@ -192,7 +192,7 @@ public class StackedBarTests : BunitContext
     }
 }
 
-public class DataLabelTests : BunitContext
+public class DataLabelTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void BarChart_ShowsDataLabels()
@@ -253,7 +253,7 @@ public class DataLabelTests : BunitContext
     }
 }
 
-public class AxisFormattingTests : BunitContext
+public class AxisFormattingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void LineChart_FormatsYAxis()
@@ -300,7 +300,7 @@ public class AxisFormattingTests : BunitContext
     }
 }
 
-public class NullHandlingTests : BunitContext
+public class NullHandlingTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void LineChart_DefaultGap_RendersMultipleSegments()

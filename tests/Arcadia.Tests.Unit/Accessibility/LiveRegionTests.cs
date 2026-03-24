@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Arcadia.Tests.Unit.Accessibility;
 
-public class LiveRegionTests : BunitContext
+public class LiveRegionTests : Arcadia.Tests.Unit.ChartTestBase
 {
     [Fact]
     public void Renders_WithPoliteByDefault()
