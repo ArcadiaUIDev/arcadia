@@ -4,7 +4,7 @@
 
 @if (Data is not null && Data.Count > 1 && XField is not null && Series is not null)
 {
-    <div class="arcadia-chart" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
+    <div class="arcadia-chart @(Loading ? "arcadia-chart--loading" : "")" @ref="ContainerRef" style="@Style" @attributes="AdditionalAttributes">
         @if (ShowToolbar) { <ChartToolbar OnExportPng="@(() => ExportPngAsync())" OnExportSvg="@(() => ExportSvgFileAsync())" /> }
         <svg width="@EffectiveWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
              role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Line chart")"
@@ -142,12 +142,22 @@
             }
 
             @* Annotations *@
-            @if (Annotations is not null)
+            @if (Annotations is not null && _yScale is not null)
             {
                 @foreach (var ann in Annotations)
                 {
-                    if (ann.DataIndex >= 0 && ann.DataIndex < Data.Count)
+                    @if (ann.YValue.HasValue)
                     {
+                        @* Horizontal reference line at Y value *@
+                        var hy = _yScale.Scale(ann.YValue.Value);
+                        <line x1="@F(_layout.PlotArea.X)" y1="@F(hy)" x2="@F(_layout.PlotArea.X + _layout.PlotArea.Width)" y2="@F(hy)"
+                              stroke="@ann.Color" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.7" />
+                        <SvgText x="@F(_layout.PlotArea.X + _layout.PlotArea.Width + 4)" y="@F(hy + 4)" text-anchor="start"
+                              style="@($"font-size:10px; fill:{ann.Color}; font-weight:600;")">@ann.Label</SvgText>
+                    }
+                    else if (ann.DataIndex >= 0 && ann.DataIndex < Data.Count)
+                    {
+                        @* Vertical marker at data index *@
                         var ax = _layout.PlotArea.X + (ann.DataIndex + 0.5) * (_layout.PlotArea.Width / Data.Count);
                         @if (ann.ShowLine)
                         {
@@ -155,7 +165,7 @@
                                   stroke="@ann.Color" stroke-width="1" stroke-dasharray="4,3" opacity="0.7" />
                         }
                         <SvgText x="@F(ax)" y="@F(_layout.PlotArea.Y + 14)" text-anchor="middle"
-                              style="@($"font-size:10px; fill:{ann.Color}; font-weight:600; background: var(--g-card, rgba(0,0,0,0.5));")">@ann.Label</SvgText>
+                              style="@($"font-size:10px; fill:{ann.Color}; font-weight:600;")">@ann.Label</SvgText>
                     }
                 }
             }

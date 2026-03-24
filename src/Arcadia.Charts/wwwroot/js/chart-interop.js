@@ -180,7 +180,25 @@ export function enablePanZoom(containerEl, dotNetRef, options = {}) {
     }
   }, { passive: false });
   
-  // Pan via mouse drag
+  // Pan via mouse drag — store handlers for cleanup
+  const onMouseMove = e => {
+    if (!state.isPanning) return;
+    const dx = e.clientX - state.startX;
+    const dy = e.clientY - state.startY;
+    state.startX = e.clientX;
+    state.startY = e.clientY;
+
+    if (state.mode === 'x' || state.mode === 'xy') state.viewportX += dx;
+    if (state.mode === 'y' || state.mode === 'xy') state.viewportY += dy;
+
+    dotNetRef.invokeMethodAsync('OnPanChanged', state.viewportX, state.viewportY);
+  };
+
+  const onMouseUp = () => {
+    state.isPanning = false;
+    svg.style.cursor = '';
+  };
+
   svg.addEventListener('mousedown', e => {
     if (e.button !== 0) return;
     state.isPanning = true;
@@ -188,24 +206,11 @@ export function enablePanZoom(containerEl, dotNetRef, options = {}) {
     state.startY = e.clientY;
     svg.style.cursor = 'grabbing';
   });
-  
-  window.addEventListener('mousemove', e => {
-    if (!state.isPanning) return;
-    const dx = e.clientX - state.startX;
-    const dy = e.clientY - state.startY;
-    state.startX = e.clientX;
-    state.startY = e.clientY;
-    
-    if (state.mode === 'x' || state.mode === 'xy') state.viewportX += dx;
-    if (state.mode === 'y' || state.mode === 'xy') state.viewportY += dy;
-    
-    dotNetRef.invokeMethodAsync('OnPanChanged', state.viewportX, state.viewportY);
-  });
-  
-  window.addEventListener('mouseup', () => {
-    state.isPanning = false;
-    svg.style.cursor = '';
-  });
+
+  window.addEventListener('mousemove', onMouseMove);
+  window.addEventListener('mouseup', onMouseUp);
+  state._onMouseMove = onMouseMove;
+  state._onMouseUp = onMouseUp;
   
   // Touch pinch zoom
   let lastTouchDist = 0;
@@ -235,6 +240,11 @@ export function enablePanZoom(containerEl, dotNetRef, options = {}) {
 }
 
 export function disablePanZoom(containerEl) {
+  const state = panZoomState.get(containerEl);
+  if (state) {
+    if (state._onMouseMove) window.removeEventListener('mousemove', state._onMouseMove);
+    if (state._onMouseUp) window.removeEventListener('mouseup', state._onMouseUp);
+  }
   panZoomState.delete(containerEl);
 }
 
