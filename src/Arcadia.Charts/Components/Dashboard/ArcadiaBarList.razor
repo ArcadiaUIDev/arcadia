@@ -36,11 +36,11 @@
 
     private string ResolvedColor => Color switch
     {
-        "primary" => "var(--arcadia-color-primary)",
-        "success" => "var(--arcadia-color-success)",
-        "warning" => "var(--arcadia-color-warning)",
-        "danger" => "var(--arcadia-color-danger)",
-        "info" => "var(--arcadia-color-info)",
+        "primary" => "var(--arcadia-color-primary, #2563eb)",
+        "success" => "var(--arcadia-color-success, #16a34a)",
+        "warning" => "var(--arcadia-color-warning, #d97706)",
+        "danger" => "var(--arcadia-color-danger, #dc2626)",
+        "info" => "var(--arcadia-color-info, #0284c7)",
         _ => Color
     };
 

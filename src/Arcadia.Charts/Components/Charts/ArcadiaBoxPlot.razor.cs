@@ -31,7 +31,7 @@ public partial class ArcadiaBoxPlot<T> : ChartBase<T>
     [Parameter] public Func<T, double>? MaxField { get; set; }
 
     /// <summary>Color for the box fill.</summary>
-    [Parameter] public string BoxColor { get; set; } = "var(--arcadia-color-primary)";
+    [Parameter] public string BoxColor { get; set; } = "var(--arcadia-color-primary, #2563eb)";
 
     /// <summary>Box width as a fraction of available band space (0-1).</summary>
     [Parameter] public double BoxWidth { get; set; } = 0.6;

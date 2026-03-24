@@ -15,7 +15,7 @@ public class ChartAnnotation
     public string Label { get; set; } = string.Empty;
 
     /// <summary>Color for the marker and label.</summary>
-    public string Color { get; set; } = "var(--arcadia-color-danger)";
+    public string Color { get; set; } = "var(--arcadia-color-danger, #dc2626)";
 
     /// <summary>Whether to show a vertical line at this point.</summary>
     public bool ShowLine { get; set; } = true;

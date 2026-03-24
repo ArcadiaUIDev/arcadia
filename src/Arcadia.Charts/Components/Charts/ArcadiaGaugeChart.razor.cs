@@ -35,7 +35,7 @@ public partial class ArcadiaGaugeChart : Arcadia.Core.Base.ArcadiaComponentBase
     [Parameter] public List<GaugeThreshold>? Thresholds { get; set; }
 
     /// <summary>Default color when no threshold is matched.</summary>
-    [Parameter] public string Color { get; set; } = "var(--arcadia-color-primary)";
+    [Parameter] public string Color { get; set; } = "var(--arcadia-color-primary, #2563eb)";
 
     /// <summary>Background track color.</summary>
     [Parameter] public string TrackColor { get; set; } = "var(--arcadia-color-border, #e2e8f0)";

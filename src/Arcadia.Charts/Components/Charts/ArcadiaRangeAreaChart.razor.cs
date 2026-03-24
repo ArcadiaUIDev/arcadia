@@ -25,13 +25,13 @@ public partial class ArcadiaRangeAreaChart<T> : ChartBase<T>
     [Parameter] public Func<T, double>? MiddleField { get; set; }
 
     /// <summary>Fill color for the range band area.</summary>
-    [Parameter] public string FillColor { get; set; } = "var(--arcadia-color-primary)";
+    [Parameter] public string FillColor { get; set; } = "var(--arcadia-color-primary, #2563eb)";
 
     /// <summary>Opacity of the range band fill (0.0 to 1.0).</summary>
     [Parameter] public double FillOpacity { get; set; } = 0.2;
 
     /// <summary>Stroke color for the upper and lower bound lines.</summary>
-    [Parameter] public string StrokeColor { get; set; } = "var(--arcadia-color-primary)";
+    [Parameter] public string StrokeColor { get; set; } = "var(--arcadia-color-primary, #2563eb)";
 
     /// <summary>Optional stroke color for the middle line. Defaults to StrokeColor if null.</summary>
     [Parameter] public string? MiddleColor { get; set; }
