@@ -364,7 +364,12 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
     private async Task HandlePointClick(int index)
     {
         if (OnPointClick.HasDelegate && Data is not null && index >= 0 && index < Data.Count)
-            await OnPointClick.InvokeAsync(Data[index]);
+            await OnPointClick.InvokeAsync(new PointClickEventArgs<T>
+            {
+                Item = Data[index],
+                DataIndex = index,
+                SeriesIndex = -1
+            });
     }
 
     private static string F(double v) => v.ToString("F1");

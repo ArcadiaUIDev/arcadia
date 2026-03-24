@@ -139,10 +139,15 @@ public partial class ArcadiaScatterChart<T> : ChartBase<T>
         return style;
     }
 
-    private async Task HandlePointClick(T item)
+    private async Task HandlePointClick(T item, int index)
     {
         if (OnPointClick.HasDelegate)
-            await OnPointClick.InvokeAsync(item);
+            await OnPointClick.InvokeAsync(new PointClickEventArgs<T>
+            {
+                Item = item,
+                DataIndex = index,
+                SeriesIndex = -1
+            });
     }
 
     private static string F(double v) => v.ToString("F1");

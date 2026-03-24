@@ -123,3 +123,22 @@ Every chart automatically includes:
 - `role="figure"` and `aria-label` on the SVG
 - Hidden `<table>` with all data for screen readers
 - Animations respect `prefers-reduced-motion`
+
+## Custom Tooltip Templates
+
+The `TooltipTemplate` parameter accepts a `RenderFragment<T>` for fully custom HTML tooltips:
+
+```razor
+<ArcadiaLineChart TItem="SalesRecord" Data="@data"
+                  XField="@(d => (object)d.Month)" Series="@series"
+                  Height="350" Width="0">
+    <TooltipTemplate Context="item">
+        <div style="padding: 8px;">
+            <strong>@item.Month</strong>
+            <div>Revenue: $@item.Revenue.ToString("N0")</div>
+        </div>
+    </TooltipTemplate>
+</ArcadiaLineChart>
+```
+
+> **Note:** Custom tooltip templates require an interactive render mode (Server or WASM). In static SSR, the default text tooltips are used instead.

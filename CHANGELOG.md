@@ -12,10 +12,10 @@
 - All CSS variable references now have hardcoded fallbacks (pie, rose, funnel, treemap, etc.)
 - Fix stale HelixUI path references in all CSS file comments
 
-### Known API Inconsistencies (will be addressed in 1.0.0)
-- `ArcadiaGaugeChart.Thresholds` uses `List<GaugeThreshold>` while `ArcadiaProgressBar.Thresholds` uses `IReadOnlyList<(double, string)>` — will be unified
-- `OnPointClick` returns `EventCallback<T>` (item) while `OnSeriesClick` returns `EventCallback<int>` (index) — will add a unified `PointClickEventArgs`
-- `TooltipTemplate` parameter exists but is not documented — it requires JS interop and only works in interactive render modes
+### API Improvements
+- `OnPointClick` now returns `PointClickEventArgs<T>` with `Item`, `DataIndex`, `SeriesIndex`, and `SeriesName` — provides full click context
+- `ArcadiaProgressBar.Thresholds` now uses `List<GaugeThreshold>` (same type as `ArcadiaGaugeChart`) — unified threshold API
+- `TooltipTemplate` parameter documented in Charts Overview
 
 ## 1.0.0-beta.4 (2026-03-24)
 

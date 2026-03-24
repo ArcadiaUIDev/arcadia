@@ -56,7 +56,7 @@
                         style="@GetPointStyle(i)"
                         @onmouseover="@(e => ShowScatterTooltip(XField(item), YField(item), e.ClientX, e.ClientY))"
                         @onmouseout="HideTooltipAction"
-                        @onclick="@(() => HandlePointClick(item))" />
+                        @onclick="@(() => HandlePointClick(item, i))" />
 
                 @if (ShowDataLabels)
                 {

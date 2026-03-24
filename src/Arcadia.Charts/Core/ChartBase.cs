@@ -128,8 +128,8 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
     [Parameter] public List<ChartAnnotation>? Annotations { get; set; }
 
     // ── Events ───────────────────────────────────────────
-    /// <summary>Fired when a data point is clicked. Receives the data item.</summary>
-    [Parameter] public EventCallback<T> OnPointClick { get; set; }
+    /// <summary>Fired when a data point is clicked. Receives item, index, and series context.</summary>
+    [Parameter] public EventCallback<PointClickEventArgs<T>> OnPointClick { get; set; }
 
     /// <summary>Fired when a series is clicked. Receives the series index.</summary>
     [Parameter] public EventCallback<int> OnSeriesClick { get; set; }

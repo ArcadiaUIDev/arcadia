@@ -29,10 +29,10 @@
     [Parameter] public string Color { get; set; } = "primary";
 
     /// <summary>
-    /// Thresholds for color changes. E.g., [(60, "warning"), (90, "danger")].
+    /// Thresholds for color changes. Same GaugeThreshold type used by ArcadiaGaugeChart.
     /// Values above the threshold use that color.
     /// </summary>
-    [Parameter] public IReadOnlyList<(double Threshold, string Color)>? Thresholds { get; set; }
+    [Parameter] public IReadOnlyList<Arcadia.Charts.Core.GaugeThreshold>? Thresholds { get; set; }
 
     private double Percent => Max > Min ? Math.Clamp((Value - Min) / (Max - Min) * 100, 0, 100) : 0;
 
@@ -42,10 +42,10 @@
         {
             if (Thresholds is not null)
             {
-                foreach (var (threshold, color) in Thresholds.OrderByDescending(t => t.Threshold))
+                foreach (var t in Thresholds.OrderByDescending(t => t.Value))
                 {
-                    if (Percent >= threshold)
-                        return ResolveColor(color);
+                    if (Percent >= t.Value)
+                        return ResolveColor(t.Color);
                 }
             }
             return ResolveColor(Color);

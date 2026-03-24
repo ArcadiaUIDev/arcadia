@@ -194,7 +194,13 @@ public partial class ArcadiaBarChart<T> : ChartBase<T>
     private async Task HandleBarClick(BarRect bar)
     {
         if (OnPointClick.HasDelegate && Data is not null && bar.DataIndex >= 0 && bar.DataIndex < Data.Count)
-            await OnPointClick.InvokeAsync(Data[bar.DataIndex]);
+            await OnPointClick.InvokeAsync(new PointClickEventArgs<T>
+            {
+                Item = Data[bar.DataIndex],
+                DataIndex = bar.DataIndex,
+                SeriesIndex = bar.SeriesIndex,
+                SeriesName = bar.SeriesName
+            });
         if (OnSeriesClick.HasDelegate)
             await OnSeriesClick.InvokeAsync(bar.SeriesIndex);
     }

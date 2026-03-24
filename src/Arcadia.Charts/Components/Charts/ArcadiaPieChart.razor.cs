@@ -116,7 +116,12 @@ public partial class ArcadiaPieChart<T> : ChartBase<T>
         if (OnSliceClick.HasDelegate)
             await OnSliceClick.InvokeAsync(Data[index]);
         if (OnPointClick.HasDelegate)
-            await OnPointClick.InvokeAsync(Data[index]);
+            await OnPointClick.InvokeAsync(new PointClickEventArgs<T>
+            {
+                Item = Data[index],
+                DataIndex = index,
+                SeriesIndex = -1
+            });
     }
 
     private async Task ShowPieTooltip(string name, double value, double percent, double x, double y)
