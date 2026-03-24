@@ -130,12 +130,12 @@ public partial class ArcadiaGaugeChart : Arcadia.Core.Base.ArcadiaComponentBase
     {
         return color switch
         {
-            "primary" => "var(--arcadia-color-primary)",
-            "secondary" => "var(--arcadia-color-secondary)",
-            "success" => "var(--arcadia-color-success)",
-            "danger" => "var(--arcadia-color-danger)",
-            "warning" => "var(--arcadia-color-warning)",
-            "info" => "var(--arcadia-color-info)",
+            "primary" => "var(--arcadia-color-primary, #2563eb)",
+            "secondary" => "var(--arcadia-color-secondary, #7c3aed)",
+            "success" => "var(--arcadia-color-success, #16a34a)",
+            "danger" => "var(--arcadia-color-danger, #dc2626)",
+            "warning" => "var(--arcadia-color-warning, #d97706)",
+            "info" => "var(--arcadia-color-info, #0284c7)",
             _ => color
         };
     }

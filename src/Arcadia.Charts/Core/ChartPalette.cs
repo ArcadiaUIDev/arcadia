@@ -30,14 +30,14 @@ public class ChartPalette
 
     // ---- Built-in palettes ----
 
-    /// <summary>Default palette using Arcadia Controls theme tokens.</summary>
+    /// <summary>Default palette using Arcadia Controls theme tokens with hardcoded fallbacks.</summary>
     public static readonly ChartPalette Default = new(
-        "var(--arcadia-color-primary)",
-        "var(--arcadia-color-success)",
-        "var(--arcadia-color-warning)",
-        "var(--arcadia-color-danger)",
-        "var(--arcadia-color-info)",
-        "var(--arcadia-color-secondary)",
+        "var(--arcadia-color-primary, #2563eb)",
+        "var(--arcadia-color-success, #16a34a)",
+        "var(--arcadia-color-warning, #d97706)",
+        "var(--arcadia-color-danger, #dc2626)",
+        "var(--arcadia-color-info, #0284c7)",
+        "var(--arcadia-color-secondary, #7c3aed)",
         "#8b5cf6", "#ec4899", "#14b8a6", "#f97316"
     );
 
