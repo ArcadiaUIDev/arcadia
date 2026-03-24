@@ -11,7 +11,7 @@ Single or multi-series line chart with area fill, trendlines, data points, and n
 ## Basic Usage
 
 ```razor
-<HelixLineChart TItem="SalesRecord" Data="@data"
+<ArcadiaLineChart TItem="SalesRecord" Data="@data"
                 XField="@(d => (object)d.Month)"
                 Series="@series"
                 Height="300" Width="600" />
@@ -73,19 +73,19 @@ Plus all [shared ChartBase parameters](/docs/charts).
 
 ```csharp
 // Gap — break the line at missing points
-<HelixLineChart NullHandling="NullHandling.Gap" />
+<ArcadiaLineChart NullHandling="NullHandling.Gap" />
 
 // Connect — skip missing, connect neighbors
-<HelixLineChart NullHandling="NullHandling.Connect" />
+<ArcadiaLineChart NullHandling="NullHandling.Connect" />
 
 // Zero — treat missing as 0
-<HelixLineChart NullHandling="NullHandling.Zero" />
+<ArcadiaLineChart NullHandling="NullHandling.Zero" />
 ```
 
 ## Axis Formatting
 
 ```razor
-<HelixLineChart YAxisFormatString="C0"
+<ArcadiaLineChart YAxisFormatString="C0"
                 XAxisFormatString="MMM"
                 FormatProvider="@CultureInfo.GetCultureInfo("en-US")" />
 ```

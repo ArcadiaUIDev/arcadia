@@ -6,7 +6,7 @@ namespace Arcadia.FormBuilder.ModelBinding;
 
 /// <summary>
 /// Generates a <see cref="FormSchema"/> from a C# class using reflection.
-/// Respects DataAnnotations, Display attributes, and HelixUI-specific attributes.
+/// Respects DataAnnotations, Display attributes, and Arcadia-specific attributes.
 /// </summary>
 public static class ModelFormGenerator
 {
@@ -34,17 +34,17 @@ public static class ModelFormGenerator
 
         var properties = modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
             .Where(p => p.CanRead && p.CanWrite)
-            .Where(p => p.GetCustomAttribute<HelixIgnoreAttribute>() is null)
+            .Where(p => p.GetCustomAttribute<ArcadiaIgnoreAttribute>() is null)
             .ToList();
 
         // Group by section
-        var sectionGroups = new Dictionary<string, (HelixSectionAttribute Attr, List<(PropertyInfo Prop, int Order)> Props)>();
+        var sectionGroups = new Dictionary<string, (ArcadiaSectionAttribute Attr, List<(PropertyInfo Prop, int Order)> Props)>();
         var unsectioned = new List<(PropertyInfo Prop, int Order)>();
 
         foreach (var prop in properties)
         {
-            var sectionAttr = prop.GetCustomAttribute<HelixSectionAttribute>();
-            var fieldAttr = prop.GetCustomAttribute<HelixFieldAttribute>();
+            var sectionAttr = prop.GetCustomAttribute<ArcadiaSectionAttribute>();
+            var fieldAttr = prop.GetCustomAttribute<ArcadiaFieldAttribute>();
             var order = fieldAttr?.Order ?? int.MaxValue;
 
             if (sectionAttr is not null)
@@ -90,7 +90,7 @@ public static class ModelFormGenerator
 
     private static FieldSchema BuildFieldSchema(PropertyInfo prop)
     {
-        var fieldAttr = prop.GetCustomAttribute<HelixFieldAttribute>();
+        var fieldAttr = prop.GetCustomAttribute<ArcadiaFieldAttribute>();
         var displayAttr = prop.GetCustomAttribute<DisplayAttribute>();
         var requiredAttr = prop.GetCustomAttribute<RequiredAttribute>();
         var stringLenAttr = prop.GetCustomAttribute<StringLengthAttribute>();
@@ -99,7 +99,7 @@ public static class ModelFormGenerator
         var phoneAttr = prop.GetCustomAttribute<PhoneAttribute>();
         var urlAttr = prop.GetCustomAttribute<UrlAttribute>();
         var dataTypeAttr = prop.GetCustomAttribute<DataTypeAttribute>();
-        var conditionAttrs = prop.GetCustomAttributes<HelixConditionAttribute>().ToList();
+        var conditionAttrs = prop.GetCustomAttributes<ArcadiaConditionAttribute>().ToList();
 
         var fieldType = fieldAttr?.HasExplicitType == true
             ? fieldAttr.Type

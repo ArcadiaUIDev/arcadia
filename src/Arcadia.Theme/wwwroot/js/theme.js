@@ -1,5 +1,5 @@
 /**
- * HelixUI Theme JS Interop
+ * Arcadia Controls Theme JS Interop
  * Handles system color scheme preference detection and persistence.
  */
 

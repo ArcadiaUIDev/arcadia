@@ -6,7 +6,7 @@ namespace Arcadia.Core.Accessibility;
 /// Renders an ARIA live region that announces dynamic content changes to screen readers.
 /// The region is visually hidden by default but accessible to assistive technology.
 /// </summary>
-public partial class LiveRegion : Base.HelixComponentBase
+public partial class LiveRegion : Base.ArcadiaComponentBase
 {
     /// <summary>
     /// Gets or sets the message to announce to screen readers.

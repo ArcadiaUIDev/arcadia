@@ -4,7 +4,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixRadarChart TItem="SkillProfile" Data="@_data"
+    <ArcadiaRadarChart TItem="SkillProfile" Data="@_data"
                      LabelField="@(d => d.Skill)" Series="@_series"
                      Height="420" Width="420" AnimateOnLoad="true"
                      Title="Team Skills" ShowLegend="true" />

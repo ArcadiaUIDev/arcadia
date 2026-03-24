@@ -46,31 +46,31 @@ public class EnumModel
 
 public class SectionedModel
 {
-    [HelixSection("Personal", Order = 0)]
+    [ArcadiaSection("Personal", Order = 0)]
     [Required]
     public string FirstName { get; set; } = string.Empty;
 
-    [HelixSection("Personal", Order = 0)]
+    [ArcadiaSection("Personal", Order = 0)]
     public string LastName { get; set; } = string.Empty;
 
-    [HelixSection("Contact", Order = 1, Description = "How to reach you")]
+    [ArcadiaSection("Contact", Order = 1, Description = "How to reach you")]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
 
-    [HelixSection("Contact", Order = 1)]
+    [ArcadiaSection("Contact", Order = 1)]
     [Phone]
     public string Phone { get; set; } = string.Empty;
 }
 
 public class AttributeModel
 {
-    [HelixField(Placeholder = "jane@example.com", HelperText = "We won't share this", ColumnSpan = 6, Order = 1)]
+    [ArcadiaField(Placeholder = "jane@example.com", HelperText = "We won't share this", ColumnSpan = 6, Order = 1)]
     public string Email { get; set; } = string.Empty;
 
-    [HelixField(Type = FieldType.TextArea, Order = 2)]
+    [ArcadiaField(Type = FieldType.TextArea, Order = 2)]
     public string Notes { get; set; } = string.Empty;
 
-    [HelixIgnore]
+    [ArcadiaIgnore]
     public string InternalId { get; set; } = string.Empty;
 }
 
@@ -78,7 +78,7 @@ public class ConditionalModel
 {
     public string ContactMethod { get; set; } = string.Empty;
 
-    [HelixCondition("ContactMethod", Equals = "Phone")]
+    [ArcadiaCondition("ContactMethod", Equals = "Phone")]
     public string PhoneNumber { get; set; } = string.Empty;
 }
 
@@ -180,7 +180,7 @@ public class ModelFormGeneratorTests
     }
 
     [Fact]
-    public void Generate_AttributeModel_UsesHelixFieldAttributes()
+    public void Generate_AttributeModel_UsesArcadiaFieldAttributes()
     {
         var schema = ModelFormGenerator.Generate<AttributeModel>();
 

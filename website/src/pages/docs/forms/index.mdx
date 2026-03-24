@@ -31,7 +31,7 @@ var schema = new FormSchema
 ```
 
 ```razor
-<HelixFormBuilder Schema="@schema" OnValidSubmit="HandleSubmit" />
+<ArcadiaFormBuilder Schema="@schema" OnValidSubmit="HandleSubmit" />
 ```
 
 ### 2. Model-Driven
@@ -40,7 +40,7 @@ var schema = new FormSchema
 public class ContactForm
 {
     [Required, StringLength(100)]
-    [HelixField(Placeholder = "John Doe")]
+    [ArcadiaField(Placeholder = "John Doe")]
     public string Name { get; set; }
 
     [Required, EmailAddress]

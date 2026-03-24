@@ -3,7 +3,7 @@ namespace Arcadia.Theme;
 /// <summary>
 /// The default light theme for Arcadia.
 /// </summary>
-public class LightTheme : HelixThemeBase
+public class LightTheme : ArcadiaThemeBase
 {
     /// <inheritdoc />
     public override string Name => "light";

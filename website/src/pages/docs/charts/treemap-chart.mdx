@@ -1,7 +1,7 @@
 ---
 layout: ../../../layouts/DocsLayout.astro
 title: Treemap Chart
-description: Visualize hierarchical data as nested rectangles with the HelixTreemapChart component.
+description: Visualize hierarchical data as nested rectangles with the ArcadiaTreemapChart component.
 ---
 
 # Treemap Chart
@@ -11,7 +11,7 @@ Displays hierarchical data as nested rectangles. Each rectangle's area is propor
 ## Basic Usage
 
 ```razor
-<HelixTreemapChart TItem="DeptBudget" Data="@data"
+<ArcadiaTreemapChart TItem="DeptBudget" Data="@data"
                    NameField="@(d => d.Dept)" ValueField="@(d => d.Budget)"
                    Height="400" Width="600" Title="Department Allocation" />
 

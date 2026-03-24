@@ -5,7 +5,7 @@ title: Schema-Driven Forms
 
 # Schema-Driven Forms
 
-Define forms as `FormSchema` objects or JSON — the `HelixFormBuilder` renders them dynamically.
+Define forms as `FormSchema` objects or JSON — the `ArcadiaFormBuilder` renders them dynamically.
 
 ## FormSchema Object
 
@@ -30,7 +30,7 @@ var schema = new FormSchema
 ```
 
 ```razor
-<HelixFormBuilder Schema="@schema"
+<ArcadiaFormBuilder Schema="@schema"
                   OnValidSubmit="HandleSubmit"
                   OnInvalidSubmit="HandleErrors" />
 ```

@@ -10,7 +10,7 @@ Financial OHLC candlestick chart with overlay line series for indicators.
 ## Basic Usage
 
 ```razor
-<HelixCandlestickChart TItem="StockData" Data="@data"
+<ArcadiaCandlestickChart TItem="StockData" Data="@data"
                         LabelField="@(d => d.Date)"
                         OpenField="@(d => d.Open)"
                         HighField="@(d => d.High)"
@@ -22,7 +22,7 @@ Financial OHLC candlestick chart with overlay line series for indicators.
 ## With Moving Average Overlay
 
 ```razor
-<HelixCandlestickChart OverlaySeries="@overlays" ... />
+<ArcadiaCandlestickChart OverlaySeries="@overlays" ... />
 
 @code {
     var overlays = new List<SeriesConfig<StockData>>

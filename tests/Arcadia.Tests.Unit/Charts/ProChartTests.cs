@@ -29,7 +29,7 @@ public class RadarChartTests : BunitContext
     [Fact]
     public void Renders_SvgWithPolygons()
     {
-        var cut = Render<HelixRadarChart<RadarData>>(p =>
+        var cut = Render<ArcadiaRadarChart<RadarData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.LabelField, d => d.Axis)
              .Add(c => c.Series, TestSeries));
@@ -42,7 +42,7 @@ public class RadarChartTests : BunitContext
     [Fact]
     public void Renders_AxisLabels()
     {
-        var cut = Render<HelixRadarChart<RadarData>>(p =>
+        var cut = Render<ArcadiaRadarChart<RadarData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.LabelField, d => d.Axis)
              .Add(c => c.Series, TestSeries));
@@ -55,7 +55,7 @@ public class RadarChartTests : BunitContext
     [Fact]
     public void Renders_Legend_WhenMultipleSeries()
     {
-        var cut = Render<HelixRadarChart<RadarData>>(p =>
+        var cut = Render<ArcadiaRadarChart<RadarData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.LabelField, d => d.Axis)
              .Add(c => c.Series, TestSeries));
@@ -66,7 +66,7 @@ public class RadarChartTests : BunitContext
     [Fact]
     public void Renders_AriaLabel()
     {
-        var cut = Render<HelixRadarChart<RadarData>>(p =>
+        var cut = Render<ArcadiaRadarChart<RadarData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.LabelField, d => d.Axis)
              .Add(c => c.Series, TestSeries)
@@ -78,7 +78,7 @@ public class RadarChartTests : BunitContext
     [Fact]
     public void Renders_DataPoints_WhenShowPointsTrue()
     {
-        var cut = Render<HelixRadarChart<RadarData>>(p =>
+        var cut = Render<ArcadiaRadarChart<RadarData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.LabelField, d => d.Axis)
              .Add(c => c.Series, TestSeries)
@@ -91,7 +91,7 @@ public class RadarChartTests : BunitContext
     [Fact]
     public void HidesPoints_WhenShowPointsFalse()
     {
-        var cut = Render<HelixRadarChart<RadarData>>(p =>
+        var cut = Render<ArcadiaRadarChart<RadarData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.LabelField, d => d.Axis)
              .Add(c => c.Series, TestSeries)
@@ -103,7 +103,7 @@ public class RadarChartTests : BunitContext
     [Fact]
     public void Renders_HiddenDataTable()
     {
-        var cut = Render<HelixRadarChart<RadarData>>(p =>
+        var cut = Render<ArcadiaRadarChart<RadarData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.LabelField, d => d.Axis)
              .Add(c => c.Series, TestSeries));
@@ -117,7 +117,7 @@ public class RadarChartTests : BunitContext
     [Fact]
     public void NoData_RendersNothing()
     {
-        var cut = Render<HelixRadarChart<RadarData>>(p =>
+        var cut = Render<ArcadiaRadarChart<RadarData>>(p =>
             p.Add(c => c.Data, new List<RadarData>())
              .Add(c => c.LabelField, d => d.Axis)
              .Add(c => c.Series, TestSeries));
@@ -128,7 +128,7 @@ public class RadarChartTests : BunitContext
     [Fact]
     public void Renders_Title()
     {
-        var cut = Render<HelixRadarChart<RadarData>>(p =>
+        var cut = Render<ArcadiaRadarChart<RadarData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.LabelField, d => d.Axis)
              .Add(c => c.Series, TestSeries)
@@ -143,7 +143,7 @@ public class GaugeChartTests : BunitContext
     [Fact]
     public void Renders_SvgWithArc()
     {
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 75)
              .Add(c => c.Min, 0)
              .Add(c => c.Max, 100));
@@ -155,7 +155,7 @@ public class GaugeChartTests : BunitContext
     [Fact]
     public void Renders_CenterValue()
     {
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 75)
              .Add(c => c.Min, 0)
              .Add(c => c.Max, 100));
@@ -166,7 +166,7 @@ public class GaugeChartTests : BunitContext
     [Fact]
     public void Renders_Label()
     {
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 42)
              .Add(c => c.Label, "Performance"));
 
@@ -176,7 +176,7 @@ public class GaugeChartTests : BunitContext
     [Fact]
     public void Renders_Title()
     {
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 50)
              .Add(c => c.Title, "CPU Usage"));
 
@@ -193,7 +193,7 @@ public class GaugeChartTests : BunitContext
             new() { Value = 80, Color = "#ef4444" },
         };
 
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 85)
              .Add(c => c.Thresholds, thresholds));
 
@@ -206,7 +206,7 @@ public class GaugeChartTests : BunitContext
     [Fact]
     public void Clamps_ValueToMinMax()
     {
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 150)
              .Add(c => c.Min, 0)
              .Add(c => c.Max, 100));
@@ -218,7 +218,7 @@ public class GaugeChartTests : BunitContext
     [Fact]
     public void Renders_FullCircle()
     {
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 50)
              .Add(c => c.FullCircle, true));
 
@@ -230,7 +230,7 @@ public class GaugeChartTests : BunitContext
     [Fact]
     public void Renders_AriaLabel()
     {
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 50)
              .Add(c => c.AriaLabel, "Server load"));
 
@@ -240,7 +240,7 @@ public class GaugeChartTests : BunitContext
     [Fact]
     public void Renders_FormattedValue()
     {
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 42.567)
              .Add(c => c.ValueFormatString, "F1"));
 
@@ -250,7 +250,7 @@ public class GaugeChartTests : BunitContext
     [Fact]
     public void Renders_Accessibility()
     {
-        var cut = Render<HelixGaugeChart>(p =>
+        var cut = Render<ArcadiaGaugeChart>(p =>
             p.Add(c => c.Value, 75)
              .Add(c => c.Max, 100));
 
@@ -273,7 +273,7 @@ public class HeatmapTests : BunitContext
     [Fact]
     public void Renders_SvgWithCells()
     {
-        var cut = Render<HelixHeatmap<HeatmapData>>(p =>
+        var cut = Render<ArcadiaHeatmap<HeatmapData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.XField, d => d.Day)
              .Add(c => c.YField, d => d.Hour)
@@ -286,7 +286,7 @@ public class HeatmapTests : BunitContext
     [Fact]
     public void Renders_ColorGradient()
     {
-        var cut = Render<HelixHeatmap<HeatmapData>>(p =>
+        var cut = Render<ArcadiaHeatmap<HeatmapData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.XField, d => d.Day)
              .Add(c => c.YField, d => d.Hour)
@@ -303,7 +303,7 @@ public class HeatmapTests : BunitContext
     [Fact]
     public void Renders_Title()
     {
-        var cut = Render<HelixHeatmap<HeatmapData>>(p =>
+        var cut = Render<ArcadiaHeatmap<HeatmapData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.XField, d => d.Day)
              .Add(c => c.YField, d => d.Hour)
@@ -316,7 +316,7 @@ public class HeatmapTests : BunitContext
     [Fact]
     public void Renders_HiddenDataTable()
     {
-        var cut = Render<HelixHeatmap<HeatmapData>>(p =>
+        var cut = Render<ArcadiaHeatmap<HeatmapData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.XField, d => d.Day)
              .Add(c => c.YField, d => d.Hour)
@@ -329,7 +329,7 @@ public class HeatmapTests : BunitContext
     [Fact]
     public void NoData_RendersNothing()
     {
-        var cut = Render<HelixHeatmap<HeatmapData>>(p =>
+        var cut = Render<ArcadiaHeatmap<HeatmapData>>(p =>
             p.Add(c => c.Data, new List<HeatmapData>())
              .Add(c => c.XField, d => d.Day)
              .Add(c => c.YField, d => d.Hour)
@@ -341,7 +341,7 @@ public class HeatmapTests : BunitContext
     [Fact]
     public void Renders_ScaleLegend()
     {
-        var cut = Render<HelixHeatmap<HeatmapData>>(p =>
+        var cut = Render<ArcadiaHeatmap<HeatmapData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.XField, d => d.Day)
              .Add(c => c.YField, d => d.Hour)
@@ -354,7 +354,7 @@ public class HeatmapTests : BunitContext
     [Fact]
     public void Custom_Colors()
     {
-        var cut = Render<HelixHeatmap<HeatmapData>>(p =>
+        var cut = Render<ArcadiaHeatmap<HeatmapData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.XField, d => d.Day)
              .Add(c => c.YField, d => d.Hour)
@@ -370,7 +370,7 @@ public class HeatmapTests : BunitContext
     [Fact]
     public void Renders_CellTooltips()
     {
-        var cut = Render<HelixHeatmap<HeatmapData>>(p =>
+        var cut = Render<ArcadiaHeatmap<HeatmapData>>(p =>
             p.Add(c => c.Data, TestData)
              .Add(c => c.XField, d => d.Day)
              .Add(c => c.YField, d => d.Hour)

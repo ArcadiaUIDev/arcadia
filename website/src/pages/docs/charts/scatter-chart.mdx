@@ -10,7 +10,7 @@ Scatter and bubble chart with optional trendlines and size-mapped points.
 ## Basic Usage
 
 ```razor
-<HelixScatterChart TItem="DataPoint" Data="@data"
+<ArcadiaScatterChart TItem="DataPoint" Data="@data"
                    XField="@(d => d.X)"
                    YField="@(d => d.Y)"
                    Height="300" Color="primary" />
@@ -21,7 +21,7 @@ Scatter and bubble chart with optional trendlines and size-mapped points.
 Add a `SizeField` to map a data dimension to point radius. Larger values render as bigger circles:
 
 ```razor
-<HelixScatterChart TItem="Company" Data="@companies"
+<ArcadiaScatterChart TItem="Company" Data="@companies"
                    XField="@(d => d.Revenue)"
                    YField="@(d => d.Growth)"
                    SizeField="@(d => d.Employees)"
@@ -42,7 +42,7 @@ Add a `SizeField` to map a data dimension to point radius. Larger values render 
 ## With Trendline
 
 ```razor
-<HelixScatterChart Trendline="@(new TrendlineConfig { Type = TrendlineType.Linear })" ... />
+<ArcadiaScatterChart Trendline="@(new TrendlineConfig { Type = TrendlineType.Linear })" ... />
 ```
 
 ## Parameters

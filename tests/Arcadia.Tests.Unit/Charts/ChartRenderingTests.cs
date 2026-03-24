@@ -616,7 +616,7 @@ public class LineChartRenderingTests : BunitContext
     [Fact]
     public void EmptyData_DoesNotCrash()
     {
-        var cut = Render<HelixLineChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<RenderPoint>>(p => p
             .Add(c => c.Data, new List<RenderPoint>())
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V")));
@@ -628,7 +628,7 @@ public class LineChartRenderingTests : BunitContext
     public void SinglePoint_HandlesGracefully()
     {
         var data = new List<RenderPoint> { new("A", 10) };
-        var cut = Render<HelixLineChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V")));
@@ -641,7 +641,7 @@ public class LineChartRenderingTests : BunitContext
     public void TwoPoints_MinimumValidLine()
     {
         var data = new List<RenderPoint> { new("A", 10), new("B", 20) };
-        var cut = Render<HelixLineChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V")));
@@ -656,7 +656,7 @@ public class LineChartRenderingTests : BunitContext
         var data = Enumerable.Range(0, 6)
             .Select(i => new RenderPoint($"P{i}", 42))
             .ToList();
-        var cut = Render<HelixLineChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V")));
@@ -679,7 +679,7 @@ public class LineChartRenderingTests : BunitContext
         };
 
         // This should not throw; it returns early because all values are NaN
-        var act = () => Render<HelixLineChart<RenderPoint>>(p => p
+        var act = () => Render<ArcadiaLineChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, series));
@@ -694,7 +694,7 @@ public class LineChartRenderingTests : BunitContext
         {
             new("A", -50), new("B", -30), new("C", -10), new("D", 10)
         };
-        var cut = Render<HelixLineChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V")));
@@ -710,7 +710,7 @@ public class LineChartRenderingTests : BunitContext
         {
             new("A", 1e15), new("B", 2e15), new("C", 1.5e15)
         };
-        var cut = Render<HelixLineChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V")));
@@ -730,7 +730,7 @@ public class LineChartRenderingTests : BunitContext
         {
             new() { Name = "V", Field = d => d.Value }
         };
-        var cut = Render<HelixLineChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, series)
@@ -761,7 +761,7 @@ public class BarChartRenderingTests : BunitContext
     [Fact]
     public void EmptyData_DoesNotCrash()
     {
-        var cut = Render<HelixBarChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<RenderPoint>>(p => p
             .Add(c => c.Data, new List<RenderPoint>())
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V")));
@@ -773,7 +773,7 @@ public class BarChartRenderingTests : BunitContext
     public void SingleBar_Renders()
     {
         var data = new List<RenderPoint> { new("A", 100) };
-        var cut = Render<HelixBarChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V")));
@@ -788,7 +788,7 @@ public class BarChartRenderingTests : BunitContext
         var data = Enumerable.Range(0, 50)
             .Select(i => new RenderPoint($"B{i}", i * 10))
             .ToList();
-        var cut = Render<HelixBarChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V")));
@@ -815,7 +815,7 @@ public class BarChartRenderingTests : BunitContext
             new() { Name = "V2", Field = _ => 0 }
         };
 
-        var act = () => Render<HelixBarChart<RenderPoint>>(p => p
+        var act = () => Render<ArcadiaBarChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, series)
@@ -837,7 +837,7 @@ public class BarChartRenderingTests : BunitContext
             new() { Name = "V2", Field = d => d.Value / 2 }
         };
 
-        var cut = Render<HelixBarChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, series)
@@ -853,7 +853,7 @@ public class BarChartRenderingTests : BunitContext
         var data = Enumerable.Range(0, 20)
             .Select(i => new RenderPoint($"B{i}", i * 10))
             .ToList();
-        var cut = Render<HelixBarChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, MakeSeries("V"))
@@ -874,7 +874,7 @@ public class PieChartRenderingTests : BunitContext
     [Fact]
     public void EmptyData_DoesNotCrash()
     {
-        var cut = Render<HelixPieChart<RenderPie>>(p => p
+        var cut = Render<ArcadiaPieChart<RenderPie>>(p => p
             .Add(c => c.Data, new List<RenderPie>())
             .Add(c => c.NameField, (Func<RenderPie, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<RenderPie, double>)(d => d.Value)));
@@ -886,7 +886,7 @@ public class PieChartRenderingTests : BunitContext
     public void SingleSlice_FullCircle()
     {
         var data = new List<RenderPie> { new("All", 100) };
-        var cut = Render<HelixPieChart<RenderPie>>(p => p
+        var cut = Render<ArcadiaPieChart<RenderPie>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.NameField, (Func<RenderPie, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<RenderPie, double>)(d => d.Value)));
@@ -903,7 +903,7 @@ public class PieChartRenderingTests : BunitContext
             new("A", 50), new("Zero", 0), new("B", 50)
         };
 
-        var act = () => Render<HelixPieChart<RenderPie>>(p => p
+        var act = () => Render<ArcadiaPieChart<RenderPie>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.NameField, (Func<RenderPie, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<RenderPie, double>)(d => d.Value)));
@@ -918,7 +918,7 @@ public class PieChartRenderingTests : BunitContext
             .Select(i => new RenderPie($"S{i}", i + 1))
             .ToList();
 
-        var cut = Render<HelixPieChart<RenderPie>>(p => p
+        var cut = Render<ArcadiaPieChart<RenderPie>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.NameField, (Func<RenderPie, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<RenderPie, double>)(d => d.Value)));
@@ -935,7 +935,7 @@ public class PieChartRenderingTests : BunitContext
             new("Big", 999), new("Tiny", 1)
         };
 
-        var cut = Render<HelixPieChart<RenderPie>>(p => p
+        var cut = Render<ArcadiaPieChart<RenderPie>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.NameField, (Func<RenderPie, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<RenderPie, double>)(d => d.Value)));
@@ -956,7 +956,7 @@ public class ScatterChartRenderingTests : BunitContext
     [Fact]
     public void EmptyData_DoesNotCrash()
     {
-        var cut = Render<HelixScatterChart<RenderXY>>(p => p
+        var cut = Render<ArcadiaScatterChart<RenderXY>>(p => p
             .Add(c => c.Data, new List<RenderXY>())
             .Add(c => c.XField, (Func<RenderXY, double>)(d => d.X))
             .Add(c => c.YField, (Func<RenderXY, double>)(d => d.Y)));
@@ -968,7 +968,7 @@ public class ScatterChartRenderingTests : BunitContext
     public void SinglePoint_Renders()
     {
         var data = new List<RenderXY> { new(5, 10) };
-        var cut = Render<HelixScatterChart<RenderXY>>(p => p
+        var cut = Render<ArcadiaScatterChart<RenderXY>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderXY, double>)(d => d.X))
             .Add(c => c.YField, (Func<RenderXY, double>)(d => d.Y)));
@@ -984,7 +984,7 @@ public class ScatterChartRenderingTests : BunitContext
             .Select(_ => new RenderXY(5, 5))
             .ToList();
 
-        var cut = Render<HelixScatterChart<RenderXY>>(p => p
+        var cut = Render<ArcadiaScatterChart<RenderXY>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderXY, double>)(d => d.X))
             .Add(c => c.YField, (Func<RenderXY, double>)(d => d.Y)));
@@ -1000,7 +1000,7 @@ public class ScatterChartRenderingTests : BunitContext
         {
             new(1, 1), new(2, 2), new(3, 3), new(1000, 1000)
         };
-        var cut = Render<HelixScatterChart<RenderXY>>(p => p
+        var cut = Render<ArcadiaScatterChart<RenderXY>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderXY, double>)(d => d.X))
             .Add(c => c.YField, (Func<RenderXY, double>)(d => d.Y)));
@@ -1029,7 +1029,7 @@ public class CandlestickRenderingTests : BunitContext
             new("Mon", 100, 110, 90, 100),
             new("Tue", 105, 115, 95, 105)
         };
-        var cut = Render<HelixCandlestickChart<RenderCandle>>(p => p
+        var cut = Render<ArcadiaCandlestickChart<RenderCandle>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.LabelField, (Func<RenderCandle, string>)(d => d.Day))
             .Add(c => c.OpenField, (Func<RenderCandle, double>)(d => d.Open))
@@ -1053,7 +1053,7 @@ public class CandlestickRenderingTests : BunitContext
         {
             new("Mon", 100, 100, 100, 100)
         };
-        var cut = Render<HelixCandlestickChart<RenderCandle>>(p => p
+        var cut = Render<ArcadiaCandlestickChart<RenderCandle>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.LabelField, (Func<RenderCandle, string>)(d => d.Day))
             .Add(c => c.OpenField, (Func<RenderCandle, double>)(d => d.Open))
@@ -1072,7 +1072,7 @@ public class CandlestickRenderingTests : BunitContext
             .Select(i => new RenderCandle($"D{i}", 50, 50, 50, 50))
             .ToList();
 
-        var act = () => Render<HelixCandlestickChart<RenderCandle>>(p => p
+        var act = () => Render<ArcadiaCandlestickChart<RenderCandle>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.LabelField, (Func<RenderCandle, string>)(d => d.Day))
             .Add(c => c.OpenField, (Func<RenderCandle, double>)(d => d.Open))
@@ -1089,7 +1089,7 @@ public class GaugeRenderingTests : BunitContext
     [Fact]
     public void ValueAtMin_MinimalArc()
     {
-        var cut = Render<HelixGaugeChart>(p => p
+        var cut = Render<ArcadiaGaugeChart>(p => p
             .Add(c => c.Value, 0)
             .Add(c => c.Min, 0)
             .Add(c => c.Max, 100));
@@ -1102,7 +1102,7 @@ public class GaugeRenderingTests : BunitContext
     [Fact]
     public void ValueAtMax_FullArc()
     {
-        var cut = Render<HelixGaugeChart>(p => p
+        var cut = Render<ArcadiaGaugeChart>(p => p
             .Add(c => c.Value, 100)
             .Add(c => c.Min, 0)
             .Add(c => c.Max, 100));
@@ -1114,7 +1114,7 @@ public class GaugeRenderingTests : BunitContext
     [Fact]
     public void ValueOutsideRange_Clamps()
     {
-        var cut = Render<HelixGaugeChart>(p => p
+        var cut = Render<ArcadiaGaugeChart>(p => p
             .Add(c => c.Value, 200)
             .Add(c => c.Min, 0)
             .Add(c => c.Max, 100));
@@ -1126,7 +1126,7 @@ public class GaugeRenderingTests : BunitContext
     [Fact]
     public void ValueBelowMin_Clamps()
     {
-        var cut = Render<HelixGaugeChart>(p => p
+        var cut = Render<ArcadiaGaugeChart>(p => p
             .Add(c => c.Value, -50)
             .Add(c => c.Min, 0)
             .Add(c => c.Max, 100));
@@ -1138,7 +1138,7 @@ public class GaugeRenderingTests : BunitContext
     [Fact]
     public void MinEqualsMax_NoDivideByZero()
     {
-        var act = () => Render<HelixGaugeChart>(p => p
+        var act = () => Render<ArcadiaGaugeChart>(p => p
             .Add(c => c.Value, 50)
             .Add(c => c.Min, 50)
             .Add(c => c.Max, 50));
@@ -1152,7 +1152,7 @@ public class HeatmapRenderingTests : BunitContext
     [Fact]
     public void EmptyData_DoesNotCrash()
     {
-        var cut = Render<HelixHeatmap<RenderHeatCell>>(p => p
+        var cut = Render<ArcadiaHeatmap<RenderHeatCell>>(p => p
             .Add(c => c.Data, new List<RenderHeatCell>())
             .Add(c => c.XField, (Func<RenderHeatCell, string>)(d => d.Col))
             .Add(c => c.YField, (Func<RenderHeatCell, string>)(d => d.Row))
@@ -1170,7 +1170,7 @@ public class HeatmapRenderingTests : BunitContext
             new("A", "R2", 42), new("B", "R2", 42)
         };
 
-        var cut = Render<HelixHeatmap<RenderHeatCell>>(p => p
+        var cut = Render<ArcadiaHeatmap<RenderHeatCell>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderHeatCell, string>)(d => d.Col))
             .Add(c => c.YField, (Func<RenderHeatCell, string>)(d => d.Row))
@@ -1187,7 +1187,7 @@ public class HeatmapRenderingTests : BunitContext
     public void SingleCell_Renders()
     {
         var data = new List<RenderHeatCell> { new("A", "R1", 10) };
-        var cut = Render<HelixHeatmap<RenderHeatCell>>(p => p
+        var cut = Render<ArcadiaHeatmap<RenderHeatCell>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderHeatCell, string>)(d => d.Col))
             .Add(c => c.YField, (Func<RenderHeatCell, string>)(d => d.Row))
@@ -1212,7 +1212,7 @@ public class RadarChartRenderingTests : BunitContext
     [Fact]
     public void EmptyData_DoesNotCrash()
     {
-        var cut = Render<HelixRadarChart<RenderRadarItem>>(p => p
+        var cut = Render<ArcadiaRadarChart<RenderRadarItem>>(p => p
             .Add(c => c.Data, new List<RenderRadarItem>())
             .Add(c => c.LabelField, (Func<RenderRadarItem, string>)(d => d.Axis))
             .Add(c => c.Series, MakeSeries()));
@@ -1224,7 +1224,7 @@ public class RadarChartRenderingTests : BunitContext
     public void SingleDataPoint_HandlesGracefully()
     {
         var data = new List<RenderRadarItem> { new("One", 50, 30) };
-        var cut = Render<HelixRadarChart<RenderRadarItem>>(p => p
+        var cut = Render<ArcadiaRadarChart<RenderRadarItem>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.LabelField, (Func<RenderRadarItem, string>)(d => d.Axis))
             .Add(c => c.Series, MakeSeries()));
@@ -1244,7 +1244,7 @@ public class RadarChartRenderingTests : BunitContext
             new() { Name = "S", Field = _ => 0 }
         };
 
-        var cut = Render<HelixRadarChart<RenderRadarItem>>(p => p
+        var cut = Render<ArcadiaRadarChart<RenderRadarItem>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.LabelField, (Func<RenderRadarItem, string>)(d => d.Axis))
             .Add(c => c.Series, series));
@@ -1259,7 +1259,7 @@ public class RadarChartRenderingTests : BunitContext
             .Select(i => new RenderRadarItem($"Cat{i}", i * 3, i * 2))
             .ToList();
 
-        var cut = Render<HelixRadarChart<RenderRadarItem>>(p => p
+        var cut = Render<ArcadiaRadarChart<RenderRadarItem>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.LabelField, (Func<RenderRadarItem, string>)(d => d.Axis))
             .Add(c => c.Series, MakeSeries()));
@@ -1293,7 +1293,7 @@ public class SvgCoordinateValidationTests : BunitContext
             new() { Name = "V", Field = d => d.Value }
         };
 
-        var cut = Render<HelixLineChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, series));
@@ -1312,7 +1312,7 @@ public class SvgCoordinateValidationTests : BunitContext
             new() { Name = "V", Field = d => d.Value }
         };
 
-        var cut = Render<HelixBarChart<RenderPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<RenderPoint>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderPoint, object>)(d => d.Label))
             .Add(c => c.Series, series));
@@ -1329,7 +1329,7 @@ public class SvgCoordinateValidationTests : BunitContext
             new("A", 40), new("B", 30), new("C", 20), new("D", 10)
         };
 
-        var cut = Render<HelixPieChart<RenderPie>>(p => p
+        var cut = Render<ArcadiaPieChart<RenderPie>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.NameField, (Func<RenderPie, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<RenderPie, double>)(d => d.Value)));
@@ -1344,7 +1344,7 @@ public class SvgCoordinateValidationTests : BunitContext
             .Select(i => new RenderXY(i * 5, i * 3 + 10))
             .ToList();
 
-        var cut = Render<HelixScatterChart<RenderXY>>(p => p
+        var cut = Render<ArcadiaScatterChart<RenderXY>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderXY, double>)(d => d.X))
             .Add(c => c.YField, (Func<RenderXY, double>)(d => d.Y))
@@ -1373,7 +1373,7 @@ public class SvgCoordinateValidationTests : BunitContext
             new("Wed", 112, 118, 108, 108)
         };
 
-        var cut = Render<HelixCandlestickChart<RenderCandle>>(p => p
+        var cut = Render<ArcadiaCandlestickChart<RenderCandle>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.LabelField, (Func<RenderCandle, string>)(d => d.Day))
             .Add(c => c.OpenField, (Func<RenderCandle, double>)(d => d.Open))
@@ -1388,7 +1388,7 @@ public class SvgCoordinateValidationTests : BunitContext
     [Fact]
     public void GaugeChart_AllCoordinatesFinite()
     {
-        var cut = Render<HelixGaugeChart>(p => p
+        var cut = Render<ArcadiaGaugeChart>(p => p
             .Add(c => c.Value, 75)
             .Add(c => c.Min, 0)
             .Add(c => c.Max, 100));
@@ -1405,7 +1405,7 @@ public class SvgCoordinateValidationTests : BunitContext
             new("A", "R2", 30), new("B", "R2", 70)
         };
 
-        var cut = Render<HelixHeatmap<RenderHeatCell>>(p => p
+        var cut = Render<ArcadiaHeatmap<RenderHeatCell>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.XField, (Func<RenderHeatCell, string>)(d => d.Col))
             .Add(c => c.YField, (Func<RenderHeatCell, string>)(d => d.Row))
@@ -1432,7 +1432,7 @@ public class SvgCoordinateValidationTests : BunitContext
             new() { Name = "B", Field = d => d.B }
         };
 
-        var cut = Render<HelixRadarChart<RenderRadarItem>>(p => p
+        var cut = Render<ArcadiaRadarChart<RenderRadarItem>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.LabelField, (Func<RenderRadarItem, string>)(d => d.Axis))
             .Add(c => c.Series, series));

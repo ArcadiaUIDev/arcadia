@@ -27,7 +27,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void Renders_Title()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -39,7 +39,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void Renders_Subtitle()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -52,7 +52,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void Renders_WithCustomDimensions()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -67,7 +67,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void Renders_AriaLabel()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -79,7 +79,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void Renders_HiddenDataTable()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries));
@@ -98,7 +98,7 @@ public class LineChartApiTests : BunitContext
             new() { Name = "Target", Field = d => d.Target, Color = "secondary", Dashed = true },
         };
 
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, multiSeries)
@@ -113,7 +113,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void HidesLegend_WhenShowLegendFalse()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -125,7 +125,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void Renders_GridLines()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -137,7 +137,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void HidesGrid_WhenShowGridFalse()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -149,7 +149,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void Renders_DataPoints()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -161,7 +161,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void HidesPoints_WhenShowPointsFalse()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -173,7 +173,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void Renders_LinePath()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries));
@@ -189,7 +189,7 @@ public class LineChartApiTests : BunitContext
             new() { Name = "Target", Field = d => d.Target, Dashed = true },
         };
 
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, dashedSeries));
@@ -206,7 +206,7 @@ public class LineChartApiTests : BunitContext
             new() { Name = "Revenue", Field = d => d.Revenue, ShowArea = true, AreaOpacity = 0.2 },
         };
 
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, areaSeries));
@@ -218,7 +218,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void AnimationClasses_WhenAnimateOnLoad()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -230,7 +230,7 @@ public class LineChartApiTests : BunitContext
     [Fact]
     public void NoAnimationClasses_WhenAnimateOff()
     {
-        var cut = Render<HelixLineChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaLineChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, DefaultSeries)
@@ -253,7 +253,7 @@ public class BarChartApiTests : BunitContext
     {
         var series = new List<SeriesConfig<SalesPoint>> { new() { Name = "Revenue", Field = d => d.Revenue } };
 
-        var cut = Render<HelixBarChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, series));
@@ -270,7 +270,7 @@ public class BarChartApiTests : BunitContext
             new() { Name = "Target", Field = d => d.Target },
         };
 
-        var cut = Render<HelixBarChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, series));
@@ -287,7 +287,7 @@ public class BarChartApiTests : BunitContext
             new() { Name = "Target", Field = d => d.Target },
         };
 
-        var cut = Render<HelixBarChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, series)
@@ -301,7 +301,7 @@ public class BarChartApiTests : BunitContext
     {
         var series = new List<SeriesConfig<SalesPoint>> { new() { Name = "Revenue", Field = d => d.Revenue } };
 
-        var cut = Render<HelixBarChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, series)
@@ -315,7 +315,7 @@ public class BarChartApiTests : BunitContext
     {
         var series = new List<SeriesConfig<SalesPoint>> { new() { Name = "Revenue", Field = d => d.Revenue } };
 
-        var cut = Render<HelixBarChart<SalesPoint>>(p => p
+        var cut = Render<ArcadiaBarChart<SalesPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<SalesPoint, object>)(d => d.Month))
             .Add(c => c.Series, series)
@@ -336,7 +336,7 @@ public class PieChartApiTests : BunitContext
     [Fact]
     public void Renders_Slices()
     {
-        var cut = Render<HelixPieChart<PieSlice>>(p => p
+        var cut = Render<ArcadiaPieChart<PieSlice>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.NameField, (Func<PieSlice, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<PieSlice, double>)(d => d.Value)));
@@ -347,7 +347,7 @@ public class PieChartApiTests : BunitContext
     [Fact]
     public void Renders_PercentLabels_ByDefault()
     {
-        var cut = Render<HelixPieChart<PieSlice>>(p => p
+        var cut = Render<ArcadiaPieChart<PieSlice>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.NameField, (Func<PieSlice, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<PieSlice, double>)(d => d.Value))
@@ -362,7 +362,7 @@ public class PieChartApiTests : BunitContext
     [Fact]
     public void Renders_NameLabels()
     {
-        var cut = Render<HelixPieChart<PieSlice>>(p => p
+        var cut = Render<ArcadiaPieChart<PieSlice>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.NameField, (Func<PieSlice, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<PieSlice, double>)(d => d.Value))
@@ -376,7 +376,7 @@ public class PieChartApiTests : BunitContext
     [Fact]
     public void HidesLabels_WhenFormatNone()
     {
-        var cut = Render<HelixPieChart<PieSlice>>(p => p
+        var cut = Render<ArcadiaPieChart<PieSlice>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.NameField, (Func<PieSlice, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<PieSlice, double>)(d => d.Value))
@@ -388,7 +388,7 @@ public class PieChartApiTests : BunitContext
     [Fact]
     public void Renders_Legend()
     {
-        var cut = Render<HelixPieChart<PieSlice>>(p => p
+        var cut = Render<ArcadiaPieChart<PieSlice>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.NameField, (Func<PieSlice, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<PieSlice, double>)(d => d.Value))
@@ -400,7 +400,7 @@ public class PieChartApiTests : BunitContext
     [Fact]
     public void Renders_AsDonut_WithInnerRadius()
     {
-        var cut = Render<HelixPieChart<PieSlice>>(p => p
+        var cut = Render<ArcadiaPieChart<PieSlice>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.NameField, (Func<PieSlice, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<PieSlice, double>)(d => d.Value))
@@ -419,7 +419,7 @@ public class PieChartApiTests : BunitContext
             new("Big", 95), new("Tiny", 2), new("Mini", 3),
         };
 
-        var cut = Render<HelixPieChart<PieSlice>>(p => p
+        var cut = Render<ArcadiaPieChart<PieSlice>>(p => p
             .Add(c => c.Data, data)
             .Add(c => c.NameField, (Func<PieSlice, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<PieSlice, double>)(d => d.Value))
@@ -432,7 +432,7 @@ public class PieChartApiTests : BunitContext
     [Fact]
     public void Renders_ScreenReaderTable()
     {
-        var cut = Render<HelixPieChart<PieSlice>>(p => p
+        var cut = Render<ArcadiaPieChart<PieSlice>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.NameField, (Func<PieSlice, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<PieSlice, double>)(d => d.Value)));
@@ -443,7 +443,7 @@ public class PieChartApiTests : BunitContext
     [Fact]
     public void SliceAnimation_WhenEnabled()
     {
-        var cut = Render<HelixPieChart<PieSlice>>(p => p
+        var cut = Render<ArcadiaPieChart<PieSlice>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.NameField, (Func<PieSlice, string>)(d => d.Name))
             .Add(c => c.ValueField, (Func<PieSlice, double>)(d => d.Value))
@@ -462,7 +462,7 @@ public class ScatterChartApiTests : BunitContext
     [Fact]
     public void Renders_Points()
     {
-        var cut = Render<HelixScatterChart<XYPoint>>(p => p
+        var cut = Render<ArcadiaScatterChart<XYPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<XYPoint, double>)(d => d.X))
             .Add(c => c.YField, (Func<XYPoint, double>)(d => d.Y)));
@@ -473,7 +473,7 @@ public class ScatterChartApiTests : BunitContext
     [Fact]
     public void Renders_WithCustomPointSize()
     {
-        var cut = Render<HelixScatterChart<XYPoint>>(p => p
+        var cut = Render<ArcadiaScatterChart<XYPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<XYPoint, double>)(d => d.X))
             .Add(c => c.YField, (Func<XYPoint, double>)(d => d.Y))
@@ -486,7 +486,7 @@ public class ScatterChartApiTests : BunitContext
     [Fact]
     public void PointAnimation_WithStagger()
     {
-        var cut = Render<HelixScatterChart<XYPoint>>(p => p
+        var cut = Render<ArcadiaScatterChart<XYPoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.XField, (Func<XYPoint, double>)(d => d.X))
             .Add(c => c.YField, (Func<XYPoint, double>)(d => d.Y))
@@ -516,7 +516,7 @@ public class CandlestickChartApiTests : BunitContext
     [Fact]
     public void Renders_CandlestickBodies()
     {
-        var cut = Render<HelixCandlestickChart<CandlePoint>>(p => p
+        var cut = Render<ArcadiaCandlestickChart<CandlePoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.LabelField, (Func<CandlePoint, string>)(d => d.Day))
             .Add(c => c.OpenField, (Func<CandlePoint, double>)(d => d.Open))
@@ -531,7 +531,7 @@ public class CandlestickChartApiTests : BunitContext
     [Fact]
     public void Renders_UpAndDownColors()
     {
-        var cut = Render<HelixCandlestickChart<CandlePoint>>(p => p
+        var cut = Render<ArcadiaCandlestickChart<CandlePoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.LabelField, (Func<CandlePoint, string>)(d => d.Day))
             .Add(c => c.OpenField, (Func<CandlePoint, double>)(d => d.Open))
@@ -551,7 +551,7 @@ public class CandlestickChartApiTests : BunitContext
     [Fact]
     public void CandleAnimation_WithStagger()
     {
-        var cut = Render<HelixCandlestickChart<CandlePoint>>(p => p
+        var cut = Render<ArcadiaCandlestickChart<CandlePoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.LabelField, (Func<CandlePoint, string>)(d => d.Day))
             .Add(c => c.OpenField, (Func<CandlePoint, double>)(d => d.Open))
@@ -571,7 +571,7 @@ public class CandlestickChartApiTests : BunitContext
             new() { Name = "MA", Field = d => (d.Open + d.Close) / 2, Color = "info" },
         };
 
-        var cut = Render<HelixCandlestickChart<CandlePoint>>(p => p
+        var cut = Render<ArcadiaCandlestickChart<CandlePoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.LabelField, (Func<CandlePoint, string>)(d => d.Day))
             .Add(c => c.OpenField, (Func<CandlePoint, double>)(d => d.Open))
@@ -586,7 +586,7 @@ public class CandlestickChartApiTests : BunitContext
     [Fact]
     public void Renders_ScreenReaderTable()
     {
-        var cut = Render<HelixCandlestickChart<CandlePoint>>(p => p
+        var cut = Render<ArcadiaCandlestickChart<CandlePoint>>(p => p
             .Add(c => c.Data, SampleData)
             .Add(c => c.LabelField, (Func<CandlePoint, string>)(d => d.Day))
             .Add(c => c.OpenField, (Func<CandlePoint, double>)(d => d.Open))

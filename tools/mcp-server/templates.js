@@ -79,7 +79,7 @@ function generateLine({ title, features, seriesCount, width, height }) {
   return `@using Arcadia.Charts.Core
 @using Arcadia.Charts.Components.Charts
 
-<HelixLineChart ${chartAttrs} />
+<ArcadiaLineChart ${chartAttrs} />
 
 @code {
     record DataRecord(string Label, double Value, double Target);
@@ -111,7 +111,7 @@ function generateGauge({ title, features, height }) {
   return `@using Arcadia.Charts.Core
 @using Arcadia.Charts.Components.Charts
 
-<HelixGaugeChart Value="73" Min="0" Max="100"
+<ArcadiaGaugeChart Value="73" Min="0" Max="100"
                  Label="${title || 'Progress'}" Width="200" Height="${hasFullCircle ? 200 : 160}"
                  ${hasFullCircle ? 'FullCircle="true"' : ''}
                  ${hasThresholds ? 'Thresholds="@_thresholds"' : ''}
@@ -147,7 +147,7 @@ export const chartTemplates = {
       return `@using Arcadia.Charts.Core
 @using Arcadia.Charts.Components.Charts
 
-<HelixBarChart TItem="DataRecord" Data="@_data"
+<ArcadiaBarChart TItem="DataRecord" Data="@_data"
                XField="@(d => (object)d.Label)" Series="@_series"
                Height="${opts.height}" Width="${opts.width}"
                ${hasStacked ? 'Stacked="true"' : ''}
@@ -174,26 +174,26 @@ export const chartTemplates = {
   pie: {
     generate: (opts) => {
       const isDonut = opts.features.includes("donut");
-      return generateSimpleChart("pie", "HelixPieChart",
+      return generateSimpleChart("pie", "ArcadiaPieChart",
         `               NameField="@(d => d.Name)" ValueField="@(d => d.Value)"${isDonut ? '\n               InnerRadius="70"' : ''}`, opts);
     }
   },
   scatter: {
     generate: (opts) => {
       const isBubble = opts.features.includes("bubble");
-      return generateSimpleChart("scatter", "HelixScatterChart",
+      return generateSimpleChart("scatter", "ArcadiaScatterChart",
         `               XField="@(d => d.X)" YField="@(d => d.Y)"${isBubble ? '\n               SizeField="@(d => d.Size)"' : ''}\n               Color="primary" PointSize="5"`, opts);
     }
   },
   candlestick: {
-    generate: (opts) => generateSimpleChart("candlestick", "HelixCandlestickChart",
+    generate: (opts) => generateSimpleChart("candlestick", "ArcadiaCandlestickChart",
       `               LabelField="@(d => d.Date)"\n               OpenField="@(d => d.Open)" HighField="@(d => d.High)"\n               LowField="@(d => d.Low)" CloseField="@(d => d.Close)"`, opts)
   },
   radar: {
     generate: (opts) => `@using Arcadia.Charts.Core
 @using Arcadia.Charts.Components.Charts
 
-<HelixRadarChart TItem="AxisData" Data="@_data"
+<ArcadiaRadarChart TItem="AxisData" Data="@_data"
                  LabelField="@(d => d.Axis)" Series="@_series"
                  Height="${opts.height}" Width="${opts.width}"
                  ${opts.title ? `Title="${opts.title}"` : ''}
@@ -217,23 +217,23 @@ export const chartTemplates = {
   },
   gauge: { generate: generateGauge },
   heatmap: {
-    generate: (opts) => generateSimpleChart("heatmap", "HelixHeatmap",
+    generate: (opts) => generateSimpleChart("heatmap", "ArcadiaHeatmap",
       `              XField="@(d => d.X)" YField="@(d => d.Y)"\n              ValueField="@(d => d.Value)"`, opts)
   },
   funnel: {
-    generate: (opts) => generateSimpleChart("funnel", "HelixFunnelChart",
+    generate: (opts) => generateSimpleChart("funnel", "ArcadiaFunnelChart",
       `                  NameField="@(d => d.Stage)" ValueField="@(d => d.Count)"`, opts)
   },
   treemap: {
-    generate: (opts) => generateSimpleChart("treemap", "HelixTreemapChart",
+    generate: (opts) => generateSimpleChart("treemap", "ArcadiaTreemapChart",
       `                   NameField="@(d => d.Name)" ValueField="@(d => d.Value)"`, opts)
   },
   waterfall: {
-    generate: (opts) => generateSimpleChart("waterfall", "HelixWaterfallChart",
+    generate: (opts) => generateSimpleChart("waterfall", "ArcadiaWaterfallChart",
       `                     CategoryField="@(d => d.Category)" ValueField="@(d => d.Amount)"`, opts)
   },
   rose: {
-    generate: (opts) => generateSimpleChart("rose", "HelixRoseChart",
+    generate: (opts) => generateSimpleChart("rose", "ArcadiaRoseChart",
       `                NameField="@(d => d.Name)" ValueField="@(d => d.Value)"`, opts)
   },
 };

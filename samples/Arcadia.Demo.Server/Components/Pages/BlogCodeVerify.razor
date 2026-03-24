@@ -6,7 +6,7 @@
 <h1>Blog Code Verification Page</h1>
 
 <!-- Example 1: Basic line chart -->
-<HelixLineChart TItem="MonthlySales"
+<ArcadiaLineChart TItem="MonthlySales"
                 Data="@salesData"
                 XField="@(d => (object)d.Month)"
                 Series="@lineSeries"
@@ -17,7 +17,7 @@
                 AnimateOnLoad="true" />
 
 <!-- Example 2: Multi-series with area -->
-<HelixLineChart TItem="MonthlySales"
+<ArcadiaLineChart TItem="MonthlySales"
                 Data="@salesData"
                 XField="@(d => (object)d.Month)"
                 Series="@multiSeries"
@@ -26,7 +26,7 @@
                 Title="Revenue vs Target" />
 
 <!-- Example 3: Bar chart -->
-<HelixBarChart TItem="QuarterData"
+<ArcadiaBarChart TItem="QuarterData"
                Data="@quarterData"
                XField="@(d => (object)d.Quarter)"
                Series="@barSeries"
@@ -35,7 +35,7 @@
                Title="Quarterly Sales by Region" />
 
 <!-- Example 4: Pie chart -->
-<HelixPieChart TItem="CategorySlice"
+<ArcadiaPieChart TItem="CategorySlice"
                Data="@pieData"
                NameField="@(d => d.Category)"
                ValueField="@(d => d.Amount)"
@@ -46,21 +46,21 @@
 
 <!-- Example 5: KPI Cards -->
 <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
-    <HelixKpiCard Title="Revenue"
+    <ArcadiaKpiCard Title="Revenue"
                   Value="$142,500"
                   Delta="+12.3%"
                   DeltaType="DeltaType.Increase"
                   Sparkline="@sparkData"
                   Footer="vs last month" />
 
-    <HelixKpiCard Title="Users"
+    <ArcadiaKpiCard Title="Users"
                   Value="8,420"
                   Delta="-2.1%"
                   DeltaType="DeltaType.Decrease"
                   Sparkline="@userSparkData"
                   SparklineColor="danger" />
 
-    <HelixKpiCard Title="Conversion"
+    <ArcadiaKpiCard Title="Conversion"
                   Value="3.8%"
                   Delta="+0.5%"
                   DeltaType="DeltaType.Increase"
@@ -69,7 +69,7 @@
 </div>
 
 <!-- Example 6: Scatter chart -->
-<HelixScatterChart TItem="DataPoint"
+<ArcadiaScatterChart TItem="DataPoint"
                    Data="@scatterData"
                    XField="@(d => d.X)"
                    YField="@(d => d.Y)"
@@ -80,7 +80,7 @@
                    PointSize="6" />
 
 <!-- Example 7: Sparkline inline -->
-<p>Revenue trend: <HelixSparkline Data="@sparkData" Width="120" Height="32" Color="primary" ShowArea="true" /></p>
+<p>Revenue trend: <ArcadiaSparkline Data="@sparkData" Width="120" Height="32" Color="primary" ShowArea="true" /></p>
 
 @code {
     // Data models

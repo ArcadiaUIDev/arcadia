@@ -33,7 +33,7 @@ var validator = new CrossFieldValidator()
     .MustBeAfter("endDate", "startDate", "End must be after start")
     .AtLeastOneRequired(new[] { "email", "phone" }, "Provide email or phone");
 
-<HelixForm Validators="@(new[] { validator })" ... />
+<ArcadiaForm Validators="@(new[] { validator })" ... />
 ```
 
 ## Custom Validators

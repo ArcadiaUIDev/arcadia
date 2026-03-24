@@ -10,7 +10,7 @@ Pie chart with configurable inner radius for donut mode, label formatting, and s
 ## Pie Chart
 
 ```razor
-<HelixPieChart TItem="Segment" Data="@data"
+<ArcadiaPieChart TItem="Segment" Data="@data"
                NameField="@(d => d.Label)"
                ValueField="@(d => d.Amount)"
                Height="350" Width="500" />
@@ -19,17 +19,17 @@ Pie chart with configurable inner radius for donut mode, label formatting, and s
 ## Donut Chart
 
 ```razor
-<HelixPieChart InnerRadius="70" ... />
+<ArcadiaPieChart InnerRadius="70" ... />
 ```
 
 ## Label Formats
 
 ```razor
-<HelixPieChart LabelFormat="PieLabelFormat.Percent" />     // "45%"
-<HelixPieChart LabelFormat="PieLabelFormat.Value" />        // "$45,000"
-<HelixPieChart LabelFormat="PieLabelFormat.Name" />         // "Sales"
-<HelixPieChart LabelFormat="PieLabelFormat.NamePercent" />  // "Sales 45%"
-<HelixPieChart LabelFormat="PieLabelFormat.None" />         // No labels
+<ArcadiaPieChart LabelFormat="PieLabelFormat.Percent" />     // "45%"
+<ArcadiaPieChart LabelFormat="PieLabelFormat.Value" />        // "$45,000"
+<ArcadiaPieChart LabelFormat="PieLabelFormat.Name" />         // "Sales"
+<ArcadiaPieChart LabelFormat="PieLabelFormat.NamePercent" />  // "Sales 45%"
+<ArcadiaPieChart LabelFormat="PieLabelFormat.None" />         // No labels
 ```
 
 ## Parameters

@@ -52,11 +52,11 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">KPI Cards with Sparklines</div>
                 <div class="gallery__widget-grid">
-                    <HelixKpiCard Title="Monthly Revenue" Value="$142,580" Delta="+12.3%" DeltaType="DeltaType.Increase"
+                    <ArcadiaKpiCard Title="Monthly Revenue" Value="$142,580" Delta="+12.3%" DeltaType="DeltaType.Increase"
                                   Sparkline="@_revenueSparkline" Footer="vs last month" />
-                    <HelixKpiCard Title="Active Users" Value="8,420" Delta="-2.1%" DeltaType="DeltaType.Decrease"
+                    <ArcadiaKpiCard Title="Active Users" Value="8,420" Delta="-2.1%" DeltaType="DeltaType.Decrease"
                                   Sparkline="@_usersSparkline" SparklineColor="danger" Footer="vs last week" />
-                    <HelixKpiCard Title="Conversion Rate" Value="3.8%" Delta="+0.5%" DeltaType="DeltaType.Increase"
+                    <ArcadiaKpiCard Title="Conversion Rate" Value="3.8%" Delta="+0.5%" DeltaType="DeltaType.Increase"
                                   Sparkline="@_conversionSparkline" SparklineColor="success" />
                 </div>
             </div>
@@ -64,18 +64,18 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Progress Indicators</div>
                 <div class="gallery__progress-stack">
-                    <HelixProgressBar Value="73" Max="100" Label="Storage Used" Thresholds="@_thresholds" />
-                    <HelixProgressBar Value="45" Max="100" Label="CPU Usage" Color="info" />
-                    <HelixProgressBar Value="92" Max="100" Label="Memory" Thresholds="@_thresholds" />
+                    <ArcadiaProgressBar Value="73" Max="100" Label="Storage Used" Thresholds="@_thresholds" />
+                    <ArcadiaProgressBar Value="45" Max="100" Label="CPU Usage" Color="info" />
+                    <ArcadiaProgressBar Value="92" Max="100" Label="Memory" Thresholds="@_thresholds" />
                 </div>
             </div>
 
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Inline Sparklines</div>
                 <div class="gallery__sparkline-row">
-                    <span>Revenue <HelixSparkline Data="@_revenueSparkline" Color="primary" ShowArea="true" /></span>
-                    <span>Users <HelixSparkline Data="@_usersSparkline" Color="danger" /></span>
-                    <span>Growth <HelixSparkline Data="@_conversionSparkline" Color="success" ShowArea="true" /></span>
+                    <span>Revenue <ArcadiaSparkline Data="@_revenueSparkline" Color="primary" ShowArea="true" /></span>
+                    <span>Users <ArcadiaSparkline Data="@_usersSparkline" Color="danger" /></span>
+                    <span>Growth <ArcadiaSparkline Data="@_conversionSparkline" Color="success" ShowArea="true" /></span>
                 </div>
             </div>
         }
@@ -91,7 +91,7 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Revenue vs Target — 12 Months</div>
                 <div class="gallery__chart-container">
-                    <HelixLineChart TItem="MonthlySales" Data="@_monthlySales"
+                    <ArcadiaLineChart TItem="MonthlySales" Data="@_monthlySales"
                                     XField="@(d => (object)d.Month)" Series="@_lineSeries"
                                     Height="380" Width="780" ShowPoints="true" AnimateOnLoad="true" />
                 </div>
@@ -100,7 +100,7 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">With Trendline Overlay</div>
                 <div class="gallery__chart-container">
-                    <HelixLineChart TItem="MonthlySales" Data="@_monthlySales"
+                    <ArcadiaLineChart TItem="MonthlySales" Data="@_monthlySales"
                                     XField="@(d => (object)d.Month)" Series="@_trendSeries"
                                     Height="380" Width="780" ShowDataLabels="true" />
                 </div>
@@ -118,7 +118,7 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Quarterly Revenue — Grouped by Region</div>
                 <div class="gallery__chart-container">
-                    <HelixBarChart TItem="QuarterlySales" Data="@_quarterlySales"
+                    <ArcadiaBarChart TItem="QuarterlySales" Data="@_quarterlySales"
                                    XField="@(d => (object)d.Quarter)" Series="@_barSeries"
                                    Height="380" Width="780" />
                 </div>
@@ -127,7 +127,7 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Same Data — Stacked</div>
                 <div class="gallery__chart-container">
-                    <HelixBarChart TItem="QuarterlySales" Data="@_quarterlySales"
+                    <ArcadiaBarChart TItem="QuarterlySales" Data="@_quarterlySales"
                                    XField="@(d => (object)d.Quarter)" Series="@_barSeries"
                                    Height="380" Width="780" Stacked="true" />
                 </div>
@@ -145,7 +145,7 @@
                 <div class="gallery__showcase">
                     <div class="gallery__showcase-title">Pie</div>
                     <div class="gallery__chart-container">
-                        <HelixPieChart TItem="BudgetItem" Data="@_budget"
+                        <ArcadiaPieChart TItem="BudgetItem" Data="@_budget"
                                        NameField="@(d => d.Category)" ValueField="@(d => d.Amount)"
                                        Height="340" Width="380" />
                     </div>
@@ -153,7 +153,7 @@
                 <div class="gallery__showcase">
                     <div class="gallery__showcase-title">Donut</div>
                     <div class="gallery__chart-container">
-                        <HelixPieChart TItem="BudgetItem" Data="@_budget"
+                        <ArcadiaPieChart TItem="BudgetItem" Data="@_budget"
                                        NameField="@(d => d.Category)" ValueField="@(d => d.Amount)"
                                        Height="340" Width="380" InnerRadius="70" />
                     </div>
@@ -171,7 +171,7 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Height vs Weight Distribution</div>
                 <div class="gallery__chart-container">
-                    <HelixScatterChart TItem="DataXY" Data="@_scatterData"
+                    <ArcadiaScatterChart TItem="DataXY" Data="@_scatterData"
                                        XField="@(d => d.X)" YField="@(d => d.Y)"
                                        Height="400" Width="780" Color="primary" PointSize="6" />
                 </div>
@@ -188,7 +188,7 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">ACME Corp — 30 Day Price with MA(5)</div>
                 <div class="gallery__chart-container">
-                    <HelixCandlestickChart TItem="StockCandle" Data="@_stockData"
+                    <ArcadiaCandlestickChart TItem="StockCandle" Data="@_stockData"
                                             LabelField="@(d => d.Date)"
                                             OpenField="@(d => d.Open)" HighField="@(d => d.High)"
                                             LowField="@(d => d.Low)" CloseField="@(d => d.Close)"
@@ -208,10 +208,10 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">System Health Monitors</div>
                 <div class="gallery__gauge-row">
-                    <HelixGaugeChart Value="73" Min="0" Max="100" Label="CPU" Width="180" Height="140" Thresholds="@_gaugeThresholds" />
-                    <HelixGaugeChart Value="42" Min="0" Max="100" Label="Memory" Width="180" Height="140" ValueFormatString="0'%'" />
-                    <HelixGaugeChart Value="91" Min="0" Max="100" Label="Disk" Width="180" Height="140" Thresholds="@_gaugeThresholds" />
-                    <HelixGaugeChart Value="99.9" Min="0" Max="100" Label="Uptime" Width="180" Height="140" ValueFormatString="0.0'%'" />
+                    <ArcadiaGaugeChart Value="73" Min="0" Max="100" Label="CPU" Width="180" Height="140" Thresholds="@_gaugeThresholds" />
+                    <ArcadiaGaugeChart Value="42" Min="0" Max="100" Label="Memory" Width="180" Height="140" ValueFormatString="0'%'" />
+                    <ArcadiaGaugeChart Value="91" Min="0" Max="100" Label="Disk" Width="180" Height="140" Thresholds="@_gaugeThresholds" />
+                    <ArcadiaGaugeChart Value="99.9" Min="0" Max="100" Label="Uptime" Width="180" Height="140" ValueFormatString="0.0'%'" />
                 </div>
             </div>
         }
@@ -226,7 +226,7 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Team Skills — A vs B</div>
                 <div class="gallery__chart-container">
-                    <HelixRadarChart TItem="SkillProfile" Data="@_skillData"
+                    <ArcadiaRadarChart TItem="SkillProfile" Data="@_skillData"
                                      LabelField="@(d => d.Skill)" Series="@_radarSeries"
                                      Height="420" Width="460" />
                 </div>
@@ -243,7 +243,7 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Commit Activity by Day & Hour</div>
                 <div class="gallery__chart-container">
-                    <HelixHeatmap TItem="HeatmapPoint" Data="@_heatmapData"
+                    <ArcadiaHeatmap TItem="HeatmapPoint" Data="@_heatmapData"
                                   XField="@(d => d.Day)" YField="@(d => d.Hour)"
                                   ValueField="@(d => d.Count)"
                                   Height="320" Width="780" />
@@ -296,14 +296,14 @@
         {
             <div class="gallery__section-header">
                 <h1>Schema-Driven Form</h1>
-                <p>Define a FormSchema object and the HelixFormBuilder renders it dynamically. Includes validation, conditional fields, and sections.</p>
+                <p>Define a FormSchema object and the ArcadiaFormBuilder renders it dynamically. Includes validation, conditional fields, and sections.</p>
                 <div class="gallery__hint">💡 Select "Phone" as contact method to see conditional field appear</div>
             </div>
 
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Contact Form — Rendered from Schema</div>
                 <div style="max-width: 540px;">
-                    <HelixFormBuilder Schema="@_contactSchema" State="@_contactState"
+                    <ArcadiaFormBuilder Schema="@_contactSchema" State="@_contactState"
                                       OnValidSubmit="HandleFormSubmit" OnInvalidSubmit="HandleFormError" />
                 </div>
             </div>
@@ -319,28 +319,28 @@
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Onboarding Wizard</div>
                 <div style="max-width: 560px;">
-                    <HelixWizard @bind-CurrentStep="_wizardStep" OnComplete="HandleWizardDone">
-                        <HelixWizardStep Title="Personal" Description="Tell us about yourself.">
+                    <ArcadiaWizard @bind-CurrentStep="_wizardStep" OnComplete="HandleWizardDone">
+                        <ArcadiaWizardStep Title="Personal" Description="Tell us about yourself.">
                             <div style="display: flex; flex-direction: column; gap: 16px;">
                                 <TextField Label="Full Name" Value="@_wName" ValueChanged="v => _wName = v" Required="true" Placeholder="Jane Doe" />
                                 <TextField Label="Email" Value="@_wEmail" ValueChanged="v => _wEmail = v" Required="true" Placeholder="jane@example.com" />
                             </div>
-                        </HelixWizardStep>
-                        <HelixWizardStep Title="Preferences" Description="Customize your experience.">
+                        </ArcadiaWizardStep>
+                        <ArcadiaWizardStep Title="Preferences" Description="Customize your experience.">
                             <div style="display: flex; flex-direction: column; gap: 16px;">
                                 <RatingField Label="How would you rate our product?" Value="@_wRating" ValueChanged="v => _wRating = v" />
                                 <SliderField Label="Email frequency" Value="@_wFreq" ValueChanged="v => _wFreq = v" Min="0" Max="10" />
                             </div>
-                        </HelixWizardStep>
-                        <HelixWizardStep Title="Review" Description="Confirm and submit.">
+                        </ArcadiaWizardStep>
+                        <ArcadiaWizardStep Title="Review" Description="Confirm and submit.">
                             <div style="font-size: 0.9rem; display: flex; flex-direction: column; gap: 6px;">
                                 <div><strong>Name:</strong> @_wName</div>
                                 <div><strong>Email:</strong> @_wEmail</div>
                                 <div><strong>Rating:</strong> @_wRating / 5</div>
                                 <div><strong>Frequency:</strong> @_wFreq</div>
                             </div>
-                        </HelixWizardStep>
-                    </HelixWizard>
+                        </ArcadiaWizardStep>
+                    </ArcadiaWizard>
                 </div>
             </div>
         }

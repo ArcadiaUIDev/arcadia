@@ -3,7 +3,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixTreemapChart TItem="DeptBudget" Data="@_data"
+    <ArcadiaTreemapChart TItem="DeptBudget" Data="@_data"
                        NameField="@(d => d.Dept)" ValueField="@(d => d.Budget)"
                        Height="400" Width="600" AnimateOnLoad="true"
                        Title="Department Allocation" />

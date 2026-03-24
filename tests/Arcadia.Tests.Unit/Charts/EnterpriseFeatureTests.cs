@@ -86,7 +86,7 @@ public class TrendlineRenderingTests : BunitContext
             }
         };
 
-        var cut = Render<HelixLineChart<SalesData>>(p =>
+        var cut = Render<ArcadiaLineChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Month)
              .Add(c => c.Series, series));
@@ -117,7 +117,7 @@ public class TrendlineRenderingTests : BunitContext
             }
         };
 
-        var cut = Render<HelixLineChart<SalesData>>(p =>
+        var cut = Render<ArcadiaLineChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Month)
              .Add(c => c.Series, series));
@@ -132,7 +132,7 @@ public class TrendlineRenderingTests : BunitContext
             .Select(i => new SalesData($"P{i}", i * 2.0, i * 3.0))
             .ToList();
 
-        var cut = Render<HelixScatterChart<SalesData>>(p =>
+        var cut = Render<ArcadiaScatterChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, (Func<SalesData, double>)(d => d.Revenue))
              .Add(c => c.YField, (Func<SalesData, double>)(d => d.Cost))
@@ -159,7 +159,7 @@ public class StackedBarTests : BunitContext
             new() { Name = "C", Field = d => d.C },
         };
 
-        var cut = Render<HelixBarChart<BarData>>(p =>
+        var cut = Render<ArcadiaBarChart<BarData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Category)
              .Add(c => c.Series, series)
@@ -182,7 +182,7 @@ public class StackedBarTests : BunitContext
             new() { Name = "B", Field = d => d.B },
         };
 
-        var cut = Render<HelixBarChart<BarData>>(p =>
+        var cut = Render<ArcadiaBarChart<BarData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Category)
              .Add(c => c.Series, series)
@@ -203,7 +203,7 @@ public class DataLabelTests : BunitContext
             new() { Name = "Revenue", Field = d => d.Revenue },
         };
 
-        var cut = Render<HelixBarChart<SalesData>>(p =>
+        var cut = Render<ArcadiaBarChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Month)
              .Add(c => c.Series, series)
@@ -224,7 +224,7 @@ public class DataLabelTests : BunitContext
             new() { Name = "Revenue", Field = d => d.Revenue },
         };
 
-        var cut = Render<HelixLineChart<SalesData>>(p =>
+        var cut = Render<ArcadiaLineChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Month)
              .Add(c => c.Series, series)
@@ -242,7 +242,7 @@ public class DataLabelTests : BunitContext
             new() { Name = "Revenue", Field = d => d.Revenue },
         };
 
-        var cut = Render<HelixBarChart<SalesData>>(p =>
+        var cut = Render<ArcadiaBarChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Month)
              .Add(c => c.Series, series)
@@ -267,7 +267,7 @@ public class AxisFormattingTests : BunitContext
             new() { Name = "Revenue", Field = d => d.Revenue },
         };
 
-        var cut = Render<HelixLineChart<SalesData>>(p =>
+        var cut = Render<ArcadiaLineChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Month)
              .Add(c => c.Series, series)
@@ -289,7 +289,7 @@ public class AxisFormattingTests : BunitContext
             new() { Name = "Revenue", Field = d => d.Revenue },
         };
 
-        var cut = Render<HelixBarChart<SalesData>>(p =>
+        var cut = Render<ArcadiaBarChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Month)
              .Add(c => c.Series, series)
@@ -319,7 +319,7 @@ public class NullHandlingTests : BunitContext
             new() { Name = "Revenue", Field = d => d.Revenue },
         };
 
-        var cut = Render<HelixLineChart<SalesData>>(p =>
+        var cut = Render<ArcadiaLineChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Month)
              .Add(c => c.Series, series)
@@ -347,7 +347,7 @@ public class NullHandlingTests : BunitContext
             new() { Name = "Revenue", Field = d => d.Revenue },
         };
 
-        var cut = Render<HelixLineChart<SalesData>>(p =>
+        var cut = Render<ArcadiaLineChart<SalesData>>(p =>
             p.Add(c => c.Data, data)
              .Add(c => c.XField, d => (object)d.Month)
              .Add(c => c.Series, series)

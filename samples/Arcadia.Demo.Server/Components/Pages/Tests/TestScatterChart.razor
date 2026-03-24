@@ -3,7 +3,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixScatterChart TItem="DataXY" Data="@_data"
+    <ArcadiaScatterChart TItem="DataXY" Data="@_data"
                        XField="@(d => d.X)" YField="@(d => d.Y)"
                        Height="400" Width="600" Color="primary" PointSize="6"
                        AnimateOnLoad="true" Title="Height vs Weight" />

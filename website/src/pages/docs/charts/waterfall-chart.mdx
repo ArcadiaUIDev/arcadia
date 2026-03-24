@@ -1,7 +1,7 @@
 ---
 layout: ../../../layouts/DocsLayout.astro
 title: Waterfall Chart
-description: Show cumulative effect of sequential positive and negative values with the HelixWaterfallChart.
+description: Show cumulative effect of sequential positive and negative values with the ArcadiaWaterfallChart.
 ---
 
 # Waterfall Chart
@@ -11,7 +11,7 @@ Displays how an initial value is affected by a series of positive and negative c
 ## Basic Usage
 
 ```razor
-<HelixWaterfallChart TItem="WaterfallItem" Data="@data"
+<ArcadiaWaterfallChart TItem="WaterfallItem" Data="@data"
                      CategoryField="@(d => d.Category)"
                      ValueField="@(d => d.Amount)"
                      Height="400" Width="600" Title="Revenue Waterfall" />

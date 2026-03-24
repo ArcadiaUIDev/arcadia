@@ -4,7 +4,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixBarChart TItem="QuarterlySales" Data="@_data"
+    <ArcadiaBarChart TItem="QuarterlySales" Data="@_data"
                    XField="@(d => (object)d.Quarter)" Series="@_series"
                    Height="400" Width="600" AnimateOnLoad="true"
                    Title="Quarterly Revenue by Region" ShowLegend="true" />

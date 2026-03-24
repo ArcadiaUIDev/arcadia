@@ -3,7 +3,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixRoseChart TItem="WindData" Data="@_data"
+    <ArcadiaRoseChart TItem="WindData" Data="@_data"
                     NameField="@(d => d.Direction)" ValueField="@(d => d.Speed)"
                     Height="400" Width="400" AnimateOnLoad="true"
                     Title="Wind Speed by Direction" ShowLegend="true" />

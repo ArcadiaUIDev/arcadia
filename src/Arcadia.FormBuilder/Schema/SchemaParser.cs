@@ -5,7 +5,7 @@ namespace Arcadia.FormBuilder.Schema;
 
 /// <summary>
 /// Deserializes a JSON string into a <see cref="FormSchema"/>.
-/// Supports both HelixUI native format and a subset of JSON Schema draft-07.
+/// Supports both Arcadia Controls native format and a subset of JSON Schema draft-07.
 /// </summary>
 public static class SchemaParser
 {

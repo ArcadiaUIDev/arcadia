@@ -7,7 +7,7 @@ namespace Arcadia.Core.Accessibility;
 /// Traps keyboard focus within its child content. Used for modals, dialogs,
 /// and other overlay components that require focus containment for accessibility.
 /// </summary>
-public partial class FocusTrap : Base.HelixComponentBase, IAsyncDisposable
+public partial class FocusTrap : Base.ArcadiaComponentBase, IAsyncDisposable
 {
     [Inject]
     private IJSRuntime JSRuntime { get; set; } = default!;

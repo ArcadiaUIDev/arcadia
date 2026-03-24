@@ -10,7 +10,7 @@ public class SparklineTests : BunitContext
     [Fact]
     public void Renders_SvgWithPath()
     {
-        var cut = Render<HelixSparkline>(p =>
+        var cut = Render<ArcadiaSparkline>(p =>
             p.Add(c => c.Data, new double[] { 1, 3, 2, 5, 4 })
              .Add(c => c.Width, 100)
              .Add(c => c.Height, 30));
@@ -22,7 +22,7 @@ public class SparklineTests : BunitContext
     [Fact]
     public void Renders_WithArea()
     {
-        var cut = Render<HelixSparkline>(p =>
+        var cut = Render<ArcadiaSparkline>(p =>
             p.Add(c => c.Data, new double[] { 1, 3, 2, 5, 4 })
              .Add(c => c.ShowArea, true));
 
@@ -32,7 +32,7 @@ public class SparklineTests : BunitContext
     [Fact]
     public void Renders_AriaLabel()
     {
-        var cut = Render<HelixSparkline>(p =>
+        var cut = Render<ArcadiaSparkline>(p =>
             p.Add(c => c.Data, new double[] { 1, 2, 3 })
              .Add(c => c.AriaLabel, "Revenue trend"));
 
@@ -42,7 +42,7 @@ public class SparklineTests : BunitContext
     [Fact]
     public void NoData_NoPath()
     {
-        var cut = Render<HelixSparkline>(p =>
+        var cut = Render<ArcadiaSparkline>(p =>
             p.Add(c => c.Data, new double[] { }));
 
         cut.FindAll("path").Should().BeEmpty();
@@ -54,7 +54,7 @@ public class DeltaIndicatorTests : BunitContext
     [Fact]
     public void Increase_ShowsUpArrow()
     {
-        var cut = Render<HelixDeltaIndicator>(p =>
+        var cut = Render<ArcadiaDeltaIndicator>(p =>
             p.Add(c => c.Value, "+12%")
              .Add(c => c.Type, DeltaType.Increase));
 
@@ -65,7 +65,7 @@ public class DeltaIndicatorTests : BunitContext
     [Fact]
     public void Decrease_ShowsDownArrow()
     {
-        var cut = Render<HelixDeltaIndicator>(p =>
+        var cut = Render<ArcadiaDeltaIndicator>(p =>
             p.Add(c => c.Value, "-5%")
              .Add(c => c.Type, DeltaType.Decrease));
 
@@ -79,7 +79,7 @@ public class ProgressBarTests : BunitContext
     [Fact]
     public void Renders_WithCorrectWidth()
     {
-        var cut = Render<HelixProgressBar>(p =>
+        var cut = Render<ArcadiaProgressBar>(p =>
             p.Add(c => c.Value, 75)
              .Add(c => c.Max, 100));
 
@@ -89,7 +89,7 @@ public class ProgressBarTests : BunitContext
     [Fact]
     public void Renders_AriaAttributes()
     {
-        var cut = Render<HelixProgressBar>(p =>
+        var cut = Render<ArcadiaProgressBar>(p =>
             p.Add(c => c.Value, 50)
              .Add(c => c.Max, 100)
              .Add(c => c.Label, "Loading"));
@@ -102,7 +102,7 @@ public class ProgressBarTests : BunitContext
     [Fact]
     public void Renders_Label()
     {
-        var cut = Render<HelixProgressBar>(p =>
+        var cut = Render<ArcadiaProgressBar>(p =>
             p.Add(c => c.Value, 30)
              .Add(c => c.Label, "Storage"));
 
@@ -115,7 +115,7 @@ public class KpiCardTests : BunitContext
     [Fact]
     public void Renders_TitleAndValue()
     {
-        var cut = Render<HelixKpiCard>(p =>
+        var cut = Render<ArcadiaKpiCard>(p =>
             p.Add(c => c.Title, "Revenue")
              .Add(c => c.Value, "$142K"));
 
@@ -126,7 +126,7 @@ public class KpiCardTests : BunitContext
     [Fact]
     public void Renders_Delta()
     {
-        var cut = Render<HelixKpiCard>(p =>
+        var cut = Render<ArcadiaKpiCard>(p =>
             p.Add(c => c.Title, "Revenue")
              .Add(c => c.Value, "$142K")
              .Add(c => c.Delta, "+12%")
@@ -138,7 +138,7 @@ public class KpiCardTests : BunitContext
     [Fact]
     public void Renders_Sparkline()
     {
-        var cut = Render<HelixKpiCard>(p =>
+        var cut = Render<ArcadiaKpiCard>(p =>
             p.Add(c => c.Title, "Revenue")
              .Add(c => c.Value, "$142K")
              .Add(c => c.Sparkline, new double[] { 1, 3, 2, 5, 4, 6 }));
@@ -149,7 +149,7 @@ public class KpiCardTests : BunitContext
     [Fact]
     public void Renders_Footer()
     {
-        var cut = Render<HelixKpiCard>(p =>
+        var cut = Render<ArcadiaKpiCard>(p =>
             p.Add(c => c.Title, "Revenue")
              .Add(c => c.Value, "$142K")
              .Add(c => c.Footer, "vs last month"));

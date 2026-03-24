@@ -13,13 +13,13 @@ The line chart supports real-time data updates with smooth slide animations. Pus
 Set `SlidingWindow` to keep only the most recent N data points. Older points are automatically removed:
 
 ```razor
-<HelixLineChart @ref="chart" TItem="SensorReading" Data="@readings"
+<ArcadiaLineChart @ref="chart" TItem="SensorReading" Data="@readings"
                 XField="@(d => (object)d.Time)" Series="@series"
                 Height="300" Width="0" SlidingWindow="20"
                 ShowPoints="true" AnimateOnLoad="false" />
 
 @code {
-    HelixLineChart<SensorReading>? chart;
+    ArcadiaLineChart<SensorReading>? chart;
     List<SensorReading> readings = new() { new("0s", 50), new("1s", 52) };
     List<SeriesConfig<SensorReading>> series = new()
     {

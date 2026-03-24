@@ -1,7 +1,7 @@
 ---
 layout: ../../../layouts/DocsLayout.astro
 title: Funnel Chart
-description: Visualize conversion funnels and multi-stage pipelines with the HelixFunnelChart component.
+description: Visualize conversion funnels and multi-stage pipelines with the ArcadiaFunnelChart component.
 ---
 
 # Funnel Chart
@@ -11,7 +11,7 @@ Renders a conversion funnel with progressively narrowing trapezoid stages. Each 
 ## Basic Usage
 
 ```razor
-<HelixFunnelChart TItem="FunnelStage" Data="@data"
+<ArcadiaFunnelChart TItem="FunnelStage" Data="@data"
                   NameField="@(d => d.Stage)" ValueField="@(d => d.Count)"
                   Height="400" Width="500" Title="Conversion Funnel" />
 

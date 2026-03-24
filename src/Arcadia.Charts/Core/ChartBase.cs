@@ -8,7 +8,7 @@ namespace Arcadia.Charts.Core;
 /// Base class for all chart components. Provides common parameters,
 /// layout engine integration, and SVG container rendering.
 /// </summary>
-public abstract class ChartBase<T> : Arcadia.Core.Base.HelixComponentBase, IAsyncDisposable
+public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAsyncDisposable
 {
     // ── Data ──────────────────────────────────────────────
     /// <summary>The data to visualize.</summary>

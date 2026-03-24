@@ -84,7 +84,7 @@ Generates complete Blazor Razor code for any of the 12 chart types.
 @using Arcadia.Charts.Core
 @using Arcadia.Charts.Components.Charts
 
-<HelixBarChart TItem="DataRecord" Data="@_data"
+<ArcadiaBarChart TItem="DataRecord" Data="@_data"
                XField="@(d => (object)d.Label)" Series="@_series"
                Height="350" Width="0" Stacked="true"
                Title="Quarterly Revenue" AnimateOnLoad="true" />

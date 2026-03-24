@@ -8,7 +8,7 @@ namespace Arcadia.FormBuilder.Components.Fields;
 /// Base class for all form field components. Provides common parameters
 /// for labels, helper text, validation display, and accessibility.
 /// </summary>
-public abstract class FieldBase : Core.Base.HelixComponentBase
+public abstract class FieldBase : Core.Base.ArcadiaComponentBase
 {
     /// <summary>
     /// Gets or sets the field schema definition.

@@ -4,7 +4,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixCandlestickChart TItem="StockCandle" Data="@_data"
+    <ArcadiaCandlestickChart TItem="StockCandle" Data="@_data"
                            LabelField="@(d => d.Date)"
                            OpenField="@(d => d.Open)" HighField="@(d => d.High)"
                            LowField="@(d => d.Low)" CloseField="@(d => d.Close)"

@@ -3,7 +3,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixWaterfallChart TItem="WaterfallItem" Data="@_data"
+    <ArcadiaWaterfallChart TItem="WaterfallItem" Data="@_data"
                          CategoryField="@(d => d.Category)" ValueField="@(d => d.Amount)"
                          Height="400" Width="600" AnimateOnLoad="true"
                          Title="Revenue Waterfall" />

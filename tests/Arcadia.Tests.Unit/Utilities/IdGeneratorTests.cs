@@ -17,7 +17,7 @@ public class IdGeneratorTests : IDisposable
     }
 
     [Fact]
-    public void Generate_ReturnsHelixPrefix()
+    public void Generate_ReturnsArcadiaPrefix()
     {
         var id = IdGenerator.Generate();
 

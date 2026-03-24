@@ -11,7 +11,7 @@ Add visual markers to highlight specific data points — product launches, incid
 ## Basic Usage
 
 ```razor
-<HelixLineChart TItem="SalesRecord" Data="@data"
+<ArcadiaLineChart TItem="SalesRecord" Data="@data"
                 XField="@(d => (object)d.Month)" Series="@series"
                 Annotations="@annotations"
                 Height="300" Width="600" />
@@ -47,7 +47,7 @@ Annotations are rendered on top of all series, so they're always visible.
 ## Supported Charts
 
 Annotations are currently supported on:
-- **HelixLineChart** — vertical markers at data indices
+- **ArcadiaLineChart** — vertical markers at data indices
 
 ## Tips
 

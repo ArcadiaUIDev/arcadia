@@ -71,16 +71,16 @@
 
         <!-- KPI Row -->
         <div class="admin__kpi-grid">
-            <HelixKpiCard Title="Monthly Revenue" Value="$142,580"
+            <ArcadiaKpiCard Title="Monthly Revenue" Value="$142,580"
                           Delta="+12.3%" DeltaType="DeltaType.Increase"
                           Sparkline="@_revenueSparkline" Footer="vs last month" />
-            <HelixKpiCard Title="Active Subscriptions" Value="2,847"
+            <ArcadiaKpiCard Title="Active Subscriptions" Value="2,847"
                           Delta="+8.1%" DeltaType="DeltaType.Increase"
                           Sparkline="@_subsSparkline" SparklineColor="success" Footer="vs last month" />
-            <HelixKpiCard Title="Churn Rate" Value="2.4%"
+            <ArcadiaKpiCard Title="Churn Rate" Value="2.4%"
                           Delta="-0.3%" DeltaType="DeltaType.Decrease"
                           Sparkline="@_churnSparkline" SparklineColor="danger" Footer="down is good" />
-            <HelixKpiCard Title="Avg. Deal Size" Value="$4,280"
+            <ArcadiaKpiCard Title="Avg. Deal Size" Value="$4,280"
                           Delta="+$320" DeltaType="DeltaType.Increase"
                           Sparkline="@_dealSparkline" Footer="vs last quarter" />
         </div>
@@ -95,7 +95,7 @@
                         <button class="admin__tab">Weekly</button>
                     </div>
                 </div>
-                <HelixLineChart TItem="RevenuePoint" Data="@_revenueData"
+                <ArcadiaLineChart TItem="RevenuePoint" Data="@_revenueData"
                                 XField="@(d => (object)d.Month)"
                                 Series="@_revenueSeries"
                                 Height="280" Width="680"
@@ -106,7 +106,7 @@
                 <div class="admin__card-header">
                     <h2>Revenue by Plan</h2>
                 </div>
-                <HelixPieChart TItem="PlanSlice" Data="@_planData"
+                <ArcadiaPieChart TItem="PlanSlice" Data="@_planData"
                                NameField="@(d => d.Name)"
                                ValueField="@(d => d.Revenue)"
                                InnerRadius="55"
@@ -123,7 +123,7 @@
                     <h2>Top Customers</h2>
                     <a class="admin__card-link">View all →</a>
                 </div>
-                <HelixBarList TItem="CustomerRecord" Data="@_topCustomers"
+                <ArcadiaBarList TItem="CustomerRecord" Data="@_topCustomers"
                               NameField="@(d => d.Name)"
                               ValueField="@(d => d.Mrr)"
                               ValueFormat="$#,##0"
@@ -134,13 +134,13 @@
                     <h2>System Health</h2>
                 </div>
                 <div class="admin__health-grid">
-                    <HelixGaugeChart Value="73" Min="0" Max="100" Label="CPU" Width="140" Height="110"
+                    <ArcadiaGaugeChart Value="73" Min="0" Max="100" Label="CPU" Width="140" Height="110"
                                      Thresholds="@_healthThresholds" />
-                    <HelixGaugeChart Value="42" Min="0" Max="100" Label="Memory" Width="140" Height="110"
+                    <ArcadiaGaugeChart Value="42" Min="0" Max="100" Label="Memory" Width="140" Height="110"
                                      ValueFormatString="0'%'" />
-                    <HelixGaugeChart Value="91" Min="0" Max="100" Label="Disk" Width="140" Height="110"
+                    <ArcadiaGaugeChart Value="91" Min="0" Max="100" Label="Disk" Width="140" Height="110"
                                      Thresholds="@_healthThresholds" />
-                    <HelixGaugeChart Value="99.9" Min="0" Max="100" Label="Uptime" Width="140" Height="110"
+                    <ArcadiaGaugeChart Value="99.9" Min="0" Max="100" Label="Uptime" Width="140" Height="110"
                                      ValueFormatString="0.0'%'" />
                 </div>
             </div>

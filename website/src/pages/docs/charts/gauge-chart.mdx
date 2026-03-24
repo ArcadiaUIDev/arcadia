@@ -10,7 +10,7 @@ Radial gauge for KPI dashboards with color thresholds.
 ## Basic Usage
 
 ```razor
-<HelixGaugeChart Value="73" Min="0" Max="100"
+<ArcadiaGaugeChart Value="73" Min="0" Max="100"
                  Label="CPU Usage" Width="200" Height="160" />
 ```
 
@@ -30,10 +30,10 @@ var thresholds = new List<GaugeThreshold>
 Set `FullCircle="true"` for a complete 360-degree radial progress indicator — ideal for scores, ratings, and completion percentages:
 
 ```razor
-<HelixGaugeChart Value="68" Min="0" Max="100" Label="Progress"
+<ArcadiaGaugeChart Value="68" Min="0" Max="100" Label="Progress"
                  Width="180" Height="180" FullCircle="true" />
 
-<HelixGaugeChart Value="3.8" Min="0" Max="5" Label="Rating"
+<ArcadiaGaugeChart Value="3.8" Min="0" Max="5" Label="Rating"
                  Width="180" Height="180" FullCircle="true"
                  ValueFormatString="0.0" />
 ```

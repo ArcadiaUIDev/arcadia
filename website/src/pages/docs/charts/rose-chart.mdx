@@ -11,7 +11,7 @@ A polar area chart where each category gets an equal-angle sector with radius pr
 ## Basic Usage
 
 ```razor
-<HelixRoseChart TItem="WindReading" Data="@data"
+<ArcadiaRoseChart TItem="WindReading" Data="@data"
                 NameField="@(d => d.Direction)" ValueField="@(d => d.Speed)"
                 Height="400" Width="400" Title="Wind Speed by Direction" />
 

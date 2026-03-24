@@ -17,15 +17,15 @@ Build a revenue dashboard with KPI cards, charts, and rankings in under 50 lines
 @using Arcadia.Charts.Components.Charts
 @using Arcadia.Charts.Components.Dashboard
 
-<HelixKpiCard Title="Revenue" Value="$142,500"
+<ArcadiaKpiCard Title="Revenue" Value="$142,500"
               Delta="+12.3%" DeltaType="DeltaType.Increase"
               Sparkline="@(new double[] { 42, 48, 45, 52, 55, 58, 62 })" />
 
-<HelixLineChart TItem="SalesRecord" Data="@data"
+<ArcadiaLineChart TItem="SalesRecord" Data="@data"
                 XField="@(d => (object)d.Month)"
                 Series="@series" Height="300" />
 
-<HelixBarList TItem="Product" Data="@products"
+<ArcadiaBarList TItem="Product" Data="@products"
               NameField="@(d => d.Name)"
               ValueField="@(d => d.Sales)" ValueFormat="$#,##0" />
 

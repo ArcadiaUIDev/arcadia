@@ -3,7 +3,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixPieChart TItem="BudgetItem" Data="@_data"
+    <ArcadiaPieChart TItem="BudgetItem" Data="@_data"
                    NameField="@(d => d.Category)" ValueField="@(d => d.Amount)"
                    Height="400" Width="400" AnimateOnLoad="true"
                    Title="Department Budget" ShowLegend="true" />

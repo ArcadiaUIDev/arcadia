@@ -10,7 +10,7 @@ Vertical or horizontal bar chart with grouped and stacked modes, rounded corners
 ## Basic Usage
 
 ```razor
-<HelixBarChart TItem="SalesRecord" Data="@data"
+<ArcadiaBarChart TItem="SalesRecord" Data="@data"
                XField="@(d => (object)d.Quarter)"
                Series="@series" Height="300" />
 ```
@@ -28,7 +28,7 @@ var series = new List<SeriesConfig<SalesRecord>>
 ## Stacked
 
 ```razor
-<HelixBarChart Stacked="true" ... />
+<ArcadiaBarChart Stacked="true" ... />
 ```
 
 ## Parameters

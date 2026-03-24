@@ -1,4 +1,4 @@
-/* HelixUI — Main CSS Entry Point
+/* Arcadia Controls — Main CSS Entry Point
    Import this single file to load all tokens and the default (light) theme.
 
    Usage in Blazor app:
@@ -14,7 +14,7 @@
 @import "themes/light.css";
 @import "themes/dark.css";
 
-/* Base reset for HelixUI components */
+/* Base reset for Arcadia Controls components */
 *,
 *::before,
 *::after {

@@ -3,7 +3,7 @@ namespace Arcadia.Theme;
 /// <summary>
 /// The dark theme for Arcadia. All contrast ratios meet WCAG 2.1 AA.
 /// </summary>
-public class DarkTheme : HelixThemeBase
+public class DarkTheme : ArcadiaThemeBase
 {
     /// <inheritdoc />
     public override string Name => "dark";

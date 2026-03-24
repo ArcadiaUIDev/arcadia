@@ -37,30 +37,30 @@ var schema = ModelFormGenerator.Generate<EmployeeForm>();
 
 | Attribute | Purpose |
 |---|---|
-| `[HelixField]` | Override field type, placeholder, helper text, order, column span |
-| `[HelixSection("Name")]` | Group properties into named sections |
-| `[HelixCondition("field")]` | Conditional visibility based on other fields |
-| `[HelixIgnore]` | Exclude property from form generation |
+| `[ArcadiaField]` | Override field type, placeholder, helper text, order, column span |
+| `[ArcadiaSection("Name")]` | Group properties into named sections |
+| `[ArcadiaCondition("field")]` | Conditional visibility based on other fields |
+| `[ArcadiaIgnore]` | Exclude property from form generation |
 
 ## Example with All Attributes
 
 ```csharp
 public class OrderForm
 {
-    [HelixSection("Customer", Order = 0)]
+    [ArcadiaSection("Customer", Order = 0)]
     [Required]
-    [HelixField(Placeholder = "jane@example.com", ColumnSpan = 6)]
+    [ArcadiaField(Placeholder = "jane@example.com", ColumnSpan = 6)]
     public string Email { get; set; }
 
-    [HelixSection("Customer", Order = 0)]
-    [HelixField(Type = FieldType.Select)]
+    [ArcadiaSection("Customer", Order = 0)]
+    [ArcadiaField(Type = FieldType.Select)]
     public string Country { get; set; }
 
-    [HelixSection("Shipping", Order = 1)]
-    [HelixCondition("Country", Equals = "US")]
+    [ArcadiaSection("Shipping", Order = 1)]
+    [ArcadiaCondition("Country", Equals = "US")]
     public string State { get; set; }
 
-    [HelixIgnore]
+    [ArcadiaIgnore]
     public string InternalId { get; set; }
 }
 ```

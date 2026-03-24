@@ -3,7 +3,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixHeatmap TItem="HeatmapPoint" Data="@_data"
+    <ArcadiaHeatmap TItem="HeatmapPoint" Data="@_data"
                   XField="@(d => d.Day)" YField="@(d => d.Hour)"
                   ValueField="@(d => d.Count)"
                   Height="320" Width="600" AnimateOnLoad="true"

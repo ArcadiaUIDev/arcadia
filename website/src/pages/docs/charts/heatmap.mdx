@@ -10,7 +10,7 @@ title: Heatmap
 ## Basic Usage
 
 ```razor
-<HelixHeatmap TItem="HeatmapPoint" Data="@data"
+<ArcadiaHeatmap TItem="HeatmapPoint" Data="@data"
               XField="@(d => d.Day)" YField="@(d => d.Hour)"
               ValueField="@(d => d.Count)"
               Height="300" Width="700" />
@@ -19,8 +19,8 @@ title: Heatmap
 ## Color Scale
 
 ```razor
-<HelixHeatmap LowColor="#f1f5f9" HighColor="#2563eb" ... />
-<HelixHeatmap LowColor="#fef2f2" HighColor="#dc2626" ... />
+<ArcadiaHeatmap LowColor="#f1f5f9" HighColor="#2563eb" ... />
+<ArcadiaHeatmap LowColor="#fef2f2" HighColor="#dc2626" ... />
 ```
 
 ## Parameters

@@ -51,7 +51,7 @@ public class ThemeProviderTests : BunitContext
     }
 
     [Fact]
-    public void Renders_WithHelixThemeProviderClass()
+    public void Renders_WithArcadiaThemeProviderClass()
     {
         var cut = Render<ThemeProvider>(parameters =>
             parameters.AddChildContent("<p>Hello</p>"));

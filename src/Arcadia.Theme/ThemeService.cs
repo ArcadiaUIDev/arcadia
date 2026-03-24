@@ -8,13 +8,13 @@ namespace Arcadia.Theme;
 /// </summary>
 public class ThemeService
 {
-    private IHelixTheme _currentTheme;
+    private IArcadiaTheme _currentTheme;
 
     /// <summary>
     /// Creates a new <see cref="ThemeService"/> with the specified default theme.
     /// </summary>
     /// <param name="defaultTheme">The initial active theme.</param>
-    public ThemeService(IHelixTheme defaultTheme)
+    public ThemeService(IArcadiaTheme defaultTheme)
     {
         _currentTheme = defaultTheme;
     }
@@ -29,7 +29,7 @@ public class ThemeService
     /// <summary>
     /// Gets the currently active theme.
     /// </summary>
-    public IHelixTheme CurrentTheme => _currentTheme;
+    public IArcadiaTheme CurrentTheme => _currentTheme;
 
     /// <summary>
     /// Raised when the active theme changes.
@@ -40,7 +40,7 @@ public class ThemeService
     /// Sets the active theme and notifies all subscribers.
     /// </summary>
     /// <param name="theme">The new theme to activate.</param>
-    public void SetTheme(IHelixTheme theme)
+    public void SetTheme(IArcadiaTheme theme)
     {
         if (_currentTheme.Name == theme.Name)
             return;

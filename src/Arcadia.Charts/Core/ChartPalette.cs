@@ -30,7 +30,7 @@ public class ChartPalette
 
     // ---- Built-in palettes ----
 
-    /// <summary>Default palette using HelixUI theme tokens.</summary>
+    /// <summary>Default palette using Arcadia Controls theme tokens.</summary>
     public static readonly ChartPalette Default = new(
         "var(--arcadia-color-primary)",
         "var(--arcadia-color-success)",

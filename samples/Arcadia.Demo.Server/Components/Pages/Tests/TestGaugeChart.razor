@@ -4,11 +4,11 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent; display: flex; gap: 24px; flex-wrap: wrap;">
-    <HelixGaugeChart Value="73" Min="0" Max="100" Label="CPU" Width="200" Height="160"
+    <ArcadiaGaugeChart Value="73" Min="0" Max="100" Label="CPU" Width="200" Height="160"
                      Thresholds="@_thresholds" AnimateOnLoad="true" />
-    <HelixGaugeChart Value="42" Min="0" Max="100" Label="Memory" Width="200" Height="160"
+    <ArcadiaGaugeChart Value="42" Min="0" Max="100" Label="Memory" Width="200" Height="160"
                      ValueFormatString="0'%'" AnimateOnLoad="true" />
-    <HelixGaugeChart Value="91" Min="0" Max="100" Label="Disk" Width="200" Height="160"
+    <ArcadiaGaugeChart Value="91" Min="0" Max="100" Label="Disk" Width="200" Height="160"
                      Thresholds="@_thresholds" AnimateOnLoad="true" />
 </div>
 

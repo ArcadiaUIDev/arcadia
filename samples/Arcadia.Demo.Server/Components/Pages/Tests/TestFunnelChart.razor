@@ -3,7 +3,7 @@
 @using Arcadia.Charts.Components.Charts
 
 <div style="padding: 24px; background: transparent;">
-    <HelixFunnelChart TItem="FunnelStage" Data="@_data"
+    <ArcadiaFunnelChart TItem="FunnelStage" Data="@_data"
                       NameField="@(d => d.Stage)" ValueField="@(d => d.Count)"
                       Height="400" Width="500" AnimateOnLoad="true"
                       Title="Conversion Funnel" />
