@@ -58,6 +58,7 @@ public partial class ArcadiaGaugeChart : Arcadia.Core.Base.ArcadiaComponentBase
     /// <summary>Whether to animate on load.</summary>
     [Parameter] public bool AnimateOnLoad { get; set; } = true;
 
+    /// <summary>Duration of the gauge fill animation in milliseconds. Only applies when AnimateOnLoad is true. Default is 800.</summary>
     [Parameter] public int AnimationDuration { get; set; } = 800;
 
     private double _cx;
