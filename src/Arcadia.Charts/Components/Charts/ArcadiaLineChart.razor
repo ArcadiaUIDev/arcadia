@@ -44,6 +44,20 @@ else if (Data is not null && Data.Count > 1 && XField is not null && Series is n
                 <SvgText x="@F(_layout.PlotArea.X - 8)" y="@F(y + 4)" text-anchor="end" class="arcadia-chart__tick-label">@(YAxisFormatString is not null ? tick.Value.ToString(YAxisFormatString, FormatProvider) : tick.Label)</SvgText>
             }
 
+            @* Secondary Y-axis labels (right side) *@
+            @if (HasSecondaryYAxis && _y2Scale is not null)
+            {
+                @foreach (var tick in _layout.Y2Ticks)
+                {
+                    var y2 = _y2Scale.Scale(tick.Value);
+                    <SvgText x="@F(_layout.PlotArea.X + _layout.PlotArea.Width + 8)" y="@F(y2 + 4)"
+                          text-anchor="start" class="arcadia-chart__tick-label">@(YAxis2FormatString is not null ? tick.Value.ToString(YAxis2FormatString, FormatProvider) : tick.Label)</SvgText>
+                }
+                <line x1="@F(_layout.PlotArea.X + _layout.PlotArea.Width)" y1="@F(_layout.PlotArea.Y)"
+                      x2="@F(_layout.PlotArea.X + _layout.PlotArea.Width)" y2="@F(_layout.PlotArea.Y + _layout.PlotArea.Height)"
+                      stroke="currentColor" opacity="@AxisLineOpacity.ToString("F2")" stroke-width="1" />
+            }
+
             @* X-axis labels *@
             @foreach (var tick in _layout.XTicks)
             {

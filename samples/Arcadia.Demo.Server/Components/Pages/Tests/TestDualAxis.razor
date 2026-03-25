@@ -1,0 +1,33 @@
+@page "/test/dual-axis"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Components.Charts
+@using Arcadia.Charts.Core
+
+<div style="padding: 24px; background: transparent;">
+    <ArcadiaLineChart TItem="SalesData" Data="@_data"
+                      XField="@(d => (object)d.Month)" Series="@_series"
+                      Height="400" Width="0"
+                      Title="Revenue vs Conversion Rate"
+                      YAxisFormatString="C0" YAxis2FormatString="P1"
+                      ShowPoints="true" ShowLegend="true" />
+</div>
+
+@code {
+    record SalesData(string Month, double Revenue, double ConversionRate);
+
+    List<SalesData> _data = new()
+    {
+        new("Jan", 45000, 0.021), new("Feb", 52000, 0.024),
+        new("Mar", 48000, 0.019), new("Apr", 61000, 0.031),
+        new("May", 55000, 0.028), new("Jun", 67000, 0.035),
+        new("Jul", 72000, 0.038), new("Aug", 68000, 0.033),
+    };
+
+    List<SeriesConfig<SalesData>> _series = new()
+    {
+        new() { Name = "Revenue", Field = d => d.Revenue, Color = "primary",
+                ShowArea = true, AreaOpacity = 0.1, CurveType = "smooth", YAxisIndex = 0 },
+        new() { Name = "Conversion", Field = d => d.ConversionRate, Color = "danger",
+                Dashed = true, YAxisIndex = 1 },
+    };
+}

@@ -31,6 +31,7 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
 
     private ChartLayoutResult _layout = new();
     private LinearScale? _yScale;
+    private LinearScale? _y2Scale;
     private TimeScale? _xTimeScale;
     private List<DateTime> _xDateTimes = new();
     private List<string> _xLabels = new();
@@ -79,13 +80,17 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
             _xLabels = Data.Select(d => FormatLabel(XField(d))).ToList();
         }
 
-        // Calculate Y range across all series (filter out NaN for null handling)
+        // Partition series by axis index
+        var primarySeries = Series.Where(s => s.YAxisIndex == 0).ToList();
+        var secondarySeries = Series.Where(s => s.YAxisIndex == 1).ToList();
+        HasSecondaryYAxis = secondarySeries.Count > 0;
+
+        // Calculate primary Y range (axis 0)
         List<double> allYValues;
         if (Stacked)
         {
-            // For stacked, the Y range needs to account for cumulative sums
             var cumulativeMax = new double[Data.Count];
-            foreach (var s in Series.Where(s => s.Visible))
+            foreach (var s in primarySeries.Where(s => s.Visible))
             {
                 for (var j = 0; j < Data.Count; j++)
                 {
@@ -98,13 +103,27 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
         }
         else
         {
-            allYValues = Series.SelectMany(s => Data.Select(d => s.Field(d)))
+            allYValues = primarySeries.SelectMany(s => Data.Select(d => s.Field(d)))
                 .Where(v => !double.IsNaN(v)).ToList();
         }
-        if (allYValues.Count == 0) return;
+        if (allYValues.Count == 0) allYValues.Add(0);
         var yMin = YAxisMin ?? allYValues.Min();
         var yMax = YAxisMax ?? allYValues.Max();
-        if (YAxisMin is null && yMin > 0) yMin = 0; // Include zero baseline unless manually set
+        if (YAxisMin is null && yMin > 0) yMin = 0;
+
+        // Calculate secondary Y range (axis 1)
+        double y2Min = 0, y2Max = 1;
+        if (HasSecondaryYAxis)
+        {
+            var y2Values = secondarySeries.SelectMany(s => Data.Select(d => s.Field(d)))
+                .Where(v => !double.IsNaN(v)).ToList();
+            if (y2Values.Count > 0)
+            {
+                y2Min = YAxis2Min ?? y2Values.Min();
+                y2Max = YAxis2Max ?? y2Values.Max();
+                if (YAxis2Min is null && y2Min > 0) y2Min = 0;
+            }
+        }
 
         _layout = LayoutEngine.Calculate(new ChartLayoutInput
         {
@@ -116,7 +135,11 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
             XTickLabels = _xLabels,
             YMin = yMin,
             YMax = yMax,
-            SeriesNames = Series.Select(s => s.Name).ToList()
+            SeriesNames = Series.Select(s => s.Name).ToList(),
+            HasSecondaryYAxis = HasSecondaryYAxis,
+            Y2Min = HasSecondaryYAxis ? y2Min : null,
+            Y2Max = HasSecondaryYAxis ? y2Max : null,
+            Y2AxisTitle = YAxis2Title
         });
 
         var yTicks = CreateYTicks(yMin, yMax);
@@ -124,6 +147,17 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
             yTicks.Min(), yTicks.Max(),
             _layout.PlotArea.Y + _layout.PlotArea.Height,
             _layout.PlotArea.Y);
+
+        // Build secondary Y scale
+        if (HasSecondaryYAxis)
+        {
+            var y2Ticks = CreateYTicks(y2Min, y2Max);
+            _y2Scale = CreateYScale(
+                y2Ticks.Min(), y2Ticks.Max(),
+                _layout.PlotArea.Y + _layout.PlotArea.Height,
+                _layout.PlotArea.Y);
+        }
+        else { _y2Scale = null; }
 
         // Build TimeScale for continuous X positioning
         if (IsTimeAxis && _xDateTimes.Count > 1)
@@ -186,7 +220,8 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
                         }
                     }
                 }
-                var y = _yScale.Scale(Stacked ? stackedValue : value);
+                var yScale = series.YAxisIndex == 1 && _y2Scale is not null ? _y2Scale : _yScale!;
+                var y = yScale.Scale(Stacked ? stackedValue : value);
                 currentSegment.Add((x, y, i));
                 rawValues.Add(value);
                 seriesPoints.Add(new DataPointInfo { X = x, Y = y, Value = value, Index = i });
@@ -284,7 +319,8 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
                     for (var i = 0; i < trendValues.Length && i < seriesPoints.Count; i++)
                     {
                         var px = seriesPoints[i].X;
-                        var py = _yScale.Scale(trendValues[i]);
+                        var trendScale = series.YAxisIndex == 1 && _y2Scale is not null ? _y2Scale : _yScale!;
+                        var py = trendScale.Scale(trendValues[i]);
                         trendPoints.Add($"{F(px)},{F(py)}");
                     }
 

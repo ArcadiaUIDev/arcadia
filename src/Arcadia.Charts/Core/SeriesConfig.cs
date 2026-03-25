@@ -53,6 +53,9 @@ public class SeriesConfig<T>
     /// <summary>Function to get per-point color. Overrides series Color for individual points.</summary>
     public Func<T, string?>? PointColorField { get; set; }
 
+    /// <summary>Which Y-axis this series maps to: 0 = primary (left), 1 = secondary (right). Default is 0.</summary>
+    public int YAxisIndex { get; set; } = 0;
+
     /// <summary>Effective dash pattern for rendering.</summary>
     public string EffectiveDash => DashPattern ?? (Dashed ? "6,4" : "");
 }

@@ -29,6 +29,18 @@ internal class ChartLayoutEngine
         result.TickLabelRotation = xRotation;
         result.YTicks = ResolveYTicks(input);
 
+        // Resolve secondary Y-axis ticks if present
+        if (input.HasSecondaryYAxis && input.Y2Min.HasValue && input.Y2Max.HasValue)
+        {
+            var y2TickValues = TickGenerator.GenerateNumericTicks(input.Y2Min.Value, input.Y2Max.Value, 8);
+            result.Y2Ticks = y2TickValues.Select(v => new TickMark
+            {
+                Label = FormatNumber(v),
+                Value = v,
+                Position = 0
+            }).ToList();
+        }
+
         // 3. Calculate legend layout
         result.Legend = ResolveLegend(input, result.Tier);
 
@@ -250,6 +262,17 @@ internal class ChartLayoutEngine
         if (result.ShowAxisTitles && !string.IsNullOrEmpty(input.XAxisTitle))
             bottom += DefaultFontSize * 1.5;
 
+        // Secondary Y-axis labels (right side)
+        if (input.HasSecondaryYAxis && result.Y2Ticks.Count > 0)
+        {
+            var maxY2LabelWidth = result.Y2Ticks.Max(t => TextMeasure.EstimateWidth(t.Label, DefaultFontSize));
+            right += maxY2LabelWidth + 8;
+        }
+
+        // Secondary Y-axis title
+        if (input.HasSecondaryYAxis && result.ShowAxisTitles && !string.IsNullOrEmpty(input.Y2AxisTitle))
+            right += DefaultFontSize * 1.5;
+
         // Legend (below chart)
         if (result.Legend.Visible)
             bottom += DefaultFontSize * 2;
@@ -291,6 +314,10 @@ internal class ChartLayoutInput
     public double? YMin { get; set; }
     public double? YMax { get; set; }
     public IReadOnlyList<string>? SeriesNames { get; set; }
+    public bool HasSecondaryYAxis { get; set; }
+    public double? Y2Min { get; set; }
+    public double? Y2Max { get; set; }
+    public string? Y2AxisTitle { get; set; }
 }
 
 internal class ChartLayoutResult
@@ -302,6 +329,7 @@ internal class ChartLayoutResult
     public PlotArea PlotArea { get; set; } = new();
     public List<TickMark> XTicks { get; set; } = new();
     public List<TickMark> YTicks { get; set; } = new();
+    public List<TickMark> Y2Ticks { get; set; } = new();
     public double TickLabelRotation { get; set; }
     public LegendLayout Legend { get; set; } = new();
     public bool ShowAxisTitles { get; set; } = true;

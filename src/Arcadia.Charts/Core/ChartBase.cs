@@ -60,6 +60,22 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
     /// <summary>Format string for X-axis tick labels.</summary>
     [Parameter] public string? XAxisFormatString { get; set; }
 
+    // ── Secondary Y-Axis ──────────────────────────────────
+    /// <summary>Secondary Y-axis title label (right side).</summary>
+    [Parameter] public string? YAxis2Title { get; set; }
+
+    /// <summary>Manual secondary Y-axis minimum. Null = auto from data.</summary>
+    [Parameter] public double? YAxis2Min { get; set; }
+
+    /// <summary>Manual secondary Y-axis maximum. Null = auto from data.</summary>
+    [Parameter] public double? YAxis2Max { get; set; }
+
+    /// <summary>Format string for secondary Y-axis tick labels (e.g., "P1", "N2").</summary>
+    [Parameter] public string? YAxis2FormatString { get; set; }
+
+    /// <summary>Maximum number of secondary Y-axis ticks.</summary>
+    [Parameter] public int YAxis2MaxTicks { get; set; } = 8;
+
     // ── Grid ─────────────────────────────────────────────
     /// <summary>Whether to show grid lines.</summary>
     [Parameter] public bool ShowGrid { get; set; } = true;
@@ -181,6 +197,9 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
     protected string EffectiveGridColor => GridColor ?? "var(--arcadia-color-border, #e2e8f0)";
 
     protected bool HasData => Data is not null && Data.Count > 0;
+
+    /// <summary>Whether any series is assigned to the secondary Y-axis.</summary>
+    protected bool HasSecondaryYAxis { get; set; }
 
     protected override void OnInitialized()
     {
