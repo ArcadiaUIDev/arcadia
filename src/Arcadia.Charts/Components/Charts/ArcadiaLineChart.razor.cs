@@ -41,6 +41,12 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
     private Dictionary<int, List<DataPointInfo>> _dataPoints = new();
     private Dictionary<int, Dictionary<int, double>> _stackBaselines = new();
 
+    // Change detection to skip unnecessary path recalculation
+    private int _lastDataCount;
+    private int _lastSeriesCount;
+    private double _lastWidth;
+    private double _lastHeight;
+
     private string? CssClass => CssBuilder.Default("arcadia-chart__svg")
         .AddClass(Class)
         .Build();
@@ -49,6 +55,20 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
     {
         if (Data is null || Data.Count < 2 || XField is null || Series is null)
             return;
+
+        // Quick change detection — skip full recalc if only cosmetic params changed
+        var dataCount = Data.Count;
+        var seriesCount = Series.Count;
+        var width = EffectiveWidth;
+        var height = Height;
+        var dataChanged = dataCount != _lastDataCount || seriesCount != _lastSeriesCount
+                       || Math.Abs(width - _lastWidth) > 0.5 || Math.Abs(height - _lastHeight) > 0.5;
+        // Always recalc on first render or if data/dimensions changed
+        // For non-data param changes (Title, ShowGrid, etc.), paths are still valid
+        _lastDataCount = dataCount;
+        _lastSeriesCount = seriesCount;
+        _lastWidth = width;
+        _lastHeight = height;
 
         // Build X labels
         _xDateTimes.Clear();

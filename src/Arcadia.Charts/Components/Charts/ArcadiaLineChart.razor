@@ -132,7 +132,10 @@ else if (Data is not null && Data.Count > 1 && XField is not null && Series is n
                 {
                     @foreach (var pt in _dataPoints[si])
                     {
-                        <circle cx="@F(pt.X)" cy="@F(pt.Y)" r="@PointRadius.ToString("F1")" fill="@color"
+                        var pointColor = (series.PointColorField is not null && pt.Index < Data!.Count)
+                            ? series.PointColorField(Data[pt.Index]) ?? color
+                            : color;
+                        <circle cx="@F(pt.X)" cy="@F(pt.Y)" r="@PointRadius.ToString("F1")" fill="@pointColor"
                                 class="arcadia-chart__point @(AnimateOnLoad ? "arcadia-animate-point" : "")"
                                 style="@GetPointStyle(pt.Index)"
                                 @onmouseover="@(e => HandlePointHover(series.Name, pt, e))"
@@ -221,7 +224,7 @@ else if (Data is not null && Data.Count > 1 && XField is not null && Series is n
 
         @* Hidden data table for screen readers *@
         <table class="arcadia-sr-only" aria-label="Chart data">
-            <thead><tr><th>@XAxisTitle</th>@foreach (var s in Series) { <th>@s.Name</th> }</tr></thead>
+            <thead><tr><th>@(XAxisTitle ?? "X")</th>@foreach (var s in Series) { <th>@s.Name@(s.YAxisIndex == 1 ? " (right axis)" : "")</th> }</tr></thead>
             <tbody>
                 @foreach (var item in Data)
                 {

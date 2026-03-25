@@ -5,7 +5,7 @@
 <div class="arcadia-chart @(AwaitingMeasurement || Loading ? "arcadia-chart--loading" : "")" @ref="ContainerRef" style="@GetContainerStyle()" @attributes="AdditionalAttributes">
 @if (AwaitingMeasurement) {
 }
-else if (HasData && CategoryField is not null && ValueField is not null) {
+else if (HasData && CategoryField is not null && ValueField is not null && _yScale is not null) {
         @if (ShowToolbar) { <ChartToolbar OnExportPng="@(() => ExportPngAsync())" OnExportSvg="@(() => ExportSvgFileAsync())" /> }
         <svg width="@SvgWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"
              role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? "Waterfall chart")">
