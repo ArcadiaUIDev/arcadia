@@ -78,10 +78,10 @@ public partial class ArcadiaScatterChart<T> : ChartBase<T>
         });
 
         var xTicks = TickGenerator.GenerateNumericTicks(xValues.Min(), xValues.Max(), 8);
-        var yTicks = TickGenerator.GenerateNumericTicks(yValues.Min(), yValues.Max(), 8);
+        var yTicks = CreateYTicks(yValues.Min(), yValues.Max());
 
         _xScale = new LinearScale(xTicks.Min(), xTicks.Max(), _layout.PlotArea.X, _layout.PlotArea.X + _layout.PlotArea.Width);
-        _yScale = new LinearScale(yTicks.Min(), yTicks.Max(), _layout.PlotArea.Y + _layout.PlotArea.Height, _layout.PlotArea.Y);
+        _yScale = CreateYScale(yTicks.Min(), yTicks.Max(), _layout.PlotArea.Y + _layout.PlotArea.Height, _layout.PlotArea.Y);
 
         // Trendline
         _trendlinePath = null;

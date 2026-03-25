@@ -85,8 +85,8 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
             SeriesNames = Series.Select(s => s.Name).ToList()
         });
 
-        var yTicks = TickGenerator.GenerateNumericTicks(yMin, yMax, YAxisMaxTicks);
-        _yScale = new LinearScale(
+        var yTicks = CreateYTicks(yMin, yMax);
+        _yScale = CreateYScale(
             yTicks.Min(), yTicks.Max(),
             _layout.PlotArea.Y + _layout.PlotArea.Height,
             _layout.PlotArea.Y);
