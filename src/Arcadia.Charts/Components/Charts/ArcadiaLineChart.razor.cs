@@ -24,8 +24,15 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
     /// <summary>When true, area fills stack on top of each other instead of starting from zero.</summary>
     [Parameter] public bool Stacked { get; set; }
 
+    /// <summary>X-axis type: "category" (default, equal spacing) or "time" (continuous DateTime positioning).</summary>
+    [Parameter] public string XAxisType { get; set; } = "category";
+
+    private bool IsTimeAxis => string.Equals(XAxisType, "time", StringComparison.OrdinalIgnoreCase);
+
     private ChartLayoutResult _layout = new();
     private LinearScale? _yScale;
+    private TimeScale? _xTimeScale;
+    private List<DateTime> _xDateTimes = new();
     private List<string> _xLabels = new();
     private Dictionary<int, string> _paths = new();
     private Dictionary<int, string> _areaPaths = new();
@@ -43,7 +50,34 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
             return;
 
         // Build X labels
-        _xLabels = Data.Select(d => FormatLabel(XField(d))).ToList();
+        _xDateTimes.Clear();
+        _xTimeScale = null;
+
+        if (IsTimeAxis)
+        {
+            _xDateTimes = Data.Select(d =>
+            {
+                var raw = XField(d);
+                return raw switch
+                {
+                    DateTime dt => dt,
+                    DateTimeOffset dto => dto.DateTime,
+#if NET6_0_OR_GREATER
+                    DateOnly dateOnly => dateOnly.ToDateTime(TimeOnly.MinValue),
+#endif
+                    _ => DateTime.MinValue
+                };
+            }).ToList();
+
+            var timeRange = _xDateTimes.Count > 1 ? _xDateTimes.Max() - _xDateTimes.Min() : TimeSpan.FromDays(1);
+            var timeTicks = TickGenerator.GenerateTimeTicks(_xDateTimes.Min(), _xDateTimes.Max(), XAxisMaxTicks);
+            var tickFormat = XAxisFormatString ?? TimeTickLabelFormatter.GetFormat(timeRange);
+            _xLabels = timeTicks.Select(t => t.ToString(tickFormat, FormatProvider)).ToList();
+        }
+        else
+        {
+            _xLabels = Data.Select(d => FormatLabel(XField(d))).ToList();
+        }
 
         // Calculate Y range across all series (filter out NaN for null handling)
         List<double> allYValues;
@@ -91,6 +125,12 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
             _layout.PlotArea.Y + _layout.PlotArea.Height,
             _layout.PlotArea.Y);
 
+        // Build TimeScale for continuous X positioning
+        if (IsTimeAxis && _xDateTimes.Count > 1)
+        {
+            _xTimeScale = TimeScale.FromData(_xDateTimes, _layout.PlotArea.X, _layout.PlotArea.X + _layout.PlotArea.Width);
+        }
+
         // Build SVG paths for each series
         _paths.Clear();
         _areaPaths.Clear();
@@ -108,7 +148,9 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
 
             for (var i = 0; i < Data.Count; i++)
             {
-                var x = _layout.PlotArea.X + (i + 0.5) * (_layout.PlotArea.Width / Data.Count);
+                var x = IsTimeAxis && _xTimeScale is not null && i < _xDateTimes.Count
+                    ? _xTimeScale.Scale(_xDateTimes[i])
+                    : _layout.PlotArea.X + (i + 0.5) * (_layout.PlotArea.Width / Data.Count);
                 var value = series.Field(Data[i]);
                 var isNull = double.IsNaN(value);
 

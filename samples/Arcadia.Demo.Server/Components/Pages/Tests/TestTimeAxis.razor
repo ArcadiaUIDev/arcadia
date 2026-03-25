@@ -1,0 +1,75 @@
+@page "/test/time-axis"
+@layout Arcadia.Demo.Server.Components.Layout.FullScreenLayout
+@using Arcadia.Charts.Components.Charts
+@using Arcadia.Charts.Core
+
+<div style="padding: 24px; background: transparent;">
+    <h2 style="color: white; margin-bottom: 16px;">DateTime X-Axis Demo</h2>
+
+    <div style="margin-bottom: 32px;">
+        <h3 style="color: #c084fc; margin-bottom: 8px;">Irregular Intervals — Sensor Readings</h3>
+        <ArcadiaLineChart TItem="SensorReading" Data="@_sensorData"
+                          XField="@(d => (object)d.Timestamp)"
+                          Series="@_sensorSeries"
+                          XAxisType="time"
+                          Height="350" Width="0"
+                          Title="Temperature Sensor" ShowPoints="true"
+                          YAxisTitle="Temperature (C)" />
+    </div>
+
+    <div>
+        <h3 style="color: #c084fc; margin-bottom: 8px;">Monthly Data — Revenue Over 2 Years</h3>
+        <ArcadiaLineChart TItem="MonthlyRevenue" Data="@_revenueData"
+                          XField="@(d => (object)d.Date)"
+                          Series="@_revenueSeries"
+                          XAxisType="time"
+                          Height="350" Width="0"
+                          Title="Revenue Trend" />
+    </div>
+</div>
+
+@code {
+    record SensorReading(DateTime Timestamp, double Temperature, double Humidity);
+    record MonthlyRevenue(DateTime Date, double Revenue, double Target);
+
+    // Irregular intervals — some readings minutes apart, some hours apart
+    List<SensorReading> _sensorData = new()
+    {
+        new(new DateTime(2026, 3, 1, 8, 0, 0), 21.2, 45),
+        new(new DateTime(2026, 3, 1, 8, 15, 0), 21.5, 44),
+        new(new DateTime(2026, 3, 1, 9, 0, 0), 22.1, 43),
+        new(new DateTime(2026, 3, 1, 12, 0, 0), 25.8, 38),
+        new(new DateTime(2026, 3, 1, 12, 30, 0), 26.2, 37),
+        new(new DateTime(2026, 3, 1, 15, 0, 0), 24.5, 40),
+        new(new DateTime(2026, 3, 1, 18, 0, 0), 22.8, 42),
+        new(new DateTime(2026, 3, 1, 21, 0, 0), 20.5, 48),
+        new(new DateTime(2026, 3, 2, 8, 0, 0), 19.8, 52),
+        new(new DateTime(2026, 3, 2, 14, 0, 0), 24.2, 39),
+    };
+
+    List<SeriesConfig<SensorReading>> _sensorSeries = new()
+    {
+        new() { Name = "Temperature", Field = d => d.Temperature, Color = "danger", CurveType = "smooth", ShowArea = true, AreaOpacity = 0.1 },
+        new() { Name = "Humidity", Field = d => d.Humidity, Color = "info", Dashed = true },
+    };
+
+    // Monthly data over 2 years
+    List<MonthlyRevenue> _revenueData = new();
+    List<SeriesConfig<MonthlyRevenue>> _revenueSeries = new()
+    {
+        new() { Name = "Revenue", Field = d => d.Revenue, Color = "success", ShowArea = true, AreaOpacity = 0.1, CurveType = "smooth" },
+        new() { Name = "Target", Field = d => d.Target, Color = "warning", Dashed = true },
+    };
+
+    protected override void OnInitialized()
+    {
+        var rng = new Random(42);
+        _revenueData = Enumerable.Range(0, 24).Select(i =>
+        {
+            var date = new DateTime(2024, 1, 1).AddMonths(i);
+            var revenue = 40000 + i * 2000 + rng.NextDouble() * 10000;
+            var target = 45000 + i * 2500;
+            return new MonthlyRevenue(date, Math.Round(revenue), target);
+        }).ToList();
+    }
+}
