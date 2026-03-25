@@ -1,6 +1,6 @@
 <p align="center">
   <strong>Arcadia Controls</strong><br>
-  <em>12 chart types, dashboard widgets, form builder & notifications for Blazor</em>
+  <em>16 chart types, dashboard widgets, form builder & notifications for Blazor</em>
 </p>
 
 <p align="center">
@@ -23,7 +23,7 @@ A commercial Blazor component library for enterprise .NET developers. Pure SVG c
 
 **[Live Demo](https://arcadiaui.com/playground/)** · **[Documentation](https://arcadiaui.com/docs/)** · **[Why Arcadia?](https://arcadiaui.com/why-arcadia/)**
 
-## Charts (12 Types)
+## Charts (16 Types)
 
 | Chart | Component | Tier |
 |-------|-----------|------|
@@ -39,6 +39,10 @@ A commercial Blazor component library for enterprise .NET developers. Pure SVG c
 | Treemap | `ArcadiaTreemapChart<T>` | Pro |
 | Waterfall | `ArcadiaWaterfallChart<T>` | Pro |
 | Rose / Polar | `ArcadiaRoseChart<T>` | Pro |
+| Range Area | `ArcadiaRangeAreaChart<T>` | Pro |
+| Box Plot | `ArcadiaBoxPlot<T>` | Pro |
+| Sankey | `ArcadiaSankeyChart` | Pro |
+| Chord | `ArcadiaChordChart` | Pro |
 
 **Plus:** 7 dashboard widgets (KPI Card, Sparkline, Progress Bar, Delta Indicator, Bar List, Tracker, Category Bar), Form Builder with 21 field types, and Toast Notifications.
 
@@ -92,7 +96,7 @@ dotnet add package Arcadia.Theme
 ## Key Features
 
 - **Pure SVG rendering** — no JavaScript dependencies for chart rendering
-- **12 chart types** — from line charts to candlesticks, heatmaps to rose charts
+- **16 chart types** — from line charts to Sankey flows, chord diagrams to heatmaps
 - **Responsive** — set `Width="0"` and charts auto-fill their container
 - **Dark/Light themes** — full theme support via CSS custom properties
 - **Streaming data** — real-time updates with `AppendAndSlide` and sliding window
@@ -110,7 +114,7 @@ dotnet add package Arcadia.Theme
 |---------|-------------|
 | `Arcadia.Core` | Base classes, theming engine, accessibility utilities |
 | `Arcadia.Theme` | Design tokens, CSS custom properties, Tailwind plugin |
-| `Arcadia.Charts` | All 12 chart types + 7 dashboard widgets |
+| `Arcadia.Charts` | All 16 chart types + 7 dashboard widgets |
 | `Arcadia.FormBuilder` | Dynamic forms, validation, wizards |
 | `Arcadia.Notifications` | Toast notification system |
 
@@ -137,7 +141,7 @@ See [tools/snippets/README.md](tools/snippets/README.md) for installation.
 | Tier | Price | Includes |
 |------|-------|----------|
 | **Community** | Free (MIT) | Line, Bar, Pie, Scatter charts + Sparklines |
-| **Pro** | $299/dev/year | All 12 chart types + Form Builder + Notifications |
+| **Pro** | $299/dev/year | All 16 chart types + Form Builder + Notifications |
 | **Enterprise** | $799/dev/year | Pro + priority support + source code access |
 
 [View pricing](https://arcadiaui.com/#pricing)
