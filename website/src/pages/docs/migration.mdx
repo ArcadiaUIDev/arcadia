@@ -1,0 +1,180 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Migration Guide
+description: Breaking changes and migration instructions for each Arcadia Controls beta release.
+---
+
+# Migration Guide
+
+This page documents every breaking change across Arcadia Controls beta releases with before/after code examples.
+
+## beta.7 → beta.8
+
+### Community tier change
+
+Funnel, Treemap, and Waterfall charts moved from Community (free) to Pro tier. They now show a `CommunityWatermark` without a license key.
+
+**No code changes required** — components still work, they just show a small watermark label. Call `ArcadiaLicense.SetKey("ARC-P...")` in `Program.cs` to remove it.
+
+### New parameters with defaults
+
+30+ new visual parameters were added across all charts. All use backward-compatible defaults matching the previous hardcoded values. No code changes required unless you want to customize:
+
+```csharp
+// These are all new — none existed before beta.8
+// Your existing code is unaffected
+<ArcadiaPieChart SliceStrokeWidth="2" SliceStrokeColor="var(--arcadia-color-surface, #fff)" ... />
+<ArcadiaBoxPlot MedianLineColor="white" MedianLineWidth="2.5" ... />
+```
+
+---
+
+## beta.6 → beta.7
+
+No breaking changes. `TooltipTemplate` parameter added to all charts (additive).
+
+---
+
+## beta.5 → beta.6
+
+### Responsive width default
+
+`Width` default changed from `600` to `0` (responsive). Charts now fill their container by default.
+
+**If you relied on the 600px default:**
+
+```razor
+// Before (beta.5) — chart was 600px wide by default
+<ArcadiaLineChart TItem="Sale" Data="@data" ... />
+
+// After (beta.6) — chart fills container. To get fixed width:
+<ArcadiaLineChart TItem="Sale" Data="@data" Width="600" ... />
+```
+
+---
+
+## beta.4 → beta.5
+
+### OnPointClick signature change
+
+`OnPointClick` changed from `EventCallback<T>` to `EventCallback<PointClickEventArgs<T>>`. The new type provides `Item`, `DataIndex`, and `SeriesIndex`.
+
+```razor
+// Before (beta.4)
+<ArcadiaLineChart TItem="Sale" Data="@data"
+                  OnPointClick="@HandleClick" ... />
+
+@code {
+    void HandleClick(Sale item)
+    {
+        Console.WriteLine(item.Month);
+    }
+}
+
+// After (beta.5+)
+<ArcadiaLineChart TItem="Sale" Data="@data"
+                  OnPointClick="@HandleClick" ... />
+
+@code {
+    void HandleClick(PointClickEventArgs<Sale> e)
+    {
+        Console.WriteLine($"{e.Item.Month} (index {e.DataIndex}, series {e.SeriesIndex})");
+    }
+}
+```
+
+---
+
+## beta.3 → beta.4
+
+### CSS file rename
+
+`helix.css` renamed to `arcadia.css`. Update your `App.razor`:
+
+```html
+<!-- Before -->
+<link href="_content/Arcadia.Theme/css/helix.css" rel="stylesheet" />
+
+<!-- After -->
+<link href="_content/Arcadia.Theme/css/arcadia.css" rel="stylesheet" />
+```
+
+### ProgressBar.Thresholds type
+
+`Thresholds` parameter changed from `List<double>` to `List<GaugeThreshold>`:
+
+```csharp
+// Before (beta.3)
+<ArcadiaProgressBar Thresholds="@(new List<double> { 60, 90 })" ... />
+
+// After (beta.4+)
+<ArcadiaProgressBar Thresholds="@(new List<GaugeThreshold> {
+    new() { Value = 60, Color = "warning" },
+    new() { Value = 90, Color = "danger" }
+})" ... />
+```
+
+---
+
+## beta.2 → beta.3
+
+### Full rename: HelixUI → Arcadia
+
+This is the largest breaking change. Every component, namespace, CSS file, and NuGet package was renamed.
+
+**Components:**
+
+```razor
+// Before
+@using HelixUI.Charts.Core
+@using HelixUI.Charts.Components.Charts
+
+<HelixLineChart TItem="Sale" ... />
+<HelixKpiCard ... />
+<HelixFormBuilder ... />
+
+// After
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+
+<ArcadiaLineChart TItem="Sale" ... />
+<ArcadiaKpiCard ... />
+<ArcadiaFormBuilder ... />
+```
+
+**NuGet packages:**
+
+```bash
+# Before
+dotnet add package HelixUI.Charts
+
+# After
+dotnet add package Arcadia.Charts
+```
+
+**CSS files:**
+
+```html
+<!-- Before -->
+<link href="_content/HelixUI.Theme/css/helix-theme.css" rel="stylesheet" />
+<link href="_content/HelixUI.Charts/css/helix-charts.css" rel="stylesheet" />
+
+<!-- After -->
+<link href="_content/Arcadia.Theme/css/arcadia.css" rel="stylesheet" />
+<link href="_content/Arcadia.Charts/css/arcadia-charts.css" rel="stylesheet" />
+```
+
+**Find and replace guide:**
+
+| Find | Replace with |
+|------|-------------|
+| `HelixUI.` | `Arcadia.` |
+| `Helix` (component prefix) | `Arcadia` |
+| `helix-` (CSS files) | `arcadia-` |
+| `HelixUI` (NuGet) | `Arcadia` |
+
+---
+
+## beta.1 → beta.2
+
+No breaking changes. New charts and parameters were additive.
