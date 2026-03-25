@@ -229,11 +229,9 @@ public partial class ArcadiaChordChart : ChartBase<ChordNode>
         var y = _cy + Math.Sin(midAngle) * labelR;
         var rotDeg = midAngle * 180 / Math.PI;
 
-        // Flip text on left side so it reads left-to-right
-        var isLeftSide = midAngle > Math.PI / 2 && midAngle < 3 * Math.PI / 2;
-        // Also handle wrapping around -PI/2
+        // Flip text on left side so it reads left-to-right (normalize angle for wraparound)
         var normalizedAngle = ((midAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-        isLeftSide = normalizedAngle > Math.PI / 2 && normalizedAngle < 3 * Math.PI / 2;
+        var isLeftSide = normalizedAngle > Math.PI / 2 && normalizedAngle < 3 * Math.PI / 2;
 
         if (isLeftSide)
         {

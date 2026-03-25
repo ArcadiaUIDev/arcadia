@@ -257,12 +257,14 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
 
     private void OnResized(double width, double height)
     {
+        if (_disposed) return; // guard against callback after disposal
         if (Math.Abs(width - _measuredWidth) > 1)
         {
             _measuredWidth = width;
             InvokeAsync(() =>
             {
-                OnParametersSet(); // Recalculate layout with new EffectiveWidth
+                if (_disposed) return;
+                OnParametersSet();
                 StateHasChanged();
             });
         }
@@ -468,8 +470,8 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
             _logScale = logScale;
         }
 
-        public new double Scale(double value) => _logScale.Scale(value);
-        public new double Invert(double pixel) => _logScale.Invert(pixel);
+        public override double Scale(double value) => _logScale.Scale(value);
+        public override double Invert(double pixel) => _logScale.Invert(pixel);
     }
 
     /// <summary>Formats a value for screen reader tables, replacing NaN with "—".</summary>
@@ -490,6 +492,8 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
         {
             if (IsResponsive && Interop is not null)
                 await Interop.UnobserveResizeAsync(ContainerRef);
+            if ((EnableZoom || EnablePan) && Interop is not null)
+                await Interop.DisablePanZoomAsync(ContainerRef);
         }
 #if NET6_0_OR_GREATER
         catch (JSDisconnectedException) { }

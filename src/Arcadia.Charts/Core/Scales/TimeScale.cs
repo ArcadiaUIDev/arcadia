@@ -24,7 +24,7 @@ public class TimeScale
     /// <summary>
     /// Maps a pixel position back to a DateTime.
     /// </summary>
-    public DateTime Invert(double pixel) => new((long)_inner.Invert(pixel));
+    public DateTime Invert(double pixel) => new((long)Math.Round(_inner.Invert(pixel)));
 
     /// <summary>
     /// Creates a time scale from data with padding.

@@ -8,7 +8,7 @@
 {
     @* Skeleton — waiting for ResizeObserver to measure container *@
 }
-else if (Data is not null && Data.Count > 1 && XField is not null && Series is not null)
+else if (Data is not null && Data.Count > 1 && XField is not null && Series is not null && _yScale is not null)
 {
         @if (ShowToolbar) { <ChartToolbar OnExportPng="@(() => ExportPngAsync())" OnExportSvg="@(() => ExportSvgFileAsync())" /> }
         <svg width="@SvgWidth" height="@Height" viewBox="0 0 @EffectiveWidth @Height"

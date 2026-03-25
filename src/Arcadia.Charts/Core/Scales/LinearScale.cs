@@ -21,7 +21,7 @@ internal class LinearScale
     /// <summary>
     /// Maps a data value to a pixel position.
     /// </summary>
-    public double Scale(double value)
+    public virtual double Scale(double value)
     {
         if (Math.Abs(DomainMax - DomainMin) < double.Epsilon)
             return (RangeMin + RangeMax) / 2;
@@ -33,7 +33,7 @@ internal class LinearScale
     /// <summary>
     /// Maps a pixel position back to a data value.
     /// </summary>
-    public double Invert(double pixel)
+    public virtual double Invert(double pixel)
     {
         if (Math.Abs(RangeMax - RangeMin) < double.Epsilon)
             return (DomainMin + DomainMax) / 2;
