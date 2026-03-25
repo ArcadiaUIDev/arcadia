@@ -140,7 +140,7 @@ Fired when a link path is clicked. Receives a `SankeyLinkClickEventArgs`:
 | `Data` | `IReadOnlyList<SankeyNode>?` | null | The nodes in the diagram |
 | `Links` | `IReadOnlyList<SankeyLink>?` | null | The links connecting nodes |
 | `Width` | `double` | 0 | Chart width in pixels (0 = responsive) |
-| `Height` | `double` | 400 | Chart height in pixels |
+| `Height` | `double` | 300 | Chart height in pixels |
 | `NodeWidth` | `double` | 20 | Width of node rectangles |
 | `NodePadding` | `double` | 15 | Vertical padding between nodes |
 | `Title` | `string?` | null | Chart title |
@@ -153,6 +153,8 @@ Fired when a link path is clicked. Receives a `SankeyLinkClickEventArgs`:
 | `Loading` | `bool` | false | Show loading skeleton |
 | `NoDataMessage` | `string?` | "No data available" | Custom empty-state message |
 | `AriaLabel` | `string?` | null | Screen reader label |
+| `LinkOpacity` | `double` | 0.3 | Base fill opacity for link ribbons (0-1) |
+| `LinkHoverOpacity` | `double` | 0.55 | Fill opacity on hover for visual emphasis |
 | `OnLinkClick` | `EventCallback<SankeyLinkClickEventArgs>` | — | Fired when a link is clicked |
 | `DataLabelFormatString` | `string?` | null | Format string for tooltip values |
 | `TooltipTemplate` | `RenderFragment<SankeyNode>?` | null | Custom tooltip content |

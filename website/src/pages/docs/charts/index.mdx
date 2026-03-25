@@ -55,7 +55,7 @@ All chart components inherit from `ChartBase<T>` and share these parameters:
 | Parameter | Type | Default | Description |
 |---|---|---|---|
 | `Data` | `IReadOnlyList<T>` | — | The data to visualize |
-| `Width` | `double` | 600 | Chart width in pixels |
+| `Width` | `double` | 0 | Chart width in pixels (0 = responsive, fills container) |
 | `Height` | `double` | 300 | Chart height in pixels |
 | `Title` | `string?` | null | Chart title |
 | `Subtitle` | `string?` | null | Subtitle below title |
@@ -66,7 +66,7 @@ All chart components inherit from `ChartBase<T>` and share these parameters:
 | `YAxisMin` / `YAxisMax` | `double?` | null | Manual axis range |
 | `YAxisFormatString` | `string?` | null | Format (e.g., "C0", "P1") |
 | `ShowDataLabels` | `bool` | false | Value labels on data points |
-| `OnPointClick` | `EventCallback<T>` | — | Click event on data point |
+| `OnPointClick` | `EventCallback<PointClickEventArgs<T>>` | — | Click event with item, data index, and series context |
 | `ShowCrosshair` | `bool` | false | Vertical crosshair on hover ([docs](/docs/charts/crosshair)) |
 | `Annotations` | `List<ChartAnnotation>?` | null | Data point markers ([docs](/docs/charts/annotations)) |
 | `EnableZoom` | `bool` | false | Mouse wheel zoom |

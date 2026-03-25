@@ -122,10 +122,12 @@ Fired when a chord ribbon is clicked. Receives a `ChordClickEventArgs`:
 | `Links` | `IReadOnlyList<ChordLink>?` | null | The chord connections |
 | `Width` | `double` | 0 | Chart width (0 = responsive) |
 | `Height` | `double` | 300 | Chart height |
-| `InnerRadius` | `double?` | null | Inner ring radius (null = 70% of outer) |
+| `InnerRadius` | `double?` | null | Inner ring radius (null = 88% of outer) |
 | `OuterRadius` | `double?` | null | Outer ring radius (null = auto from dims) |
 | `PadAngle` | `double` | 2.0 | Gap between arc segments in degrees |
-| `ChordOpacity` | `double` | 0.6 | Ribbon fill opacity |
+| `ChordOpacity` | `double` | 0.75 | Ribbon fill opacity |
+| `ChordHoverOpacity` | `double` | 1.0 | Ribbon fill opacity on hover |
+| `MinLabelAngle` | `double` | 8 | Minimum arc degrees for label to render |
 | `Title` | `string?` | null | Chart title |
 | `Subtitle` | `string?` | null | Subtitle below title |
 | `ShowLabels` | `bool` | true | Show labels on the outer ring |
