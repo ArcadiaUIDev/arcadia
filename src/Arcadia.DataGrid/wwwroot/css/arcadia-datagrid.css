@@ -489,38 +489,49 @@ th[aria-sort="descending"] .arcadia-grid__sort-icon {
 
 /* ── 2. Vapor — Frosted Glass ── */
 .arcadia-grid--vapor {
-  --_bg: rgba(15,15,20,0.85);
-  --_header: rgba(20,20,28,0.9);
-  --_border: rgba(255,255,255,0.08);
+  --_bg: #12111a;
+  --_header: #18172a;
+  --_border: rgba(129,140,248,0.1);
   --_text: #E4E4E7;
   --_muted: #8888A0;
   --_accent: #818CF8;
-  --_row-bg: rgba(15,15,20,0.6);
-  --_row-alt: rgba(255,255,255,0.02);
-  --_row-hover: rgba(255,255,255,0.05);
-  --_row-selected: rgba(99,102,241,0.12);
-  border-radius: 12px;
-  backdrop-filter: blur(16px) saturate(180%);
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.3);
-  border: none;
+  --_row-bg: #12111a;
+  --_row-alt: #151422;
+  --_row-hover: rgba(129,140,248,0.06);
+  --_row-selected: rgba(129,140,248,0.12);
+  border-radius: 14px;
+  border: 1px solid rgba(129,140,248,0.12);
+  box-shadow: 0 0 0 1px rgba(129,140,248,0.06),
+              0 0 40px rgba(129,140,248,0.04),
+              0 8px 32px rgba(0,0,0,0.3);
+  background: linear-gradient(180deg, #18172a 0%, #12111a 100%);
 }
 .arcadia-grid--vapor .arcadia-grid__thead--sticky {
-  backdrop-filter: blur(16px) saturate(180%);
+  background: #18172a;
 }
 .arcadia-grid--vapor .arcadia-grid__th {
   text-transform: none;
   font-weight: 500;
   font-size: 0.8rem;
   letter-spacing: 0;
-  background: rgba(20,20,28,0.9);
+  background: #18172a;
+  border-bottom-color: rgba(129,140,248,0.08);
 }
 .arcadia-grid--vapor .arcadia-grid__td {
   padding: 14px 20px;
-  background: rgba(15,15,20,0.6);
+  border-bottom-color: rgba(129,140,248,0.06);
 }
 .arcadia-grid--vapor .arcadia-grid__toolbar,
 .arcadia-grid--vapor .arcadia-grid__pagination {
-  background: rgba(20,20,28,0.9);
+  background: #18172a;
+}
+.arcadia-grid--vapor .arcadia-grid__filter-toggle:hover,
+.arcadia-grid--vapor .arcadia-grid__filter-toggle--active {
+  background: rgba(129,140,248,0.1);
+  border-color: rgba(129,140,248,0.3);
+}
+.arcadia-grid--vapor .arcadia-grid__td--footer {
+  color: #818CF8;
 }
 
 /* ── 3. Carbon — Stripe Enterprise ── */

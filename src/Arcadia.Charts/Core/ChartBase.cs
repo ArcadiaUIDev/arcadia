@@ -499,9 +499,18 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
         catch (JSDisconnectedException) { }
 #endif
         catch (ObjectDisposedException) { }
+        catch (InvalidOperationException) { } // JS interop not available during SSR prerendering
 
-        if (Interop is not null)
-            await Interop.DisposeAsync();
+        try
+        {
+            if (Interop is not null)
+                await Interop.DisposeAsync();
+        }
+#if NET6_0_OR_GREATER
+        catch (JSDisconnectedException) { }
+#endif
+        catch (ObjectDisposedException) { }
+        catch (InvalidOperationException) { }
 
         _resizeRef?.Dispose();
         _panZoomRef?.Dispose();

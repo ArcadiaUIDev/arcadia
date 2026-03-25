@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Arcadia Controls — Visual Fix Report (2026-03-25)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, -apple-system, sans-serif; background: #09090B; color: #FAFAFA; padding: 40px; }
+  h1 { font-size: 2rem; margin-bottom: 8px; }
+  .subtitle { color: #71717A; margin-bottom: 40px; }
+  .fix { margin-bottom: 60px; border: 1px solid #1F1F23; border-radius: 12px; overflow: hidden; }
+  .fix-header { background: #0F0F12; padding: 20px 24px; border-bottom: 1px solid #1F1F23; }
+  .fix-header h2 { font-size: 1.1rem; margin-bottom: 4px; }
+  .fix-header .severity { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600; }
+  .severity-high { background: rgba(239,68,68,0.15); color: #F87171; }
+  .severity-medium { background: rgba(251,191,36,0.15); color: #FBBF24; }
+  .fix-header p { color: #71717A; font-size: 0.85rem; margin-top: 8px; }
+  .comparison { display: grid; grid-template-columns: 1fr 1fr; }
+  .comparison > div { padding: 16px; }
+  .comparison > div:first-child { border-right: 1px solid #1F1F23; }
+  .label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: #71717A; margin-bottom: 8px; }
+  .label-before { color: #F87171; }
+  .label-after { color: #22C55E; }
+  img { width: 100%; border-radius: 6px; border: 1px solid #1F1F23; }
+  .commit { font-family: monospace; font-size: 0.8rem; color: #818CF8; }
+</style>
+</head>
+<body>
+
+<h1>Visual Fix Report</h1>
+<p class="subtitle">Arcadia Controls — 2026-03-25 — 3 visual issues identified and fixed</p>
+
+<div class="fix">
+  <div class="fix-header">
+    <span class="severity severity-high">HIGH</span>
+    <h2>Time Axis Chart — Light Theme on Dark Page</h2>
+    <p>The /test/time-axis demo rendered with a white background because FullScreenLayout used <code>background: transparent</code>. Charts inherited the browser default white instead of the dark theme surface color.</p>
+    <p><strong>Fix:</strong> Changed FullScreenLayout background to <code>var(--arcadia-color-surface, #0f172a)</code></p>
+  </div>
+  <div class="comparison">
+    <div>
+      <div class="label label-before">BEFORE</div>
+      <img src="before-time-axis.png" alt="Time axis with white background">
+    </div>
+    <div>
+      <div class="label label-after">AFTER</div>
+      <img src="after-time-axis.png" alt="Time axis with dark background">
+    </div>
+  </div>
+</div>
+
+<div class="fix">
+  <div class="fix-header">
+    <span class="severity severity-high">HIGH</span>
+    <h2>Dual Axis Chart — Light Theme on Dark Page</h2>
+    <p>Same root cause as Time Axis — FullScreenLayout transparent background. Secondary Y-axis labels on the right were barely visible against white.</p>
+    <p><strong>Fix:</strong> Same FullScreenLayout fix applies to all test pages.</p>
+  </div>
+  <div class="comparison">
+    <div>
+      <div class="label label-before">BEFORE</div>
+      <img src="before-dual-axis.png" alt="Dual axis with white background">
+    </div>
+    <div>
+      <div class="label label-after">AFTER</div>
+      <img src="after-dual-axis.png" alt="Dual axis with dark background">
+    </div>
+  </div>
+</div>
+
+<div class="fix">
+  <div class="fix-header">
+    <span class="severity severity-medium">MEDIUM</span>
+    <h2>DataGrid Vapor Theme — Indistinct from Obsidian</h2>
+    <p>Vapor theme used <code>rgba(255,255,255,0.02)</code> surfaces that were nearly identical to solid dark backgrounds. The "frosted glass" effect was invisible without a colorful background behind the grid.</p>
+    <p><strong>Fix:</strong> Replaced translucent surfaces with a distinct dark palette featuring indigo-tinted borders, gradient background, and subtle glow shadow. Vapor now has its own visual identity without depending on what's behind it.</p>
+  </div>
+  <div class="comparison">
+    <div>
+      <div class="label label-before">BEFORE</div>
+      <img src="before-vapor.png" alt="Vapor theme looking identical to Obsidian">
+    </div>
+    <div>
+      <div class="label label-after">AFTER</div>
+      <img src="after-vapor.png" alt="Vapor theme with distinct indigo-tinted identity">
+    </div>
+  </div>
+</div>
+
+<div style="margin-top: 40px; padding: 20px; background: #0F0F12; border-radius: 8px; border: 1px solid #1F1F23;">
+  <h3 style="font-size: 0.9rem; margin-bottom: 12px;">Additional Fix: SSR Disposal Exception</h3>
+  <p style="color: #71717A; font-size: 0.85rem;">ChartBase.DisposeAsync threw <code>InvalidOperationException</code> during static prerendering when calling JS interop. Added catch for <code>InvalidOperationException</code> alongside existing <code>JSDisconnectedException</code> and <code>ObjectDisposedException</code> handlers.</p>
+</div>
+
+</body>
+</html>
