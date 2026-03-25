@@ -1,99 +1,127 @@
 # Changelog
 
-## 1.0.0-beta.4.1 (2026-03-24) — Post-review fixes
+All notable changes to Arcadia Controls are documented here. This project uses [Keep a Changelog](https://keepachangelog.com/) format and [Semantic Versioning](https://semver.org/).
 
-### Bug Fixes
-- Fix `Loading` property — now applies `arcadia-chart--loading` shimmer CSS class
-- Fix `YValue` annotations — draws horizontal reference lines at Y position (was always vertical)
-- Fix pan/zoom listener leak — `mousemove`/`mouseup` handlers properly removed in `disablePanZoom()`
-- Fix NaN in screen reader tables — shows "—" instead of "NaN"
-- Add `ShowToolbar` parameter (default `true`) to opt out of export toolbar
-- Add `NoDataState` component — all 14 charts show "No data available" when empty
-- All CSS variable references now have hardcoded fallbacks (pie, rose, funnel, treemap, etc.)
-- Fix stale HelixUI path references in all CSS file comments
+## [1.0.0-beta.8] — 2026-03-24
 
-### API Improvements
-- `OnPointClick` now returns `PointClickEventArgs<T>` with `Item`, `DataIndex`, `SeriesIndex`, and `SeriesName` — provides full click context
-- `ArcadiaProgressBar.Thresholds` now uses `List<GaugeThreshold>` (same type as `ArcadiaGaugeChart`) — unified threshold API
-- `TooltipTemplate` parameter documented in Charts Overview
+### Added
+- **Sankey Diagram** (`ArcadiaSankeyChart`) — flow visualization with topological column layout, 4+ level support, cycle handling, input validation (negative values, self-links, duplicates)
+- **Chord Diagram** (`ArcadiaChordChart`) — circular relationship visualization with arc ring, quadratic bezier ribbon paths, rotated labels, hover highlight, small-arc label suppression
+- **30+ configurable visual parameters** across all 16 charts:
+  - ChartBase: `GridOpacity`, `AxisLineOpacity`, `PointRadius`
+  - Pie/Rose: `SliceStrokeWidth`, `SliceStrokeColor`
+  - Treemap: `CellStrokeWidth`, `CellStrokeColor`, `CellLabelColor`
+  - Funnel: `StageOpacity`, `StageLabelColor`
+  - Scatter: `PointOpacity`, `TrendlineOpacity`
+  - Candlestick: `WickWidth`, `CandleWidthRatio`
+  - BoxPlot: `BoxFillOpacity`, `WhiskerOpacity`, `MedianLineColor`, `MedianLineWidth`
+  - Waterfall: `ConnectorOpacity`, `ConnectorDashPattern`
+  - RangeArea: `LineStrokeWidth`
+  - Gauge: `TrackOpacity`
+  - Heatmap: `CellGap`
+  - Radar: `GridRingOpacity`, `HoverDimOpacity`, `HoverFillOpacity`
+  - Sankey: `LinkOpacity`, `LinkHoverOpacity`
+  - Chord: `ChordOpacity`, `ChordHoverOpacity`, `MinLabelAngle`
+- Radar chart hover-dim effect (hovering one series dims all others)
+- Chord chart hover highlight (ribbons at 0.75 default, 1.0 on hover)
+- Blog post screenshots for dashboard tutorial
+- 63 new unit tests (35 Sankey + 28 Chord), 18 new E2E tests with visual baselines
 
-## 1.0.0-beta.4 (2026-03-24)
+### Fixed
+- **Animation opacity override** — Sankey, Chord, Range Area, and Radar fill animations no longer snap to `opacity: 1` after completion. Uses `from`-only keyframes respecting inline opacity.
+- Gallery defaults to dark theme with gradient title shading
+
+### Changed
+- Community edition locked to 4 charts (Line, Bar, Pie, Scatter). Funnel, Treemap, and Waterfall moved to Pro tier.
+- Total chart count: 14 → 16
+
+## [1.0.0-beta.7] — 2026-03-24
+
+### Added
+- Custom tooltip templates (`TooltipTemplate` parameter) — render arbitrary Blazor content on hover
+- Roslyn analyzers package (`Arcadia.Analyzers`)
+- NuGet package READMEs rewritten
+
+### Fixed
+- Responsive charts finalized: `width="100%"` + viewBox scaling → ResizeObserver approach
+- WASM playground synced with Server demo
+- Deploy workflow fixes
+
+## [1.0.0-beta.6] — 2026-03-23
+
+### Added
+- **Responsive width by default** — `Width="0"` fills container correctly
+
+### Fixed
+- BlogLayout not reading MDX frontmatter props
+
+## [1.0.0-beta.5] — 2026-03-23
+
+### Fixed
+- `Loading` parameter shows skeleton shimmer correctly
+- Annotations render at correct data index positions
+- ResizeObserver listener leak on dispose
+- All known API issues from external review addressed
 
 ### Breaking Changes
-- **All component names renamed from `Helix*` to `Arcadia*`**
-  - `HelixLineChart` → `ArcadiaLineChart`
-  - `HelixBarChart` → `ArcadiaBarChart`
-  - `HelixPieChart` → `ArcadiaPieChart`
-  - `HelixScatterChart` → `ArcadiaScatterChart`
-  - `HelixCandlestickChart` → `ArcadiaCandlestickChart`
-  - `HelixRadarChart` → `ArcadiaRadarChart`
-  - `HelixGaugeChart` → `ArcadiaGaugeChart`
-  - `HelixHeatmap` → `ArcadiaHeatmap`
-  - `HelixFunnelChart` → `ArcadiaFunnelChart`
-  - `HelixTreemapChart` → `ArcadiaTreemapChart`
-  - `HelixWaterfallChart` → `ArcadiaWaterfallChart`
-  - `HelixRoseChart` → `ArcadiaRoseChart`
-  - `HelixKpiCard` → `ArcadiaKpiCard`
-  - `HelixSparkline` → `ArcadiaSparkline`
-  - `HelixProgressBar` → `ArcadiaProgressBar`
-  - `HelixFormBuilder` → `ArcadiaFormBuilder`
-  - `HelixWizard` → `ArcadiaWizard`
-  - `HelixToastContainer` → `ArcadiaToastContainer`
-  - `HelixComponentBase` → `ArcadiaComponentBase`
-  - `IHelixTheme` → `IArcadiaTheme`
-- Theme CSS renamed from `helix.css` to `arcadia.css`:
-  ```diff
-  - <link href="_content/Arcadia.Theme/css/helix.css" rel="stylesheet" />
-  + <link href="_content/Arcadia.Theme/css/arcadia.css" rel="stylesheet" />
-  ```
+- `OnPointClick` changed from `EventCallback<T>` to `EventCallback<PointClickEventArgs<T>>` — now includes `Item`, `DataIndex`, `SeriesIndex`
 
-### New Features
-- **Rose/Polar area chart** (`ArcadiaRoseChart`)
-- **Box Plot chart** (`ArcadiaBoxPlot`)
-- **Range Area chart** (`ArcadiaRangeAreaChart`)
-- **Export toolbar** on all 14 chart types (PNG/SVG download on hover)
-- **Pan & Zoom** parameters (`EnableZoom`, `EnablePan`, `ZoomMode`)
-- **Crosshair** tracking (`ShowCrosshair`)
-- **Annotations** for marking data points (`Annotations` parameter)
-- **Streaming data** with slide animation (`AppendAndSlide`, `SlidingWindow`)
-- **Click events** wired on Bar, Pie, Line, Scatter (`OnPointClick`, `OnSliceClick`)
-- **ShowToolbar** parameter to opt out of export toolbar
-- **MCP server** for AI-assisted chart code generation
-- **IDE snippet packs** for Visual Studio and JetBrains Rider
-- **Empty data state** — charts show "No data available" when Data is empty
-- **CSS variable fallbacks** — charts render correctly even without theme CSS loaded
+## [1.0.0-beta.4] — 2026-03-22
 
-### Bug Fixes
-- Fix Blazor circuit crash on rapid tab switching (proper `IAsyncDisposable`)
-- Fix heatmap/radar/pie/treemap rendering off-center (use `EffectiveWidth`)
-- Fix candlestick label overlap (layout engine index-based positioning)
-- Fix gauge animation (dynamic `stroke-dasharray` from arc path length)
-- Fix export downloading toolbar icon instead of chart SVG
-- Fix NaN values showing in screen reader tables (now shows "—")
-- Fix gauge track bleed-through (thinner track with lower opacity)
-- Fix label contrast in dark/light themes (`currentColor` with opacity)
-- Fix widget contrast (KPI cards, progress bars adapt to theme)
+### Added
+- **Box Plot** (`ArcadiaBoxPlot<T>`) — statistical distribution chart
+- **Range Area** (`ArcadiaRangeAreaChart<T>`) — confidence intervals and min/max bands
+- Click events (`OnPointClick`) on Bar, Pie, Line, Scatter
 
-### Internal
-- 20+ implementation types changed from `public` to `internal`
-- 102 Playwright E2E visual regression tests
-- 565 bUnit unit tests
-- CI workflow with E2E job and documentation check
+### Fixed
+- Empty state: all charts show `NoDataState` when data is null/empty
+- NaN in screen reader tables replaced with "—"
+- CSS variable fallbacks on all color references
 
-## 1.0.0-beta.3 (2026-03-23)
+### Breaking Changes
+- `helix.css` renamed to `arcadia.css` — update `<link>` tags
 
-### Features
-- Smooth curves (Catmull-Rom interpolation)
-- Real-time streaming API
-- Combo charts (bar + line on same axes)
-- Stacked area charts
-- Trendlines (linear and moving average)
+## [1.0.0-beta.3] — 2026-03-22
 
-## 1.0.0-beta.2 (2026-03-22)
+### Added
+- **Helix → Arcadia rename** across all components, namespaces, CSS, packages
+- License key validation (`ArcadiaLicense.SetKey()`)
+- Community watermark on Pro components
+- WASM playground at `/playground/`
+- MCP server for AI-assisted code generation
+- IDE snippets (Visual Studio + JetBrains Rider)
+- Rose/Polar chart, stacked area, combo charts
+- Annotations, crosshair, export toolbar
+- Interactive legend toggle
+- Streaming data with `AppendAndSlide`
+- Playwright E2E tests
 
-### Features
-- Initial 8 chart types
-- Dashboard widgets
-- Theme engine
-- Form Builder
-- Toast notifications
+### Breaking Changes
+- **All names changed**: `HelixKpiCard` → `ArcadiaKpiCard`, `HelixLineChart` → `ArcadiaLineChart`, etc.
+- **All CSS renamed**: `helix-theme.css` → `arcadia-theme.css`, `helix-charts.css` → `arcadia-charts.css`
+- **All namespaces**: `HelixUI.*` → `Arcadia.*`
+- **NuGet packages**: `HelixUI.Charts` → `Arcadia.Charts`, etc.
+
+## [1.0.0-beta.2] — 2026-03-21
+
+### Added
+- Candlestick (OHLC) chart
+- On-load animations for all chart types
+- 30+ parameters on `ChartBase<T>` (axes, grid, margins, pan/zoom, crosshair)
+- Pro charts: Radar, Gauge, Heatmap, Funnel, Treemap, Waterfall
+- Trendlines (linear regression, moving average)
+- Stacked bar mode
+- Anti-collision layout engine
+- 38 bUnit unit tests
+
+## [1.0.0-beta.1] — 2026-03-20
+
+### Added
+- Initial release
+- **Core**: base classes, CSS builder, focus trap, accessibility utilities
+- **Theme**: design tokens, CSS custom properties, light/dark themes, Tailwind plugin
+- **Charts**: Line, Bar, Pie, Scatter + 7 dashboard widgets
+- **Form Builder**: 21 field types, schema-driven, wizard mode, validation
+- **Notifications**: toast system with auto-dismiss and stacking
+- Multi-target: .NET 5–10
+- Server, WebAssembly, and Auto render mode support
