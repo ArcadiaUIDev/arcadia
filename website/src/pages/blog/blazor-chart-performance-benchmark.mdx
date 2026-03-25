@@ -1,0 +1,244 @@
+---
+layout: ../../layouts/BlogLayout.astro
+title: "Blazor Chart Performance Benchmark: Arcadia Controls vs Syncfusion vs Telerik vs DevExpress (Real Numbers)"
+description: "We measured actual bundle sizes, counted JS dependencies, and compared features across four Blazor chart libraries. Here are the real numbers — including where Arcadia falls short."
+date: "2026-03-25"
+readTime: "12 min read"
+tags: ["Blazor", "Charts", "Performance", "Benchmark", ".NET", "Bundle Size"]
+---
+
+Every Blazor chart library claims to be "lightweight" and "high-performance." We decided to stop taking marketing pages at face value and measure things ourselves.
+
+This post covers real bundle size measurements from our own Release builds, NuGet package data from public sources, and a feature-by-feature comparison across four libraries: **Arcadia Controls**, **Syncfusion Blazor**, **Telerik UI for Blazor**, and **DevExpress Blazor**.
+
+We will be honest about where competitors beat us.
+
+## Methodology
+
+For Arcadia Controls, we built each package in Release configuration targeting .NET 9 and measured every output file: DLLs, CSS, and JavaScript. These are the exact bytes your users download.
+
+For competitors, we pulled data from NuGet package pages, official documentation, and published system requirements. Where exact numbers were not available, we note that and provide the best available estimate.
+
+All measurements were taken in March 2026.
+
+## Bundle Size: The Raw Numbers
+
+### Arcadia Controls (Measured from Release Build)
+
+| Asset | Size |
+|---|---|
+| `Arcadia.Charts.dll` | 268 KB |
+| `Arcadia.Core.dll` | 26 KB |
+| `Arcadia.Theme.dll` | 14 KB |
+| Charts CSS (`arcadia-charts.css`) | 17 KB |
+| Charts JS (`chart-interop.js`) | 9 KB |
+| Core CSS + JS | 1 KB |
+| Theme CSS (all tokens + themes) | 14 KB |
+| Theme JS (`theme.js`) | 2 KB |
+| **Total DLLs** | **308 KB** |
+| **Total CSS** | **32 KB** |
+| **Total JS** | **11 KB** |
+| **Grand Total (everything)** | **351 KB** |
+
+That is the complete Arcadia Charts stack: charting library, core framework, theming engine, dark/light themes, design tokens, and all CSS. Three hundred and fifty-one kilobytes.
+
+A note on the JS: Arcadia Charts renders SVG directly from C# Blazor components. The 9 KB of JavaScript in `chart-interop.js` handles browser-specific concerns (clipboard export, resize observers, tooltip positioning) rather than chart rendering itself. The charts render without it during SSR.
+
+### Syncfusion Blazor Charts
+
+| Metric | Value |
+|---|---|
+| NuGet package (`Syncfusion.Blazor.Charts`) | ~940 KB - 1.33 MB (varies by version) |
+| Required JS dependencies | `ej2-charts`, `ej2-base`, `ej2-data`, `ej2-pdf-export`, `ej2-file-utils`, `ej2-compression`, `ej2-svg-base` |
+| Additional transitive NuGet dependencies | `Syncfusion.Blazor.Core`, `Syncfusion.Blazor.Data`, others |
+| **Estimated total chart payload** | **~1.5 - 2 MB** |
+
+Syncfusion uses a JavaScript-based rendering engine under the hood. The NuGet package contains the .NET wrapper assemblies, but the actual chart rendering happens in their `ej2` JavaScript libraries, which are loaded as additional dependencies. Their individual NuGet package strategy (introduced in v18.4) helps compared to the monolithic `Syncfusion.Blazor` package, but the chart-specific package still pulls in several transitive dependencies.
+
+### Telerik UI for Blazor
+
+| Metric | Value |
+|---|---|
+| NuGet package (`Telerik.UI.for.Blazor`) | Single monolithic package (all components) |
+| Chart rendering | JavaScript canvas-based engine |
+| Custom bundling | Not supported (single package for all components) |
+| **Estimated chart-related payload** | **~800 KB - 1.2 MB** (JS + DLL, estimated) |
+
+Telerik ships all Blazor components in a single NuGet package. You cannot install just the chart component. The chart rendering uses a JavaScript canvas engine (similar architecture to Kendo UI), which means a JS runtime is required. Telerik has stated that splitting into individual packages is not planned, as their components are native Blazor rather than jQuery plugin wrappers.
+
+A positive note: Telerik's JS file is described as "rather small compared to other suites" because they use JavaScript only when necessary. Their canvas rendering mode is recommended for large dashboards due to lower DOM overhead.
+
+### DevExpress Blazor
+
+| Metric | Value |
+|---|---|
+| NuGet package (`DevExpress.Blazor`) | Part of broader ASP.NET/DXperience subscription |
+| Chart rendering | Native Blazor (C#-based rendering) |
+| Custom bundling | Component-level packages available |
+| **Estimated chart-related payload** | **~600 KB - 1 MB** (estimated) |
+
+DevExpress takes a similar approach to Arcadia in that their Blazor charts use native C# rendering rather than wrapping a JavaScript chart engine. This keeps their chart payload relatively lean compared to Syncfusion and Telerik. However, exact public bundle size figures are not published.
+
+### Bundle Size Summary
+
+| Library | DLLs | CSS | JS | Estimated Total |
+|---|---|---|---|---|
+| **Arcadia Controls** | 308 KB | 32 KB | 11 KB | **351 KB** |
+| **DevExpress** | ~400-600 KB | ~50 KB | ~30 KB | **~600 KB - 1 MB** |
+| **Telerik** | ~500-700 KB | ~80 KB | ~200 KB | **~800 KB - 1.2 MB** |
+| **Syncfusion** | ~940 KB - 1.3 MB | ~60 KB | ~300 KB+ | **~1.5 - 2 MB** |
+
+Arcadia's total footprint is roughly one-quarter to one-fifth the size of Syncfusion's chart payload and about one-third of Telerik's. For WebAssembly applications where every kilobyte affects initial load time, this difference is significant.
+
+## Feature Comparison
+
+### Chart Types
+
+| Library | Count | Notable Types |
+|---|---|---|
+| **Syncfusion** | 55+ | Widest variety: includes 3D charts, Smith charts, stock charts, bullet charts, range navigator |
+| **Telerik** | 15+ | Area, Bar, Bubble, Column, Donut, Line, Pie, Scatter, Heatmap, Radar, Waterfall, and more |
+| **Arcadia** | 16 | Line, Bar, Pie, Scatter, Candlestick, Radar, Gauge, Heatmap, Funnel, Treemap, Waterfall, Rose, Sankey, Chord, Range Area, Box Plot |
+| **DevExpress** | 20+ | Area, Bar, Bubble, Candlestick, Line, Pie, Point, Range, Scatter, and more |
+
+**Honest take:** Syncfusion wins on chart variety by a wide margin. If you need a Smith chart, 3D surface plot, or bullet chart, Syncfusion is your only option among these four. Arcadia covers the 16 chart types that account for the vast majority of dashboard use cases but cannot match Syncfusion's breadth.
+
+### Rendering Architecture
+
+| Library | Rendering | JS Required for Charts | SSR Compatible |
+|---|---|---|---|
+| **Arcadia** | SVG from C# | No (9 KB helper JS for export/resize only) | Yes |
+| **DevExpress** | Native Blazor (C#) | Minimal | Yes |
+| **Telerik** | JavaScript canvas engine | Yes | Limited |
+| **Syncfusion** | JavaScript `ej2` engine | Yes | Limited |
+
+The rendering architecture is the fundamental technical difference. Arcadia and DevExpress generate chart markup directly from C# Blazor components. Telerik and Syncfusion marshal data from C# to JavaScript and render via canvas or SVG in JS.
+
+This matters for:
+- **SSR (Static Server Rendering):** Pure C# charts render during server-side prerendering without a JS runtime. JS-dependent charts show empty containers until the JavaScript loads.
+- **SignalR overhead:** In Blazor Server mode, JS interop calls for chart updates travel over the SignalR connection. Fewer interop calls mean less latency.
+- **WebAssembly startup:** Less JavaScript means faster time-to-interactive.
+
+### .NET Version Support
+
+| Library | Supported Versions | Range |
+|---|---|---|
+| **Arcadia** | .NET 5, 6, 7, 8, 9, 10 | 6 major versions |
+| **Syncfusion** | .NET 8, 9, 10 (dropped 6/7 in 2025 Vol 1) | 3 major versions |
+| **Telerik** | .NET 8, 9, 10 (dropping 8/9 Nov 2026) | 3 major versions |
+| **DevExpress** | .NET 8, 9, 10 | 3 major versions |
+
+Arcadia supports the widest range. If you maintain legacy applications on .NET 5, 6, or 7, Arcadia is the only commercial option among these four that still targets those frameworks. All three competitors have dropped support for anything below .NET 8.
+
+### Render Mode Support
+
+| Library | Server | WASM | Auto (net8+) | SSR |
+|---|---|---|---|---|
+| **Arcadia** | Yes | Yes | Yes | Yes (full) |
+| **Syncfusion** | Yes | Yes | Yes | Partial |
+| **Telerik** | Yes | Yes | Yes | Partial |
+| **DevExpress** | Yes | Yes | Yes | Partial |
+
+### Accessibility
+
+| Feature | Arcadia | Syncfusion | Telerik | DevExpress |
+|---|---|---|---|---|
+| WCAG compliance target | 2.1 AA | 2.2 AA | 2.2 AA | Section 508 |
+| Hidden data tables for screen readers | All charts | Some charts | Some charts | Limited |
+| Keyboard navigation | Full (all chart types) | Partial | Partial | Partial |
+| ARIA labels on chart elements | All SVG elements | WAI-ARIA attributes | WAI-ARIA attributes | Basic ARIA |
+| `prefers-reduced-motion` | Respected | Not documented | Not documented | Not documented |
+| Screen reader tested | NVDA, VoiceOver, Narrator | Narrator, VoiceOver | Narrator, screen readers | Basic |
+
+**Honest take:** Syncfusion and Telerik have both improved their accessibility stories significantly and now target WCAG 2.2 AA compliance. Arcadia's advantage is that every SVG element is part of the Blazor DOM and gets ARIA attributes natively, plus hidden data tables are generated for all chart types automatically. The JS-rendered charts from competitors face an inherent challenge: canvas-rendered charts are opaque to screen readers unless additional HTML structures are provided alongside them.
+
+### Pricing (Per Developer, Per Year)
+
+| Library | Entry Price | Full Price | Free Tier |
+|---|---|---|---|
+| **Arcadia** | Free (Community) | $299 (Pro) / $799 (Enterprise) | Yes: 4 chart types, sparklines, notifications |
+| **MudBlazor** | Free (MIT) | Free | Yes: full library |
+| **Syncfusion** | Free (Community, <$1M revenue) | $995+ | Yes, with revenue restriction |
+| **Telerik** | $849 (individual) | $979 - $1,149+ | No |
+| **DevExpress** | $1,078 (ASP.NET subscription) | $1,078 - $2,254 | No |
+
+## Where Competitors Are Stronger
+
+We believe in honest comparisons. Here is where each competitor has a genuine advantage over Arcadia:
+
+### Syncfusion
+- **55+ chart types** vs our 16. If you need niche visualizations (3D charts, Smith charts, range navigators, stock charts with technical indicators), Syncfusion has them and we do not.
+- **Broader component ecosystem.** 80+ Blazor components in one suite. Arcadia is focused on charts, dashboards, and forms.
+- **Community license** for companies under $1M revenue is genuinely free with no feature restrictions.
+
+### Telerik
+- **100+ components** in one package. Grid, scheduler, editor, PDF viewer, and much more beyond charts.
+- **Longest track record** in the .NET component space. Enterprise procurement teams trust the Progress/Telerik name.
+- **Canvas rendering** handles extremely large datasets (100K+ points) with less DOM overhead than SVG. For dashboards with massive real-time data feeds, canvas can outperform SVG.
+
+### DevExpress
+- **Native C# rendering** like Arcadia, but with a larger component suite.
+- **20+ chart types** with strong financial chart support.
+- **Mature enterprise ecosystem** with WinForms, WPF, and cross-platform options in the same subscription.
+
+### MudBlazor
+- **Completely free and open source.** No licensing decisions, no procurement process, no revenue restrictions.
+- **Active community** and frequent releases.
+
+## Where Arcadia Wins
+
+- **Smallest bundle size by a factor of 2-5x.** 351 KB total vs 600 KB - 2 MB for competitors.
+- **Zero JavaScript chart rendering.** Charts are SVG elements in the Blazor component tree. They render during SSR, participate in Blazor diffing, and need no JS runtime.
+- **Widest .NET support.** NET 5 through .NET 10. No other commercial library supports .NET 5, 6, or 7 in 2026.
+- **MCP server for AI integration.** Describe a chart in natural language and get Blazor code. No competitor offers this.
+- **Best price-to-feature ratio.** Free community edition with 4 chart types, $299/year for all 16 chart types, vs $979+ for competitors.
+- **Accessibility by default.** Hidden data tables, ARIA labels, and keyboard navigation on every chart type, not just select ones.
+
+## When to Choose Each Library
+
+**Choose Arcadia Controls if:**
+- Bundle size and initial load time are critical (especially WASM)
+- You need SSR-compatible charts that render without JavaScript
+- Your team maintains applications on .NET 5, 6, or 7
+- You want AI-assisted chart code generation via MCP
+- You need WCAG 2.1 AA accessibility on every chart type
+- Budget matters and 16 chart types cover your needs
+
+**Choose Syncfusion if:**
+- You need 30+ chart types including niche visualizations
+- You qualify for the community license (under $1M revenue)
+- You need a broad component suite beyond just charts
+- 3D charts or advanced stock charts are a requirement
+
+**Choose Telerik if:**
+- You need an all-in-one suite with 100+ components
+- Enterprise procurement already has a Progress relationship
+- You have massive real-time datasets (100K+ points) where canvas rendering outperforms SVG
+- Budget is not a primary concern
+
+**Choose DevExpress if:**
+- You need cross-platform consistency (WinForms, WPF, Blazor, MAUI in one subscription)
+- You prefer native C# rendering but need more chart types than Arcadia offers
+- Your team already uses the DevExpress ecosystem
+
+**Choose MudBlazor if:**
+- Free and open source is a hard requirement
+- You only need basic charts (Line, Bar, Pie, Donut)
+- Material Design is your design language
+
+## Try It Yourself
+
+The best benchmark is your own application. Install the Arcadia Community Edition and measure:
+
+```bash
+dotnet add package Arcadia.Charts
+dotnet add package Arcadia.Theme
+```
+
+The Community Edition is free forever and includes Line, Bar, Pie, and Scatter charts. Render a chart, open DevTools, check the Network tab. You will see the difference.
+
+[Read the documentation](/docs/charts) to get started in under five minutes.
+
+---
+
+*All measurements taken March 25, 2026. Competitor data sourced from NuGet package pages, official documentation, and published specifications. Competitor bundle sizes are estimates based on publicly available information; exact numbers may vary by version and configuration. We encourage you to verify with your own measurements.*
