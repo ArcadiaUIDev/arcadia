@@ -79,6 +79,41 @@ builder.Services.AddScoped&lt;ToastService&gt;();</code></pre>
               DeltaType="DeltaType.Increase"
               Sparkline="@(new double[] { 42, 48, 45, 52, 55, 58, 62 })" /&gt;</code></pre>
 
+<h2>Your First Chart</h2>
+<p>Add a line chart to any page — this is a complete, copy-paste-and-it-works example:</p>
+
+<pre><code>@page "/my-chart"
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
+
+&lt;ArcadiaLineChart TItem="SalesRecord" Data="@data"
+                  XField="@(d =&gt; (object)d.Month)"
+                  Series="@series"
+                  Height="350" Width="0"
+                  ShowPoints="true" AnimateOnLoad="true"
+                  Title="Monthly Revenue" /&gt;
+
+@code {
+    record SalesRecord(string Month, double Revenue, double Target);
+
+    List&lt;SalesRecord&gt; data = new()
+    {
+        new("Jan", 45000, 50000), new("Feb", 52000, 50000),
+        new("Mar", 48000, 52000), new("Apr", 61000, 55000),
+        new("May", 55000, 55000), new("Jun", 67000, 58000),
+    };
+
+    List&lt;SeriesConfig&lt;SalesRecord&gt;&gt; series = new()
+    {
+        new() { Name = "Revenue", Field = d =&gt; d.Revenue,
+                Color = "success", ShowArea = true, CurveType = "smooth" },
+        new() { Name = "Target", Field = d =&gt; d.Target,
+                Color = "warning", Dashed = true },
+    };
+}</code></pre>
+
+<p><code>Width="0"</code> makes the chart responsive — it fills its container automatically. All 16 chart types follow the same pattern: <code>Data</code> + field selectors + <code>Series</code> config.</p>
+
 <div class="callout">
   <div class="callout-title">Next steps</div>
   <p>Check out the <a href="/docs/quick-start" style="color: #c084fc;">Quick Start</a> guide for a complete dashboard example, or dive into <a href="/docs/charts" style="color: #c084fc;">Charts</a> or <a href="/docs/forms" style="color: #c084fc;">Forms</a>.</p>
