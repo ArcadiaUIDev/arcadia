@@ -44,12 +44,14 @@ Displays statistical distribution for each data category using a box and whisker
 | `MedianField` | `Func<T, double>` | required | Extracts the median (50th percentile) |
 | `Q3Field` | `Func<T, double>` | required | Extracts the third quartile (75th percentile) |
 | `MaxField` | `Func<T, double>` | required | Extracts the maximum value |
-| `BoxColor` | `string` | primary | Fill color for the box |
-| `BoxWidth` | `double` | 0.6 | Box width as fraction of available space (0-1) |
-| `Title` | `string?` | null | Chart title |
-| `Height` | `double` | 300 | Chart height in pixels |
-| `Width` | `double` | 600 | Chart width (0 = responsive) |
-| `AnimateOnLoad` | `bool` | true | Animate boxes on initial render |
+| `BoxColor` | `string` | `"var(--arcadia-color-primary, #2563eb)"` | Fill color for the box |
+| `BoxWidth` | `double` | `0.6` | Box width as fraction of available band space (0-1) |
+| `BoxFillOpacity` | `double` | `0.7` | Fill opacity of the box rectangle (0.0 to 1.0) |
+| `WhiskerOpacity` | `double` | `0.6` | Opacity of the whisker and cap lines (0.0 to 1.0) |
+| `MedianLineColor` | `string` | `"white"` | Color of the median line drawn across each box |
+| `MedianLineWidth` | `double` | `2.5` | Stroke width of the median line drawn across each box |
+
+Plus all [shared ChartBase parameters](/docs/charts).
 
 ## Features
 

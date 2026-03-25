@@ -32,12 +32,11 @@ A polar area chart where each category gets an equal-angle sector with radius pr
 |-----------|------|---------|-------------|
 | `NameField` | `Func<T, string>` | required | Extracts the category name |
 | `ValueField` | `Func<T, double>` | required | Extracts the value (determines sector radius) |
-| `ShowLabels` | `bool` | true | Show category labels on sectors |
-| `Title` | `string?` | null | Chart title |
-| `Height` | `double` | 300 | Chart height in pixels |
-| `Width` | `double` | 600 | Chart width (0 = responsive) |
-| `AnimateOnLoad` | `bool` | true | Animate sectors on initial render |
-| `ShowLegend` | `bool` | true | Show legend with values |
+| `ShowLabels` | `bool` | `true` | Show category labels on sectors |
+| `SliceStrokeWidth` | `double` | `2` | Stroke width for each rose slice border |
+| `SliceStrokeColor` | `string` | `"var(--arcadia-color-surface, #fff)"` | Stroke color for each rose slice border |
+
+Plus all [shared ChartBase parameters](/docs/charts).
 
 ## How It Works
 

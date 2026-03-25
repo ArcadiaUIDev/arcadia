@@ -36,13 +36,13 @@ Displays how an initial value is affected by a series of positive and negative c
 |-----------|------|---------|-------------|
 | `CategoryField` | `Func<T, string>` | required | Extracts the category label |
 | `ValueField` | `Func<T, double>` | required | Extracts the value (positive = increase, negative = decrease) |
-| `PositiveColor` | `string` | success green | Color for positive bars |
-| `NegativeColor` | `string` | danger red | Color for negative bars |
-| `TotalColor` | `string` | primary blue | Color for total bars |
-| `Title` | `string?` | null | Chart title |
-| `Height` | `double` | 300 | Chart height in pixels |
-| `Width` | `double` | 600 | Chart width (0 = responsive) |
-| `AnimateOnLoad` | `bool` | true | Animate bars on initial render |
+| `PositiveColor` | `string` | `"var(--arcadia-color-success, #16a34a)"` | Color for positive (increase) bars |
+| `NegativeColor` | `string` | `"var(--arcadia-color-danger, #dc2626)"` | Color for negative (decrease) bars |
+| `TotalColor` | `string` | `"var(--arcadia-color-primary, #2563eb)"` | Color for total bars |
+| `ConnectorOpacity` | `double` | `0.2` | Opacity of the connector lines between waterfall bars (0.0 to 1.0) |
+| `ConnectorDashPattern` | `string` | `"3,3"` | SVG stroke-dasharray pattern for connector lines between bars |
+
+Plus all [shared ChartBase parameters](/docs/charts).
 
 ## Features
 

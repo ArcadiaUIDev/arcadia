@@ -54,5 +54,17 @@ Add a `SizeField` to map a data dimension to point radius. Larger values render 
 | `YField` | `Func<T, double>` | — | Y value selector |
 | `SizeField` | `Func<T, double>?` | null | Bubble size selector |
 | `PointSize` | `double` | 5 | Default point radius |
+| `PointOpacity` | `double` | 0.7 | Opacity of data points (0.0 to 1.0) |
 | `Color` | `string?` | null | Point color |
+| `XAxisLabel` | `string?` | null | X-axis label text |
+| `YAxisLabel` | `string?` | null | Y-axis label text |
 | `Trendline` | `TrendlineConfig?` | null | Trendline config |
+| `TrendlineOpacity` | `double` | 0.6 | Opacity of the trendline (0.0 to 1.0) |
+
+Plus all [shared ChartBase parameters](/docs/charts).
+
+## Events
+
+| Event | Type | Description |
+|---|---|---|
+| `OnPointClick` | `EventCallback<PointClickEventArgs<T>>` | Fired when a data point is clicked. Receives item, index, and series context |

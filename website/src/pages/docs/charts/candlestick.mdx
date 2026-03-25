@@ -38,11 +38,21 @@ Financial OHLC candlestick chart with overlay line series for indicators.
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `LabelField` | `Func<T, string>` | — | X-axis label |
-| `OpenField` | `Func<T, double>` | — | Open price |
-| `HighField` | `Func<T, double>` | — | High price |
-| `LowField` | `Func<T, double>` | — | Low price |
-| `CloseField` | `Func<T, double>` | — | Close price |
-| `UpColor` | `string` | success | Up candle color |
-| `DownColor` | `string` | danger | Down candle color |
-| `OverlaySeries` | `List<SeriesConfig<T>>?` | null | Overlay line series |
+| `LabelField` | `Func<T, string>` | — | X-axis label selector |
+| `OpenField` | `Func<T, double>` | — | Open price selector |
+| `HighField` | `Func<T, double>` | — | High price selector |
+| `LowField` | `Func<T, double>` | — | Low price selector |
+| `CloseField` | `Func<T, double>` | — | Close price selector |
+| `UpColor` | `string` | `var(--arcadia-color-success, #16a34a)` | Color for up (close > open) candles |
+| `DownColor` | `string` | `var(--arcadia-color-danger, #dc2626)` | Color for down (close < open) candles |
+| `OverlaySeries` | `List<SeriesConfig<T>>?` | null | Overlay line series (e.g., moving averages, Bollinger bands) |
+| `CandleWidthRatio` | `double` | 0.35 | Candle body width as a fraction of available band space (0-1) |
+| `WickWidth` | `double` | 1.5 | Stroke width of the wick (high-low) line on each candlestick |
+
+Plus all [shared ChartBase parameters](/docs/charts).
+
+## Events
+
+| Event | Type | Description |
+|---|---|---|
+| `OnPointClick` | `EventCallback<PointClickEventArgs<T>>` | Fired when a data point is clicked. Receives item, index, and series context |

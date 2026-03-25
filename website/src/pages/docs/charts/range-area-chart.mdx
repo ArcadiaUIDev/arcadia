@@ -42,18 +42,15 @@ A range area chart displays a filled band between upper and lower bound values f
 | `XField` | `Func<T, object>` | required | Extracts the X-axis label from each data item |
 | `UpperField` | `Func<T, double>` | required | Extracts the upper bound value |
 | `LowerField` | `Func<T, double>` | required | Extracts the lower bound value |
-| `MiddleField` | `Func<T, double>?` | null | Optional middle line value (e.g., average) |
-| `FillColor` | `string` | `var(--arcadia-color-primary)` | Fill color for the range band |
-| `FillOpacity` | `double` | 0.2 | Opacity of the range band fill |
-| `StrokeColor` | `string` | `var(--arcadia-color-primary)` | Stroke color for upper/lower lines |
-| `MiddleColor` | `string?` | null | Stroke color for the middle line (defaults to StrokeColor) |
+| `MiddleField` | `Func<T, double>?` | `null` | Optional middle line value (e.g., average) |
+| `FillColor` | `string` | `"var(--arcadia-color-primary, #2563eb)"` | Fill color for the range band |
+| `FillOpacity` | `double` | `0.2` | Opacity of the range band fill (0.0 to 1.0) |
+| `StrokeColor` | `string` | `"var(--arcadia-color-primary, #2563eb)"` | Stroke color for upper/lower boundary lines |
+| `MiddleColor` | `string?` | `null` | Stroke color for the middle line (defaults to StrokeColor) |
+| `LineStrokeWidth` | `double` | `2` | Stroke width for the upper, lower, and middle boundary lines |
 | `CurveType` | `string` | `"linear"` | Curve interpolation: `"linear"` or `"smooth"` |
-| `Title` | `string?` | null | Chart title |
-| `Height` | `double` | 300 | Chart height in pixels |
-| `Width` | `double` | 600 | Chart width (0 = responsive) |
-| `AnimateOnLoad` | `bool` | true | Animate on initial render |
-| `ShowDataLabels` | `bool` | false | Show value labels on data points |
-| `ShowGrid` | `bool` | true | Show grid lines |
+
+Plus all [shared ChartBase parameters](/docs/charts).
 
 ## How It Works
 

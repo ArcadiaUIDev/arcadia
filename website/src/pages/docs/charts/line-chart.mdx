@@ -62,12 +62,21 @@ new() {
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
-| `XField` | `Func<T, object>` | — | X-axis label selector (required) |
-| `Series` | `List<SeriesConfig<T>>` | — | Series configs (required) |
-| `ShowPoints` | `bool` | true | Show data point dots |
-| `NullHandling` | `NullHandling` | Gap | Gap, Connect, or Zero |
+| `XField` | `Func<T, object>` | required | X-axis label selector |
+| `Series` | `List<SeriesConfig<T>>` | required | Series configurations |
+| `ShowPoints` | `bool` | `true` | Show data point dots on lines (overridden per-series by `SeriesConfig.ShowPoints`) |
+| `NullHandling` | `NullHandling` | `Gap` | How to handle null/missing data values: `Gap`, `Connect`, or `Zero` |
+| `Stacked` | `bool` | `false` | When true, area fills stack on top of each other instead of starting from zero |
+| `SlidingWindow` | `int` | `0` | Maximum number of points to keep in sliding window mode (0 = no limit) |
 
 Plus all [shared ChartBase parameters](/docs/charts).
+
+## Events
+
+| Event | Type | Description |
+|-------|------|-------------|
+| `OnPointClick` | `EventCallback<PointClickEventArgs<T>>` | Fired when a data point is clicked. Receives item, data index, and series context |
+| `OnSeriesClick` | `EventCallback<int>` | Fired when a series is clicked. Receives the series index |
 
 ## Null Data Handling
 

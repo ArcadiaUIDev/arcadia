@@ -25,3 +25,14 @@ Radar (spider) chart for comparing multi-dimensional data across categories.
 | `GridRings` | `int` | 5 | Number of concentric grid rings |
 | `ShowFill` | `bool` | true | Fill polygon area |
 | `ShowPoints` | `bool` | true | Show data point dots |
+| `HoverDimOpacity` | `double` | 0.05 | Opacity of non-hovered series when any series is hovered (0 = fully hidden, 1 = no dimming) |
+| `HoverFillOpacity` | `double` | 0.35 | Fill opacity of the hovered series polygon |
+| `GridRingOpacity` | `double` | 0.15 | Opacity of the concentric grid rings (0.0-1.0) |
+
+Plus all [shared ChartBase parameters](/docs/charts).
+
+## Events
+
+| Event | Type | Description |
+|---|---|---|
+| `OnPointClick` | `EventCallback<PointClickEventArgs<T>>` | Fired when a data point is clicked. Receives item, index, and series context |

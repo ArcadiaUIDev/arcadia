@@ -34,3 +34,14 @@ description: Blazor heatmap component for visualizing density, frequency, or int
 | `LowColor` | `string` | #f1f5f9 | Color for minimum value |
 | `HighColor` | `string` | #2563eb | Color for maximum value |
 | `ShowValues` | `bool` | false | Show values in cells |
+| `ValueFormatString` | `string?` | null | Format string for cell values |
+| `CellGap` | `double` | 1 | Gap in pixels between adjacent cells |
+
+Plus all [shared ChartBase parameters](/docs/charts).
+
+## Events
+
+| Event | Type | Description |
+|---|---|---|
+| `OnPointClick` | `EventCallback<PointClickEventArgs<T>>` | Fired when a cell is clicked |
+| `OnSeriesClick` | `EventCallback<int>` | Fired when a series is clicked |

@@ -46,8 +46,17 @@ Set `FullCircle="true"` for a complete 360-degree radial progress indicator — 
 | `Value` | `double` | — | Current gauge value |
 | `Min` | `double` | 0 | Minimum range |
 | `Max` | `double` | 100 | Maximum range |
+| `Height` | `double` | 200 | Chart height in pixels |
+| `Width` | `double` | 300 | Chart width in pixels |
+| `Title` | `string?` | null | Chart title |
 | `Label` | `string?` | null | Label below value |
 | `Thresholds` | `List<GaugeThreshold>?` | null | Color thresholds |
-| `FullCircle` | `bool` | false | Full 360° or semi-circle |
+| `Color` | `string` | `var(--arcadia-color-primary)` | Default arc color when no threshold is matched |
+| `TrackColor` | `string` | `var(--arcadia-color-border)` | Background track color |
 | `StrokeWidth` | `double` | 20 | Arc thickness |
+| `FullCircle` | `bool` | false | Full 360° or semi-circle |
 | `ValueFormatString` | `string?` | null | Format for center value |
+| `AriaLabel` | `string?` | null | Accessible description for screen readers |
+| `TrackOpacity` | `double` | 0.3 | Opacity of the background track arc (0.0–1.0) |
+| `AnimateOnLoad` | `bool` | true | Whether to animate on load |
+| `AnimationDuration` | `int` | 800 | Animation duration in milliseconds |

@@ -40,7 +40,21 @@ Pie chart with configurable inner radius for donut mode, label formatting, and s
 | `NameField` | `Func<T, string>` | — | Category name selector |
 | `ValueField` | `Func<T, double>` | — | Value selector |
 | `InnerRadius` | `double` | 0 | Inner radius (0 = pie, >0 = donut) |
+| `OuterRadius` | `double?` | null | Outer radius override. Null = auto from dimensions |
 | `LabelFormat` | `PieLabelFormat` | Percent | Label display format |
+| `ShowLabels` | `bool` | true | Whether to show labels on slices |
 | `MinLabelPercent` | `double` | 5 | Hide labels on slices below this % |
-| `StartAngle` | `double` | -90 | Start angle in degrees |
-| `ShowLegend` | `bool` | true | Show legend below chart |
+| `ValueFormatString` | `string?` | null | Format string for value labels (e.g., "C0" for currency) |
+| `PaddingAngle` | `double` | 0 | Padding angle between slices in degrees |
+| `StartAngle` | `double` | -90 | Start angle in degrees (0 = top, 90 = right) |
+| `SliceStrokeWidth` | `double` | 2 | Stroke width for each pie slice border |
+| `SliceStrokeColor` | `string` | `var(--arcadia-color-surface, #fff)` | Stroke color for each pie slice border |
+
+Plus all [shared ChartBase parameters](/docs/charts).
+
+## Events
+
+| Event | Type | Description |
+|---|---|---|
+| `OnSliceClick` | `EventCallback<T>` | Fired when a pie slice is clicked. Receives the data item for the clicked slice |
+| `OnPointClick` | `EventCallback<PointClickEventArgs<T>>` | Fired when a data point is clicked. Receives item, index, and series context |

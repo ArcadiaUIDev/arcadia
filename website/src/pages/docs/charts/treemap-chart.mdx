@@ -33,10 +33,18 @@ Displays hierarchical data as nested rectangles. Each rectangle's area is propor
 |-----------|------|---------|-------------|
 | `NameField` | `Func<T, string>` | required | Extracts the category name |
 | `ValueField` | `Func<T, double>` | required | Extracts the numeric value (determines area) |
-| `Title` | `string?` | null | Chart title |
-| `Height` | `double` | 300 | Chart height in pixels |
-| `Width` | `double` | 600 | Chart width (0 = responsive) |
-| `AnimateOnLoad` | `bool` | true | Animate cells on initial render |
+| `CellStrokeWidth` | `double` | 2 | Stroke width for each treemap cell border |
+| `CellStrokeColor` | `string` | `var(--arcadia-color-surface)` | Stroke color for each treemap cell border |
+| `CellLabelColor` | `string` | white | Fill color for the cell name label text |
+
+Plus all [shared ChartBase parameters](/docs/charts).
+
+## Events
+
+| Event | Type | Description |
+|---|---|---|
+| `OnPointClick` | `EventCallback<PointClickEventArgs<T>>` | Fired when a cell is clicked |
+| `OnSeriesClick` | `EventCallback<int>` | Fired when a series is clicked |
 
 ## Features
 
