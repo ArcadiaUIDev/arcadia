@@ -55,6 +55,10 @@
         <table class="arcadia-grid__table">
             <thead class="@(FixedHeader ? "arcadia-grid__thead--sticky" : "")">
                 <tr role="row">
+                    @if (ShowRowSelector)
+                    {
+                        <th class="arcadia-grid__th arcadia-grid__th--row-selector">#</th>
+                    }
                     @if (DetailTemplate is not null)
                     {
                         <th class="arcadia-grid__th" style="width:36px;"></th>
@@ -104,6 +108,8 @@
                 @if (_showFilters && Filterable)
                 {
                     <tr class="arcadia-grid__filter-row">
+                        @if (ShowRowSelector) { <th class="arcadia-grid__th"></th> }
+                        @if (DetailTemplate is not null) { <th class="arcadia-grid__th"></th> }
                         @if (Selectable && MultiSelect)
                         {
                             <th class="arcadia-grid__th"></th>
@@ -127,7 +133,8 @@
             </thead>
             <tbody>
                 @{ var rows = !string.IsNullOrEmpty(GroupBy) ? new List<TItem>() : GetPagedData().ToList();
-                   var colSpan = Columns.Count(c => c.IsVisible) + (Selectable && MultiSelect ? 1 : 0) + (DetailTemplate is not null ? 1 : 0); }
+                   var rowIdx = _pageIndex * PageSize;
+                   var colSpan = Columns.Count(c => c.IsVisible) + (Selectable && MultiSelect ? 1 : 0) + (DetailTemplate is not null ? 1 : 0) + (ShowRowSelector ? 1 : 0); }
 
                 @* Grouped rendering *@
                 @if (!string.IsNullOrEmpty(GroupBy))
@@ -177,9 +184,25 @@
                     @foreach (var item in rows)
                     {
                         var localItem = item;
-                        <tr role="row" class="@(IsSelected(localItem) ? "arcadia-grid__row--selected" : "")"
-                            @onclick="@(Selectable ? async () => await ToggleSelection(localItem) : (Func<Task>)(() => Task.CompletedTask))"
-                            style="@(Selectable ? "cursor:pointer;" : "")">
+                        var localRowIdx = ++rowIdx;
+                        <tr role="row" class="@(IsSelected(localItem) ? "arcadia-grid__row--selected" : "") @(IsCurrent(localItem) ? "arcadia-grid__row--current" : "")"
+                            @onclick="@(async () => { SetCurrentRow(localItem); if (Selectable) await ToggleSelection(localItem); else StateHasChanged(); })"
+                            style="cursor:pointer;">
+                            @if (ShowRowSelector)
+                            {
+                                var selectorGlyph = GetRowSelectorGlyph(localItem);
+                                <td class="arcadia-grid__td arcadia-grid__td--row-selector" @onclick:stopPropagation="true"
+                                    @onclick="@(async () => { SetCurrentRow(localItem); if (Selectable) await ToggleSelection(localItem); })">
+                                    @if (!string.IsNullOrEmpty(selectorGlyph))
+                                    {
+                                        <span class="arcadia-grid__row-glyph">@selectorGlyph</span>
+                                    }
+                                    else if (ShowRowNumbers)
+                                    {
+                                        <span class="arcadia-grid__row-number">@localRowIdx</span>
+                                    }
+                                </td>
+                            }
                             @if (DetailTemplate is not null)
                             {
                                 <td class="arcadia-grid__td arcadia-grid__td--expand" @onclick:stopPropagation="true"

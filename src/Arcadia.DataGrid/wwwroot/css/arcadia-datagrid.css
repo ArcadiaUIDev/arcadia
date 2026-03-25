@@ -388,6 +388,52 @@ th[aria-sort="descending"] .arcadia-grid__sort-icon {
 /* Tabular numerals for numeric alignment */
 .arcadia-grid__td { font-variant-numeric: tabular-nums; }
 
+/* ── Row Selector ── */
+.arcadia-grid__th--row-selector {
+  width: 42px;
+  text-align: center;
+  font-weight: 500;
+  font-size: 0.7rem;
+  color: var(--_muted);
+  padding: 8px 4px !important;
+}
+.arcadia-grid__td--row-selector {
+  width: 42px;
+  text-align: center;
+  padding: 6px 4px !important;
+  cursor: pointer;
+  user-select: none;
+  border-right: 1px solid var(--_border);
+  background: var(--_header) !important;
+  transition: background 0.1s;
+}
+.arcadia-grid__td--row-selector:hover {
+  background: var(--_row-hover) !important;
+}
+.arcadia-grid__row-number {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--_muted);
+}
+.arcadia-grid__row--current .arcadia-grid__row-number {
+  color: var(--_accent);
+  font-weight: 600;
+}
+.arcadia-grid__row--selected .arcadia-grid__td--row-selector {
+  background: var(--_row-selected) !important;
+}
+.arcadia-grid__row--selected .arcadia-grid__row-number {
+  color: var(--_text);
+  font-weight: 600;
+}
+.arcadia-grid__row-glyph {
+  font-size: 0.7rem;
+  color: var(--_accent);
+}
+.arcadia-grid__row--current > .arcadia-grid__td:first-child {
+  box-shadow: inset 3px 0 0 var(--_accent);
+}
+
 /* Cell text truncation */
 .arcadia-grid__td > span,
 .arcadia-grid__td > :not(button):not(input) {

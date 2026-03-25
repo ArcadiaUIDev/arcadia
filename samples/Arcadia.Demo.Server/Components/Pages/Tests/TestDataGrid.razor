@@ -26,6 +26,7 @@
     <ArcadiaDataGrid TItem="Employee" Data="@_employees" PageSize="10"
                       Striped="true" Hoverable="true"
                       Filterable="true" Selectable="true" MultiSelect="true"
+                      ShowRowSelector="true"
                       SelectedItemsChanged="@(items => _selectedCount = items.Count)"
                       GroupBy="@_groupBy"
                       Class="@($"{_theme} {_density}")"

@@ -43,6 +43,12 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase
     /// <summary>Message shown when data is empty.</summary>
     [Parameter] public string EmptyMessage { get; set; } = "No data available";
 
+    /// <summary>Show row selector column with row numbers and state indicators (current arrow, edit pencil).</summary>
+    [Parameter] public bool ShowRowSelector { get; set; }
+
+    /// <summary>Show row numbers in the row selector. When false, only state glyphs are shown.</summary>
+    [Parameter] public bool ShowRowNumbers { get; set; } = true;
+
     /// <summary>Enable column filtering (filter row below header).</summary>
     [Parameter] public bool Filterable { get; set; }
 
@@ -94,6 +100,7 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase
     private HashSet<TItem> _expandedRows = new();
     private TItem? _editingRow;
     private string? _editingColumn;
+    private TItem? _currentRow;
     private Dictionary<object, bool> _groupExpanded = new();
     private bool _isServerMode => LoadData.HasDelegate;
 
@@ -330,6 +337,20 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase
     {
         SetPageSize(size);
         if (_isServerMode) await InvokeLoadData();
+    }
+
+    // ── Current row (focus) ──
+
+    internal bool IsCurrent(TItem item) => _currentRow is not null && EqualityComparer<TItem>.Default.Equals(_currentRow, item);
+
+    internal void SetCurrentRow(TItem item) { _currentRow = item; }
+
+    /// <summary>Get the row selector glyph for a given item.</summary>
+    internal string GetRowSelectorGlyph(TItem item)
+    {
+        if (IsEditing(item)) return "\u270E"; // ✎ pencil
+        if (IsCurrent(item)) return "\u25B6"; // ▶ right arrow
+        return "";
     }
 
     // ── Detail expansion ──
