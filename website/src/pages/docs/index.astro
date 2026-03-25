@@ -82,7 +82,7 @@ builder.Services.AddScoped&lt;ToastService&gt;();</code></pre>
 <h2>Your First Chart</h2>
 <p>Add a line chart to any page — this is a complete, copy-paste-and-it-works example:</p>
 
-<pre><code>@page "/my-chart"
+<pre><code set:html={`@page "/my-chart"
 @using Arcadia.Charts.Core
 @using Arcadia.Charts.Components.Charts
 
@@ -93,24 +93,24 @@ builder.Services.AddScoped&lt;ToastService&gt;();</code></pre>
                   ShowPoints="true" AnimateOnLoad="true"
                   Title="Monthly Revenue" /&gt;
 
-@code {
+@code &#123;
     record SalesRecord(string Month, double Revenue, double Target);
 
     List&lt;SalesRecord&gt; data = new()
-    {
+    &#123;
         new("Jan", 45000, 50000), new("Feb", 52000, 50000),
         new("Mar", 48000, 52000), new("Apr", 61000, 55000),
         new("May", 55000, 55000), new("Jun", 67000, 58000),
-    };
+    &#125;;
 
     List&lt;SeriesConfig&lt;SalesRecord&gt;&gt; series = new()
-    {
-        new() { Name = "Revenue", Field = d =&gt; d.Revenue,
-                Color = "success", ShowArea = true, CurveType = "smooth" },
-        new() { Name = "Target", Field = d =&gt; d.Target,
-                Color = "warning", Dashed = true },
-    };
-}</code></pre>
+    &#123;
+        new() &#123; Name = "Revenue", Field = d =&gt; d.Revenue,
+                Color = "success", ShowArea = true, CurveType = "smooth" &#125;,
+        new() &#123; Name = "Target", Field = d =&gt; d.Target,
+                Color = "warning", Dashed = true &#125;,
+    &#125;;
+&#125;`} /></pre>
 
 <p><code>Width="0"</code> makes the chart responsive — it fills its container automatically. All 16 chart types follow the same pattern: <code>Data</code> + field selectors + <code>Series</code> config.</p>
 

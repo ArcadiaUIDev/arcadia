@@ -161,7 +161,7 @@ svg .arcadia-chart__radar-fill:hover + .arcadia-chart__radar-line { opacity: 1 !
   from { opacity: 0; }
 }
 .arcadia-animate-area {
-  animation: arcadia-area-fade 0.6s var(--arcadia-ease-out, ease-out) 0.8s;
+  animation: arcadia-area-fade 0.6s var(--arcadia-ease-out, ease-out) 0.8s backwards;
 }
 
 /* Bar grow — fade in + slide up */
@@ -227,7 +227,7 @@ svg .arcadia-chart__radar-fill:hover + .arcadia-chart__radar-line { opacity: 1 !
 
 /* Radar fill fade in — respects inline opacity */
 .arcadia-animate-radar-fill {
-  animation: arcadia-area-fade 0.5s var(--arcadia-ease-out, ease-out) 0.6s;
+  animation: arcadia-area-fade 0.5s var(--arcadia-ease-out, ease-out) 0.6s backwards;
 }
 
 /* Heatmap cell pop */
@@ -257,7 +257,7 @@ svg .arcadia-chart__radar-fill:hover + .arcadia-chart__radar-line { opacity: 1 !
 
 /* Sankey link fade in — respects inline opacity */
 .arcadia-animate-sankey {
-  animation: arcadia-area-fade 0.5s var(--arcadia-ease-out, ease-out);
+  animation: arcadia-area-fade 0.5s var(--arcadia-ease-out, ease-out) backwards;
 }
 
 /* Sankey node/link styling */
@@ -298,7 +298,7 @@ svg .arcadia-chart__radar-fill:hover + .arcadia-chart__radar-line { opacity: 1 !
   from { opacity: 0; }
 }
 .arcadia-animate-chord {
-  animation: arcadia-chord-fade 0.5s var(--arcadia-ease-out, ease-out);
+  animation: arcadia-chord-fade 0.5s var(--arcadia-ease-out, ease-out) backwards;
 }
 
 /* Progress bar fill */
