@@ -149,8 +149,11 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
     /// <summary>Enable click-and-drag panning on the chart canvas. Works alongside zoom. Requires JS interop. Default is false.</summary>
     [Parameter] public bool EnablePan { get; set; }
 
-    /// <summary>Zoom mode: "x" (horizontal only), "y" (vertical only), "xy" (both).</summary>
+    /// <summary>Zoom mode: "x" (horizontal only), "y" (vertical only), "xy" (both), "selection" (rubber band selection zoom).</summary>
     [Parameter] public string ZoomMode { get; set; } = "x";
+
+    /// <summary>Print the chart at high resolution. Opens browser print dialog with print-optimized CSS. Requires JS interop.</summary>
+    [Parameter] public EventCallback OnPrint { get; set; }
 
     /// <summary>Synchronization group name. Charts in the same group share crosshair position and zoom level. Null = no sync.</summary>
     [Parameter] public string? SyncGroup { get; set; }
