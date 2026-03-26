@@ -2,6 +2,45 @@
 
 All notable changes to Arcadia Controls are documented here. This project uses [Keep a Changelog](https://keepachangelog.com/) format and [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.9] — 2026-03-26
+
+### Added
+- **ArcadiaDataGrid** — full-featured data grid component with sorting, filtering, paging, row selection, master-detail, grouping, cell editing, CSV export, column picker, column resize, column reorder (drag-drop), frozen columns, row selector, keyboard navigation, ARIA live regions, and virtual scrolling (10K+ rows via Blazor Virtualize)
+- **6 DataGrid themes** — Obsidian, Vapor, Carbon, Aurora, Slate, Midnight (each with distinct visual identity)
+- **3 density modes** — Compact, Default, Relaxed
+- **6 unified named themes** in Arcadia.Theme — Obsidian, Vapor, Carbon, Aurora, Slate, Midnight (C# classes + CSS, apply to Charts + DataGrid + all components)
+- **DateTime X-axis** (`XAxisType="time"`) — continuous time-proportional positioning with auto-format tick labels
+- **Secondary Y-axis** — dual-axis charts via `YAxisIndex` on SeriesConfig, with right-side labels and scale
+- **Logarithmic Y-axis** (`YAxisType="log"`) — log10 scale with power-of-10 ticks
+- **Interactive playground** at `/playground-builder` — live parameter editor with code generation
+- **Performance benchmarks** — 8 tests measuring render time (LineChart 10K pts: 87ms)
+- **Stress tests** — 18 tests for null, empty, NaN, extreme values, circular refs, special chars
+- **30+ configurable visual parameters** across all 16 charts (opacity, stroke, colors, radii)
+
+### Fixed
+- Animation opacity override on Sankey, Chord, Range Area, Radar (from-only keyframes)
+- Animation blink (backwards fill mode for delayed animations)
+- LogScaleAdapter method hiding (virtual + override instead of new)
+- Pan/zoom JS event listener leak in disposal
+- ResizeObserver callback after disposal race condition
+- TimeScale invert precision (Math.Round)
+- Chord label angular wraparound
+- LineChart null guard on _yScale (+ 6 other charts)
+- SSR disposal exception (catch InvalidOperationException)
+- Vapor theme contrast (readable text on dark backgrounds)
+- Double scrollbar in virtual scroll mode
+- 8 doc page mismatches (wrong defaults, missing params, wrong types)
+
+### Changed
+- .editorconfig with 20+ Roslyn analyzer rules, zero errors across all projects
+- 100% XML doc coverage: 329 parameters across Charts, DataGrid, FormBuilder all documented
+- Dead code purged: 4 unused methods, 5 unused CSS classes, 1 dead keyframe
+- All bare catch blocks replaced with typed exceptions + comments
+- CSS duplicates removed, split declarations consolidated
+- Gallery defaults to dark theme with gradient title
+- Test count: 677 (was 628)
+- Bundle size: 452 KB total (382 KB DLLs + 59 KB CSS + 11 KB JS)
+
 ## [1.0.0-beta.8] — 2026-03-24
 
 ### Added
