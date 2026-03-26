@@ -19,6 +19,8 @@
         <h2 class="gallery__title">Arcadia Controls</h2>
         <p class="gallery__subtitle">Component Gallery</p>
         <nav class="gallery__nav">
+            <button class="gallery__nav-btn gallery__nav-btn--home @(_tab == "home" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "home"' style="font-weight:600;margin-bottom:8px;">Home</button>
+
             <div class="gallery__nav-group">Charts</div>
             <button class="gallery__nav-btn @(_tab == "dashboard" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "dashboard"'>Dashboard Widgets</button>
             <button class="gallery__nav-btn @(_tab == "line" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "line"'>Line & Area</button>
@@ -58,6 +60,82 @@
     </div>
 
     <div class="gallery__content">
+
+        @if (_tab == "home")
+        {
+            <div style="max-width: 900px; margin: 0 auto; padding: 40px 20px;">
+                <h1 style="font-size: 2.5rem; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 8px;">
+                    <span style="background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Arcadia Controls</span>
+                </h1>
+                <p style="font-size: 1.15rem; color: #9490b3; line-height: 1.7; margin-bottom: 40px;">
+                    Enterprise Blazor components for .NET developers. Charts, DataGrid, Forms, UI primitives, and notifications — all accessible, themeable, and zero JavaScript.
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 40px;">
+                    @* Charts *@
+                    <button @onclick='() => _tab = "dashboard"' style="background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.15); border-radius: 14px; padding: 24px; text-align: left; cursor: pointer; transition: border-color 0.15s, transform 0.1s;" onmouseover="this.style.borderColor='rgba(139,92,246,0.4)'" onmouseout="this.style.borderColor='rgba(139,92,246,0.15)'">
+                        <div style="font-size: 1.75rem; margin-bottom: 8px;">&#128200;</div>
+                        <div style="font-size: 1rem; font-weight: 600; color: #f1f0f9; margin-bottom: 6px;">Charts & Dashboard</div>
+                        <div style="font-size: 0.8125rem; color: #8a86a8; line-height: 1.5;">16 chart types + 7 dashboard widgets. Pure SVG, no JS. Line, Bar, Pie, Scatter, Candlestick, Radar, Gauge, Heatmap, Funnel, Treemap, Waterfall, Rose, Sankey, Chord, and more.</div>
+                        <div style="font-size: 0.75rem; color: #8b5cf6; margin-top: 10px;">Explore charts →</div>
+                    </button>
+
+                    @* DataGrid *@
+                    <button @onclick='() => _tab = "datagrid"' style="background: rgba(34,211,238,0.04); border: 1px solid rgba(34,211,238,0.15); border-radius: 14px; padding: 24px; text-align: left; cursor: pointer; transition: border-color 0.15s;" onmouseover="this.style.borderColor='rgba(34,211,238,0.4)'" onmouseout="this.style.borderColor='rgba(34,211,238,0.15)'">
+                        <div style="font-size: 1.75rem; margin-bottom: 8px;">&#128451;</div>
+                        <div style="font-size: 1rem; font-weight: 600; color: #f1f0f9; margin-bottom: 6px;">DataGrid</div>
+                        <div style="font-size: 0.8125rem; color: #8a86a8; line-height: 1.5;">Multi-column sort, quick filter, batch editing, virtual scrolling, state persistence, context menu, CSV export, 6 themes, and keyboard navigation.</div>
+                        <div style="font-size: 0.75rem; color: #22d3ee; margin-top: 10px;">Explore grid →</div>
+                    </button>
+
+                    @* Forms *@
+                    <button @onclick='() => _tab = "fields"' style="background: rgba(236,72,153,0.04); border: 1px solid rgba(236,72,153,0.15); border-radius: 14px; padding: 24px; text-align: left; cursor: pointer; transition: border-color 0.15s;" onmouseover="this.style.borderColor='rgba(236,72,153,0.4)'" onmouseout="this.style.borderColor='rgba(236,72,153,0.15)'">
+                        <div style="font-size: 1.75rem; margin-bottom: 8px;">&#128221;</div>
+                        <div style="font-size: 1rem; font-weight: 600; color: #f1f0f9; margin-bottom: 6px;">Form Builder</div>
+                        <div style="font-size: 0.8125rem; color: #8a86a8; line-height: 1.5;">20+ field types, schema-driven and model-driven forms, wizard mode, validation, conditional fields, and repeater sections.</div>
+                        <div style="font-size: 0.75rem; color: #ec4899; margin-top: 10px;">Explore forms →</div>
+                    </button>
+
+                    @* UI Components *@
+                    <button @onclick='() => _tab = "toasts"' style="background: rgba(250,204,21,0.04); border: 1px solid rgba(250,204,21,0.12); border-radius: 14px; padding: 24px; text-align: left; cursor: pointer; transition: border-color 0.15s;" onmouseover="this.style.borderColor='rgba(250,204,21,0.35)'" onmouseout="this.style.borderColor='rgba(250,204,21,0.12)'">
+                        <div style="font-size: 1.75rem; margin-bottom: 8px;">&#128296;</div>
+                        <div style="font-size: 1rem; font-weight: 600; color: #f1f0f9; margin-bottom: 6px;">UI Components</div>
+                        <div style="font-size: 0.8125rem; color: #8a86a8; line-height: 1.5;">Dialog, Tabs, Tooltip, Sidebar, Accordion, Breadcrumb, Card, Badge, Avatar. Toast notifications with auto-dismiss and stacking.</div>
+                        <div style="font-size: 0.75rem; color: #facc15; margin-top: 10px;">Explore UI →</div>
+                    </button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-bottom: 40px; text-align: center;">
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">57+</div>
+                        <div style="font-size: 0.75rem; color: #6b6890; text-transform: uppercase; letter-spacing: 0.05em;">Components</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">973</div>
+                        <div style="font-size: 0.75rem; color: #6b6890; text-transform: uppercase; letter-spacing: 0.05em;">Unit Tests</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">7</div>
+                        <div style="font-size: 0.75rem; color: #6b6890; text-transform: uppercase; letter-spacing: 0.05em;">NuGet Packages</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">0 KB</div>
+                        <div style="font-size: 0.75rem; color: #6b6890; text-transform: uppercase; letter-spacing: 0.05em;">JavaScript</div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.12); border-radius: 14px; padding: 24px;">
+                    <div style="font-size: 0.875rem; font-weight: 600; color: #c084fc; margin-bottom: 8px;">Quick Install</div>
+                    <code style="display: block; font-family: 'JetBrains Mono', monospace; font-size: 0.8125rem; color: #d4d0ec; line-height: 1.8;">
+                        dotnet add package Arcadia.Charts<br/>
+                        dotnet add package Arcadia.DataGrid<br/>
+                        dotnet add package Arcadia.FormBuilder<br/>
+                        dotnet add package Arcadia.UI<br/>
+                        dotnet add package Arcadia.Theme
+                    </code>
+                </div>
+            </div>
+        }
 
         @if (_tab == "dashboard")
         {
@@ -735,7 +813,7 @@
 </div>
 
 @code {
-    string _tab = "dashboard";
+    string _tab = "home";
     string? _clickedItem;
 
     void HandleBarClick(PointClickEventArgs<QuarterlySales> e)
