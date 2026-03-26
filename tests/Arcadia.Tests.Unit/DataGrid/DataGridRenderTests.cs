@@ -60,7 +60,7 @@ public class DataGridRenderTests : DataGridTestBase
     [Fact]
     public void NullData_ShowsDefaultEmptyMessage()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, (IReadOnlyList<TestEmployee>?)null);
             p.AddChildContent<ArcadiaColumn<TestEmployee>>(col =>
@@ -81,7 +81,7 @@ public class DataGridRenderTests : DataGridTestBase
     [Fact]
     public void CustomEmptyMessage_Overrides_Default()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, new List<TestEmployee>());
             p.Add(g => g.EmptyMessage, "Nothing here!");
@@ -96,7 +96,7 @@ public class DataGridRenderTests : DataGridTestBase
     [Fact]
     public void EmptyTemplate_RendersInsteadOfMessage()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, new List<TestEmployee>());
             p.Add(g => g.EmptyTemplate, (RenderFragment)(builder => { builder.OpenElement(0, "div"); builder.AddAttribute(1, "class", "custom-empty"); builder.AddContent(2, "No employees found"); builder.CloseElement(); }));
@@ -112,7 +112,7 @@ public class DataGridRenderTests : DataGridTestBase
     [Fact]
     public void Loading_ShowsSkeletonRows()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.Loading, true);
@@ -126,7 +126,7 @@ public class DataGridRenderTests : DataGridTestBase
     [Fact]
     public void Loading_DoesNotRenderDataRows()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.Loading, true);

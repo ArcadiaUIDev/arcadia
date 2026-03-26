@@ -28,7 +28,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void PropertyParam_CaseInsensitive()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -44,7 +44,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void PropertyParam_AutoGeneratesTitle()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -71,7 +71,7 @@ public class DataGridColumnTests : DataGridTestBase
     public void FieldParam_OverridesProperty()
     {
         // When both Field and Property are set, Field takes precedence
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -91,7 +91,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void ResolvedKey_UsesExplicitKey()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -108,7 +108,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void ResolvedKey_FallsBackToProperty()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -124,7 +124,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void ResolvedKey_FallsBackToTitle()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -142,7 +142,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void Format_AppliedToNumericValues()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -176,7 +176,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void HiddenColumn_NotRendered()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -211,7 +211,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void FrozenColumn_HasStickyStyle()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -234,7 +234,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void Width_SetsHeaderStyle()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);
@@ -253,7 +253,7 @@ public class DataGridColumnTests : DataGridTestBase
     [Fact]
     public void Align_SetsTextAlignment()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);

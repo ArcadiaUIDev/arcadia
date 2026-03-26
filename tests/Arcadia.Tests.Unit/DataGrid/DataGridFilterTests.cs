@@ -19,7 +19,7 @@ public class DataGridFilterTests : DataGridTestBase
     private IRenderedComponent<ArcadiaDataGrid<TestEmployee>> RenderFilterableGrid(
         IReadOnlyList<TestEmployee>? data = null)
     {
-        return Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        return RenderDataGrid(p =>
         {
             p.Add(g => g.Data, data ?? SampleData);
             p.Add(g => g.PageSize, 0);
@@ -106,7 +106,7 @@ public class DataGridFilterTests : DataGridTestBase
     public void Filter_ResetsPagingToFirstPage()
     {
         // Paged grid: set page to 2, then filter should go back to page 1
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 2);

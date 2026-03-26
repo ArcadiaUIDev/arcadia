@@ -19,12 +19,10 @@ public class DataGridSortTests : DataGridTestBase
     {
         var cut = RenderGrid(SampleData);
 
-        // Click the "Name" header
         cut.FindAll("th[role='columnheader']")[0].Click();
 
-        // After first click: ascending -> Alice, Bob, Charlie, Diana, Eve
         var names = cut.FindAll("td[role='gridcell']")
-            .Where((_, i) => i % 3 == 0) // every 3rd cell is Name
+            .Where((_, i) => i % 3 == 0)
             .Select(td => td.TextContent.Trim())
             .ToList();
         names.Should().BeInAscendingOrder();
@@ -35,9 +33,8 @@ public class DataGridSortTests : DataGridTestBase
     {
         var cut = RenderGrid(SampleData);
 
-        var header = cut.FindAll("th[role='columnheader']")[0];
-        header.Click(); // Asc
-        header.Click(); // Desc
+        cut.FindAll("th[role='columnheader']")[0].Click(); // Asc
+        cut.FindAll("th[role='columnheader']")[0].Click(); // Desc
 
         var names = cut.FindAll("td[role='gridcell']")
             .Where((_, i) => i % 3 == 0)
@@ -51,12 +48,10 @@ public class DataGridSortTests : DataGridTestBase
     {
         var cut = RenderGrid(SampleData);
 
-        var header = cut.FindAll("th[role='columnheader']")[0];
-        header.Click(); // Asc
-        header.Click(); // Desc
-        header.Click(); // None
+        cut.FindAll("th[role='columnheader']")[0].Click(); // Asc
+        cut.FindAll("th[role='columnheader']")[0].Click(); // Desc
+        cut.FindAll("th[role='columnheader']")[0].Click(); // None
 
-        // Original order restored: Alice, Bob, Charlie, Diana, Eve (as in SampleData)
         var names = cut.FindAll("td[role='gridcell']")
             .Where((_, i) => i % 3 == 0)
             .Select(td => td.TextContent.Trim())
@@ -85,10 +80,9 @@ public class DataGridSortTests : DataGridTestBase
         var cut = RenderGrid(SampleData, p =>
             p.Add(g => g.SortChanged, EventCallback.Factory.Create<SortDescriptor?>(this, s => received = s)));
 
-        var header = cut.FindAll("th[role='columnheader']")[0];
-        header.Click(); // Asc
-        header.Click(); // Desc
-        header.Click(); // None -> callback with null
+        cut.FindAll("th[role='columnheader']")[0].Click(); // Asc
+        cut.FindAll("th[role='columnheader']")[0].Click(); // Desc
+        cut.FindAll("th[role='columnheader']")[0].Click(); // None -> callback with null
 
         received.Should().BeNull();
     }
@@ -118,7 +112,6 @@ public class DataGridSortTests : DataGridTestBase
 
         cut.FindAll("th[role='columnheader']")[0].Click();
 
-        // Order unchanged
         var names = cut.FindAll("td[role='gridcell']")
             .Where((_, i) => i % 3 == 0)
             .Select(td => td.TextContent.Trim())
@@ -131,7 +124,6 @@ public class DataGridSortTests : DataGridTestBase
     {
         var cut = RenderGrid(SampleData);
 
-        // Click Salary header (index 2)
         cut.FindAll("th[role='columnheader']")[2].Click();
 
         var salaries = cut.FindAll("td[role='gridcell']")
@@ -144,8 +136,7 @@ public class DataGridSortTests : DataGridTestBase
     [Fact]
     public void SortResetsPageToFirst()
     {
-        // Use paged grid with page size 3, go to page 2, then sort
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 3);
@@ -153,15 +144,12 @@ public class DataGridSortTests : DataGridTestBase
                 col.Add(c => c.Property, "Name").Add(c => c.Title, "Name"));
         });
 
-        // Navigate to page 2
         var nextBtn = cut.FindAll("button[aria-label='Next page']");
         if (nextBtn.Count > 0)
             nextBtn[0].Click();
 
-        // Sort by Name
         cut.FindAll("th[role='columnheader']")[0].Click();
 
-        // First visible name should be Alice (page 1, ascending)
         var firstName = cut.FindAll("td[role='gridcell']").First().TextContent.Trim();
         firstName.Should().Be("Alice");
     }
@@ -171,32 +159,25 @@ public class DataGridSortTests : DataGridTestBase
     {
         var cut = RenderGrid(SampleData);
 
-        var header = cut.FindAll("th[role='columnheader']")[0];
+        cut.FindAll("th[role='columnheader']")[0].GetAttribute("aria-sort").Should().Be("none");
 
-        // Before sort: none
-        header.GetAttribute("aria-sort").Should().Be("none");
+        cut.FindAll("th[role='columnheader']")[0].Click();
+        cut.FindAll("th[role='columnheader']")[0].GetAttribute("aria-sort").Should().Be("ascending");
 
-        // Click once: ascending
-        header.Click();
-        header = cut.FindAll("th[role='columnheader']")[0]; // re-query after render
-        header.GetAttribute("aria-sort").Should().Be("ascending");
-
-        // Click again: descending
-        header.Click();
-        header = cut.FindAll("th[role='columnheader']")[0];
-        header.GetAttribute("aria-sort").Should().Be("descending");
+        cut.FindAll("th[role='columnheader']")[0].Click();
+        cut.FindAll("th[role='columnheader']")[0].GetAttribute("aria-sort").Should().Be("descending");
     }
 
     [Fact]
     public void SortAriaLabel_DescribesState()
     {
         var cut = RenderGrid(SampleData);
-        var header = cut.FindAll("th[role='columnheader']")[0];
 
-        header.GetAttribute("aria-label").Should().Contain("click to sort");
+        cut.FindAll("th[role='columnheader']")[0].GetAttribute("aria-label")
+            .Should().Contain("click to sort");
 
-        header.Click();
-        header = cut.FindAll("th[role='columnheader']")[0];
-        header.GetAttribute("aria-label").Should().Contain("sorted ascending");
+        cut.FindAll("th[role='columnheader']")[0].Click();
+        cut.FindAll("th[role='columnheader']")[0].GetAttribute("aria-label")
+            .Should().Contain("sorted ascending");
     }
 }

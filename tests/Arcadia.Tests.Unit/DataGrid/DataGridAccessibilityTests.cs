@@ -14,6 +14,17 @@ namespace Arcadia.Tests.Unit.DataGrid;
 /// </summary>
 public class DataGridAccessibilityTests : DataGridTestBase
 {
+    /// <summary>
+    /// Helper: render a grid and focus it so _gridHasFocus is true for keyboard tests.
+    /// </summary>
+    private IRenderedComponent<ArcadiaDataGrid<TestEmployee>> RenderAndFocusGrid()
+    {
+        var cut = RenderGrid(SampleData);
+        // Trigger the @onfocus handler on the grid root element
+        cut.Find("[role='grid']").Focus();
+        return cut;
+    }
+
     // ── role="grid" ──
 
     [Fact]
@@ -48,6 +59,7 @@ public class DataGridAccessibilityTests : DataGridTestBase
     {
         var cut = RenderGrid(SampleData);
 
+        // Data rows are in tbody
         var bodyRows = cut.FindAll("tbody tr[role='row']");
         bodyRows.Count.Should().Be(5);
     }
@@ -89,10 +101,10 @@ public class DataGridAccessibilityTests : DataGridTestBase
     {
         var cut = RenderGrid(SampleData);
 
-        cut.FindAll("th[role='columnheader']")[0].Click(); // sort Name ascending
+        cut.FindAll("th[role='columnheader']")[0].Click();
 
-        var header = cut.FindAll("th[role='columnheader']")[0];
-        header.GetAttribute("aria-sort").Should().Be("ascending");
+        cut.FindAll("th[role='columnheader']")[0]
+            .GetAttribute("aria-sort").Should().Be("ascending");
     }
 
     [Fact]
@@ -100,12 +112,11 @@ public class DataGridAccessibilityTests : DataGridTestBase
     {
         var cut = RenderGrid(SampleData);
 
-        var header = cut.FindAll("th[role='columnheader']")[0];
-        header.Click(); // ascending
-        header.Click(); // descending
+        cut.FindAll("th[role='columnheader']")[0].Click(); // ascending
+        cut.FindAll("th[role='columnheader']")[0].Click(); // descending
 
-        header = cut.FindAll("th[role='columnheader']")[0];
-        header.GetAttribute("aria-sort").Should().Be("descending");
+        cut.FindAll("th[role='columnheader']")[0]
+            .GetAttribute("aria-sort").Should().Be("descending");
     }
 
     // ── aria-label ──
@@ -124,7 +135,7 @@ public class DataGridAccessibilityTests : DataGridTestBase
     [Fact]
     public void Loading_AriaBusyIsTrue()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.Loading, true);
@@ -173,23 +184,24 @@ public class DataGridAccessibilityTests : DataGridTestBase
     }
 
     // ── Keyboard navigation ──
+    // After focusing the grid, keyboard events move the internal focus row/col.
+    // IsFocusedCell requires _gridHasFocus=true, which is set by the @onfocus handler.
 
     [Fact]
     public void ArrowDown_MovesFocusRow()
     {
-        var cut = RenderGrid(SampleData);
+        var cut = RenderAndFocusGrid();
         var grid = cut.Instance;
 
         grid.HandleGridKeyDown(new KeyboardEventArgs { Key = "ArrowDown" });
 
-        // _focusRow should have incremented
         grid.IsFocusedCell(1, 0).Should().BeTrue();
     }
 
     [Fact]
     public void ArrowUp_MovesFocusRowUp()
     {
-        var cut = RenderGrid(SampleData);
+        var cut = RenderAndFocusGrid();
         var grid = cut.Instance;
 
         grid.HandleGridKeyDown(new KeyboardEventArgs { Key = "ArrowDown" });
@@ -202,7 +214,7 @@ public class DataGridAccessibilityTests : DataGridTestBase
     [Fact]
     public void ArrowUp_AtTop_StaysAtZero()
     {
-        var cut = RenderGrid(SampleData);
+        var cut = RenderAndFocusGrid();
         var grid = cut.Instance;
 
         grid.HandleGridKeyDown(new KeyboardEventArgs { Key = "ArrowUp" });
@@ -213,7 +225,7 @@ public class DataGridAccessibilityTests : DataGridTestBase
     [Fact]
     public void ArrowRight_MovesFocusColumn()
     {
-        var cut = RenderGrid(SampleData);
+        var cut = RenderAndFocusGrid();
         var grid = cut.Instance;
 
         grid.HandleGridKeyDown(new KeyboardEventArgs { Key = "ArrowRight" });
@@ -224,7 +236,7 @@ public class DataGridAccessibilityTests : DataGridTestBase
     [Fact]
     public void ArrowLeft_MovesFocusColumnLeft()
     {
-        var cut = RenderGrid(SampleData);
+        var cut = RenderAndFocusGrid();
         var grid = cut.Instance;
 
         grid.HandleGridKeyDown(new KeyboardEventArgs { Key = "ArrowRight" });
@@ -237,7 +249,7 @@ public class DataGridAccessibilityTests : DataGridTestBase
     [Fact]
     public void Home_MovesFocusToFirstColumn()
     {
-        var cut = RenderGrid(SampleData);
+        var cut = RenderAndFocusGrid();
         var grid = cut.Instance;
 
         grid.HandleGridKeyDown(new KeyboardEventArgs { Key = "ArrowRight" });
@@ -250,7 +262,7 @@ public class DataGridAccessibilityTests : DataGridTestBase
     [Fact]
     public void End_MovesFocusToLastColumn()
     {
-        var cut = RenderGrid(SampleData);
+        var cut = RenderAndFocusGrid();
         var grid = cut.Instance;
 
         grid.HandleGridKeyDown(new KeyboardEventArgs { Key = "End" });
@@ -261,7 +273,7 @@ public class DataGridAccessibilityTests : DataGridTestBase
     [Fact]
     public void CtrlHome_MovesFocusToTopLeft()
     {
-        var cut = RenderGrid(SampleData);
+        var cut = RenderAndFocusGrid();
         var grid = cut.Instance;
 
         grid.HandleGridKeyDown(new KeyboardEventArgs { Key = "ArrowDown" });
@@ -275,7 +287,7 @@ public class DataGridAccessibilityTests : DataGridTestBase
     [Fact]
     public void CtrlEnd_MovesFocusToBottomRight()
     {
-        var cut = RenderGrid(SampleData);
+        var cut = RenderAndFocusGrid();
         var grid = cut.Instance;
 
         grid.HandleGridKeyDown(new KeyboardEventArgs { Key = "End", CtrlKey = true });
@@ -293,12 +305,30 @@ public class DataGridAccessibilityTests : DataGridTestBase
         cut.Instance.GetCellId(2, 1).Should().Be("cell-2-1");
     }
 
+    // ── Active descendant ──
+
+    [Fact]
+    public void GetActiveDescendant_NullWhenNotFocused()
+    {
+        var cut = RenderGrid(SampleData);
+
+        cut.Instance.GetActiveDescendant().Should().BeNull();
+    }
+
+    [Fact]
+    public void GetActiveDescendant_ReturnsCellIdWhenFocused()
+    {
+        var cut = RenderAndFocusGrid();
+
+        cut.Instance.GetActiveDescendant().Should().Be("cell-0-0");
+    }
+
     // ── Pagination aria ──
 
     [Fact]
     public void PaginationNav_HasAriaLabel()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, LargeData);
             p.Add(g => g.PageSize, 10);

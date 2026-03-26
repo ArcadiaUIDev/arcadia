@@ -17,7 +17,7 @@ public class DataGridGroupingTests : DataGridTestBase
         string groupBy = "Department",
         IReadOnlyList<TestEmployee>? data = null)
     {
-        return Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        return RenderDataGrid(p =>
         {
             p.Add(g => g.Data, data ?? SampleData);
             p.Add(g => g.PageSize, 0);
@@ -166,7 +166,7 @@ public class DataGridGroupingTests : DataGridTestBase
     [Fact]
     public void NoGroupBy_RendersNormalRows()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);

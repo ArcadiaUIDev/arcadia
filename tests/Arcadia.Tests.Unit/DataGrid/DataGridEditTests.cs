@@ -17,7 +17,7 @@ public class DataGridEditTests : DataGridTestBase
     private IRenderedComponent<ArcadiaDataGrid<TestEmployee>> RenderEditableGrid(
         EventCallback<TestEmployee>? onRowEdit = null)
     {
-        return Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        return RenderDataGrid(p =>
         {
             p.Add(g => g.Data, SampleData);
             p.Add(g => g.PageSize, 0);

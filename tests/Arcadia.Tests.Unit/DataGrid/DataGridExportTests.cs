@@ -17,7 +17,7 @@ public class DataGridExportTests : DataGridTestBase
         IReadOnlyList<TestEmployee>? data = null,
         bool withFormat = false)
     {
-        return Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        return RenderDataGrid(p =>
         {
             p.Add(g => g.Data, data ?? SampleData);
             p.Add(g => g.PageSize, 0);
@@ -203,7 +203,7 @@ public class DataGridExportTests : DataGridTestBase
     [Fact]
     public void ToCsv_NullData_OnlyHeaderRow()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, (IReadOnlyList<TestEmployee>?)null);
             p.Add(g => g.PageSize, 0);

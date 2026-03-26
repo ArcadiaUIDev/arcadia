@@ -17,7 +17,7 @@ public class DataGridPagingTests : DataGridTestBase
         int pageSize = 10,
         IReadOnlyList<TestEmployee>? data = null)
     {
-        return Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        return RenderDataGrid(p =>
         {
             p.Add(g => g.Data, data ?? LargeData);
             p.Add(g => g.PageSize, pageSize);
@@ -28,15 +28,14 @@ public class DataGridPagingTests : DataGridTestBase
         });
     }
 
-    // ── 1. Page count ──
+    // ── 1. Page count (multi-page: UI renders pagination) ──
 
     [Theory]
     [InlineData(10, 30, 3)]  // 30 items / 10 = 3 pages
     [InlineData(10, 25, 3)]  // 25 items / 10 = 3 pages (ceil)
-    [InlineData(10, 10, 1)]  // exactly one page
-    [InlineData(10, 1, 1)]   // single item
     [InlineData(5, 30, 6)]   // 30 / 5 = 6
-    public void PageCount_CalculatedCorrectly(int pageSize, int itemCount, int expectedPages)
+    [InlineData(10, 11, 2)]  // just over one page
+    public void PageCount_MultiPage_ShownInPagination(int pageSize, int itemCount, int expectedPages)
     {
         var data = Enumerable.Range(1, itemCount)
             .Select(i => new TestEmployee(i, $"E{i}", "Dept", 50000, DateTime.Now))
@@ -44,12 +43,28 @@ public class DataGridPagingTests : DataGridTestBase
 
         var cut = RenderPagedGrid(pageSize, data);
 
-        // Page info text: "Page 1 of N"
         var pageInfo = cut.Find(".arcadia-grid__page-current");
         pageInfo.TextContent.Should().Contain($"of {expectedPages}");
     }
 
-    // ── 2. First page shows correct rows ──
+    // ── 2. Single page: no pagination UI ──
+
+    [Theory]
+    [InlineData(10, 10)]  // exactly one page
+    [InlineData(10, 1)]   // single item
+    [InlineData(10, 5)]   // fewer than page size
+    public void PageCount_SinglePage_NoPaginationUI(int pageSize, int itemCount)
+    {
+        var data = Enumerable.Range(1, itemCount)
+            .Select(i => new TestEmployee(i, $"E{i}", "Dept", 50000, DateTime.Now))
+            .ToList();
+
+        var cut = RenderPagedGrid(pageSize, data);
+
+        cut.FindAll(".arcadia-grid__pagination").Count.Should().Be(0);
+    }
+
+    // ── 3. First page shows correct rows ──
 
     [Fact]
     public void FirstPage_ShowsFirstNRows()
@@ -65,7 +80,7 @@ public class DataGridPagingTests : DataGridTestBase
         names.Last().Should().Be("Employee10");
     }
 
-    // ── 3. Next page navigation ──
+    // ── 4. Next page navigation ──
 
     [Fact]
     public void NextPage_ShowsNextRows()
@@ -82,7 +97,7 @@ public class DataGridPagingTests : DataGridTestBase
         names.Last().Should().Be("Employee20");
     }
 
-    // ── 4. Previous page ──
+    // ── 5. Previous page ──
 
     [Fact]
     public void PreviousPage_GoesBack()
@@ -98,7 +113,7 @@ public class DataGridPagingTests : DataGridTestBase
         firstName.Should().Be("Employee1");
     }
 
-    // ── 5. Last page ──
+    // ── 6. Last page ──
 
     [Fact]
     public void LastPage_ShowsRemainingRows()
@@ -115,7 +130,7 @@ public class DataGridPagingTests : DataGridTestBase
         names.Count.Should().Be(10); // 30 items, page 3 has 10
     }
 
-    // ── 6. First page button ──
+    // ── 7. First page button ──
 
     [Fact]
     public void FirstPageButton_ReturnToStart()
@@ -131,7 +146,7 @@ public class DataGridPagingTests : DataGridTestBase
         firstName.Should().Be("Employee1");
     }
 
-    // ── 7. Buttons disabled state ──
+    // ── 8. Buttons disabled state ──
 
     [Fact]
     public void FirstPage_PreviousButtonsDisabled()
@@ -153,7 +168,7 @@ public class DataGridPagingTests : DataGridTestBase
         cut.Find("button[aria-label='Last page']").HasAttribute("disabled").Should().BeTrue();
     }
 
-    // ── 8. Page size change ──
+    // ── 9. Page size change ──
 
     [Fact]
     public void SetPageSize_ChangesRowCount()
@@ -173,9 +188,7 @@ public class DataGridPagingTests : DataGridTestBase
     {
         var cut = RenderPagedGrid(10);
 
-        // Go to page 2
         cut.Find("button[aria-label='Next page']").Click();
-        // Change page size
         cut.Instance.SetPageSize(5);
         cut.Render();
 
@@ -185,7 +198,7 @@ public class DataGridPagingTests : DataGridTestBase
         firstName.Should().Be("Employee1");
     }
 
-    // ── 9. Page info text ──
+    // ── 10. Page info text ──
 
     [Fact]
     public void PageInfo_ShowsRange()
@@ -198,12 +211,12 @@ public class DataGridPagingTests : DataGridTestBase
         info.Should().Contain("30");
     }
 
-    // ── 10. No pagination when pageSize=0 ──
+    // ── 11. No pagination when pageSize=0 ──
 
     [Fact]
     public void PageSizeZero_NoPaginationUI()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, LargeData);
             p.Add(g => g.PageSize, 0);
@@ -217,7 +230,7 @@ public class DataGridPagingTests : DataGridTestBase
     [Fact]
     public void PageSizeZero_ShowsAllRows()
     {
-        var cut = Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        var cut = RenderDataGrid(p =>
         {
             p.Add(g => g.Data, LargeData);
             p.Add(g => g.PageSize, 0);
@@ -229,7 +242,7 @@ public class DataGridPagingTests : DataGridTestBase
         rowCount.Should().Be(30);
     }
 
-    // ── 11. GoToPage boundary clamping ──
+    // ── 12. GoToPage boundary clamping ──
 
     [Fact]
     public void GoToPage_NegativeIndex_ClampsToZero()

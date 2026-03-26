@@ -43,6 +43,20 @@ public abstract class DataGridTestBase : BunitContext
         )).ToList();
 
     /// <summary>
+    /// Render a DataGrid and trigger a second render pass so the table appears.
+    /// The grid uses a CascadingValue to collect column definitions during
+    /// the first render; the table is only produced once Columns.Count > 0
+    /// on the second pass.
+    /// </summary>
+    protected IRenderedComponent<ArcadiaDataGrid<TestEmployee>> RenderDataGrid(
+        Action<ComponentParameterCollectionBuilder<ArcadiaDataGrid<TestEmployee>>> builder)
+    {
+        var cut = Render<ArcadiaDataGrid<TestEmployee>>(builder);
+        cut.Render(); // second pass: columns are now collected, table renders
+        return cut;
+    }
+
+    /// <summary>
     /// Render a grid with the given data and standard Name / Department / Salary columns
     /// using the Property-based reflection accessor.
     /// </summary>
@@ -51,7 +65,7 @@ public abstract class DataGridTestBase : BunitContext
         Action<ComponentParameterCollectionBuilder<ArcadiaDataGrid<TestEmployee>>>? configure = null,
         bool withSalaryColumn = true)
     {
-        return Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        return RenderDataGrid(p =>
         {
             p.Add(g => g.Data, data);
             p.Add(g => g.PageSize, 0); // no paging by default
@@ -75,7 +89,7 @@ public abstract class DataGridTestBase : BunitContext
         IReadOnlyList<TestEmployee> data,
         Action<ComponentParameterCollectionBuilder<ArcadiaDataGrid<TestEmployee>>>? configure = null)
     {
-        return Render<ArcadiaDataGrid<TestEmployee>>(p =>
+        return RenderDataGrid(p =>
         {
             p.Add(g => g.Data, data);
             p.Add(g => g.PageSize, 0);
