@@ -181,6 +181,11 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
 
     private int PageCount => PageSize > 0 ? Math.Max(1, (int)Math.Ceiling((double)TotalCount / PageSize)) : 1;
 
+    protected override void OnInitialized()
+    {
+        Collector.OnColumnsChanged = () => InvokeAsync(StateHasChanged);
+    }
+
     protected override void OnParametersSet()
     {
         // SelectionMode overrides Selectable/MultiSelect when set

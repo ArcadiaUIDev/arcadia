@@ -10,10 +10,16 @@ internal class ArcadiaDataGridColumnCollector<TItem>
 
     public IReadOnlyList<ArcadiaColumn<TItem>> Columns => _columns;
 
+    /// <summary>Callback invoked when a column is added, so the parent grid can re-render.</summary>
+    public Action? OnColumnsChanged { get; set; }
+
     public void AddColumn(ArcadiaColumn<TItem> column)
     {
         if (!_columns.Contains(column))
+        {
             _columns.Add(column);
+            OnColumnsChanged?.Invoke();
+        }
     }
 
     public void MoveColumn(int fromIndex, int toIndex)
