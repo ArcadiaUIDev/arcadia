@@ -102,6 +102,12 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     /// <summary>Extra rows rendered outside the viewport to reduce flicker during fast scrolling. Default is 5.</summary>
     [Parameter] public int OverscanCount { get; set; } = 5;
 
+    /// <summary>localStorage key for persisting grid state (sort, filter, column order, visibility, page size). Null = no persistence.</summary>
+    [Parameter] public string? StateKey { get; set; }
+
+    /// <summary>Callback invoked when grid state changes. Use for server-side persistence.</summary>
+    [Parameter] public EventCallback<DataGridState> OnStateChanged { get; set; }
+
     [Inject] private IJSRuntime JSRuntime { get; set; } = default!;
     private IJSObjectReference? _jsModule;
     private bool _disposed;
@@ -172,6 +178,9 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     protected override async void OnAfterRender(bool firstRender)
     {
         if (_disposed) return;
+
+        if (firstRender && !string.IsNullOrEmpty(StateKey))
+            await LoadStateAsync();
 
         if (!_resizeInitialized && Columns.Count > 0)
         {
@@ -417,6 +426,7 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
         if (SortChanged.HasDelegate)
             await SortChanged.InvokeAsync(_sortStack.Count > 0 ? _sortStack[0] : null);
         if (_isServerMode) await InvokeLoadData();
+        _ = SaveStateAsync();
     }
 
     private IEnumerable<TItem> ApplySort(IEnumerable<TItem> data)
@@ -838,6 +848,78 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
             Announce($"Copied {(_selectedItems.Count > 0 ? _selectedItems.Count : "all")} rows to clipboard");
         }
         catch { } // Clipboard API may not be available
+    }
+
+    // ── State Persistence ──
+
+    /// <summary>Get the current grid state for persistence.</summary>
+    public DataGridState GetState() => new()
+    {
+        Sorts = _sortStack.Count > 0 ? _sortStack.ToList() : null,
+        Filters = _filters.Values.Where(f => !string.IsNullOrEmpty(f.Value)).ToList() is { Count: > 0 } fl ? fl : null,
+        PageSize = PageSize,
+        ColumnVisibility = Columns.Any(c => !c.IsVisible)
+            ? Columns.ToDictionary(c => c.ResolvedKey, c => c.IsVisible)
+            : null,
+    };
+
+    /// <summary>Restore grid state from a previously saved state object.</summary>
+    public void RestoreState(DataGridState state)
+    {
+        if (state.Sorts is { Count: > 0 }) _sortStack = state.Sorts.ToList();
+        if (state.Filters is { Count: > 0 })
+        {
+            _filters.Clear();
+            foreach (var f in state.Filters) _filters[f.Property] = f;
+        }
+        if (state.PageSize.HasValue) PageSize = state.PageSize.Value;
+        if (state.ColumnVisibility is not null)
+        {
+            foreach (var col in Columns)
+            {
+                if (state.ColumnVisibility.TryGetValue(col.ResolvedKey, out var vis))
+                    col.IsVisible = vis;
+            }
+        }
+        InvalidateCache();
+        StateHasChanged();
+    }
+
+    private async Task SaveStateAsync()
+    {
+        if (string.IsNullOrEmpty(StateKey) && !OnStateChanged.HasDelegate) return;
+
+        var state = GetState();
+        if (OnStateChanged.HasDelegate)
+            await OnStateChanged.InvokeAsync(state);
+
+        if (!string.IsNullOrEmpty(StateKey))
+        {
+            try
+            {
+                _jsModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
+                    "import", "./_content/Arcadia.DataGrid/js/datagrid-interop.js");
+                await _jsModule.InvokeVoidAsync("saveState", StateKey, state.ToJson());
+            }
+            catch { } // localStorage may not be available
+        }
+    }
+
+    private async Task LoadStateAsync()
+    {
+        if (string.IsNullOrEmpty(StateKey)) return;
+        try
+        {
+            _jsModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
+                "import", "./_content/Arcadia.DataGrid/js/datagrid-interop.js");
+            var json = await _jsModule.InvokeAsync<string?>("loadState", StateKey);
+            if (json is not null)
+            {
+                var state = DataGridState.FromJson(json);
+                if (state is not null) RestoreState(state);
+            }
+        }
+        catch { } // localStorage may not be available
     }
 
     // ── ARIA Live Announcements ──

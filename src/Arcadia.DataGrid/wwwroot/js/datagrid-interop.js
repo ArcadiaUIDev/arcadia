@@ -28,6 +28,14 @@ export function copyToClipboard(text) {
     document.body.removeChild(ta);
 }
 
+// State persistence (localStorage)
+export function saveState(key, json) {
+    try { localStorage.setItem('arcadia-grid-' + key, json); } catch {}
+}
+export function loadState(key) {
+    try { return localStorage.getItem('arcadia-grid-' + key); } catch { return null; }
+}
+
 // Column resize via pointer events
 export function initResizeHandles(tableElement, minWidth) {
     if (!tableElement) return;
