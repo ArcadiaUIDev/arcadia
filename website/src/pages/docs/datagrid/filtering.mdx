@@ -1,7 +1,7 @@
 ---
 layout: ../../../../layouts/DocsLayout.astro
 title: DataGrid Filtering
-description: Per-column filtering for the Arcadia DataGrid with a filter row UI, FilterDescriptor type, and six filter operators.
+description: Per-column filtering for the Arcadia DataGrid with a filter row UI, FilterDescriptor type, nine filter operators, and cross-column quick filter.
 ---
 
 # Filtering
@@ -52,7 +52,7 @@ public class FilterDescriptor
 
 ## Filter Operators
 
-The `FilterOperator` enum supports six operators:
+As of beta.10, the `FilterOperator` enum supports nine operators. The filter row UI now includes a dropdown next to each column's input, allowing the user to pick the operator instead of always using `Contains`.
 
 | Operator | Description | Example |
 |---|---|---|
@@ -60,10 +60,13 @@ The `FilterOperator` enum supports six operators:
 | `Equals` | Cell value equals the filter text (case-insensitive) | "alice" matches "Alice" |
 | `StartsWith` | Cell value starts with the filter text | "Al" matches "Alice" |
 | `EndsWith` | Cell value ends with the filter text | "ce" matches "Alice" |
+| `NotEquals` | Cell value does not equal the filter text (case-insensitive) | "Bob" excludes "Bob", shows all others |
 | `GreaterThan` | Numeric: cell value > filter value | "80000" matches 95000 |
 | `LessThan` | Numeric: cell value < filter value | "80000" matches 72000 |
+| `IsEmpty` | Cell value is null, empty, or whitespace. No filter text required | Matches rows where the cell is blank |
+| `IsNotEmpty` | Cell value is not null, empty, or whitespace. No filter text required | Matches rows where the cell has a value |
 
-The default operator is `Contains`. The built-in filter row uses `Contains` for all columns.
+The default operator is `Contains`. When `IsEmpty` or `IsNotEmpty` is selected, the text input is disabled since no value is needed.
 
 ## Client-Side Behavior
 
@@ -106,5 +109,40 @@ When `LoadData` is set, all active filters are passed in `DataGridLoadArgs.Filte
     }
 }
 ```
+
+## Quick Filter
+
+Beta.10 adds a cross-column quick filter. When `ShowToolbar="true"` is set, the toolbar includes a search input that filters all columns at once. The `QuickFilter` parameter provides two-way binding to the search text.
+
+Typing into the quick filter searches across all columns with a `Field` accessor. A row is shown if any column's value contains the search text (case-insensitive). The quick filter works alongside per-column filters -- both must match for a row to appear.
+
+```razor
+<ArcadiaDataGrid TItem="Employee" Data="@employees"
+                 ShowToolbar="true"
+                 Filterable="true"
+                 QuickFilter="@quickSearch"
+                 QuickFilterChanged="@(val => quickSearch = val)">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" />
+</ArcadiaDataGrid>
+
+<p>Searching for: @quickSearch</p>
+
+@code {
+    private string? quickSearch;
+
+    private List<Employee> employees = new()
+    {
+        new("Alice", "Engineering", 95000),
+        new("Bob", "Marketing", 72000),
+        new("Carol", "Engineering", 105000),
+    };
+
+    record Employee(string Name, string Department, decimal Salary);
+}
+```
+
+The quick filter text is included in `DataGridLoadArgs.QuickFilter` for server-side mode, so your `LoadData` callback can apply it server-side.
 
 > **Note:** Toggling the filter row visibility does not clear the filter values. Filters persist until the user clears the input text.

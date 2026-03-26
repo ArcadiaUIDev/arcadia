@@ -1,0 +1,154 @@
+---
+layout: ../../../../layouts/DocsLayout.astro
+title: State Persistence
+description: Save and restore DataGrid state including sort order, filters, page size, and column visibility using localStorage or server-side persistence.
+---
+
+# State Persistence
+
+The Arcadia DataGrid can automatically save and restore its state so users pick up right where they left off. State includes the sort stack, active filters, page size, and column visibility.
+
+## Quick Start with localStorage
+
+Set the `StateKey` parameter to a unique string. The grid will automatically save state to `localStorage` on every change and restore it on load.
+
+```razor
+<ArcadiaDataGrid TItem="Employee" Data="@employees"
+                 StateKey="employees-grid">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" />
+    <ArcadiaColumn TItem="Employee" Title="Start Date" Field="@(e => e.StartDate)" />
+</ArcadiaDataGrid>
+```
+
+That's it. The grid serializes its state to JSON and writes it to `localStorage` under the key `arcadia-grid:{StateKey}`. On the next page load, it reads the saved state and applies it before the first render.
+
+## What Gets Saved
+
+The `DataGridState` model captures the following:
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `SortDescriptors` | `List<SortDescriptor>` | Active sort stack (multi-column) |
+| `FilterDescriptors` | `List<FilterDescriptor>` | Active column filters |
+| `PageSize` | `int` | Current rows per page |
+| `PageIndex` | `int` | Current page (zero-based) |
+| `ColumnVisibility` | `Dictionary<string, bool>` | Visible/hidden state per column key |
+
+## DataGridState Model
+
+The `DataGridState` class is fully serializable to JSON, making it easy to store anywhere.
+
+```csharp
+public class DataGridState
+{
+    public List<SortDescriptor> SortDescriptors { get; set; } = new();
+    public List<FilterDescriptor> FilterDescriptors { get; set; } = new();
+    public int PageSize { get; set; } = 25;
+    public int PageIndex { get; set; }
+    public Dictionary<string, bool> ColumnVisibility { get; set; } = new();
+}
+```
+
+## Server-Side Persistence
+
+For scenarios where state should follow the user across devices, use the `OnStateChanged` callback to send state to your server instead of (or in addition to) localStorage.
+
+```razor
+<ArcadiaDataGrid TItem="Employee" Data="@employees"
+                 OnStateChanged="@SaveStateToServer">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" />
+</ArcadiaDataGrid>
+
+@code {
+    private async Task SaveStateToServer(DataGridState state)
+    {
+        // Serialize to JSON and POST to your API
+        var json = JsonSerializer.Serialize(state);
+        await Http.PostAsJsonAsync($"/api/grid-state/employees", state);
+    }
+}
+```
+
+> **Tip:** When both `StateKey` and `OnStateChanged` are set, the grid saves to localStorage *and* fires the callback. This gives you offline-first behavior with server backup.
+
+## Manual Control with GetState / RestoreState
+
+For full control, skip the automatic mechanisms and call `GetState()` and `RestoreState()` directly on the grid reference.
+
+```razor
+<ArcadiaDataGrid @ref="gridRef" TItem="Employee" Data="@employees">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" />
+</ArcadiaDataGrid>
+
+<button @onclick="SaveSnapshot">Save Snapshot</button>
+<button @onclick="RestoreSnapshot" disabled="@(savedState is null)">Restore Snapshot</button>
+<button @onclick="ResetGrid">Reset to Default</button>
+
+@code {
+    private ArcadiaDataGrid<Employee> gridRef = default!;
+    private DataGridState? savedState;
+
+    private async Task SaveSnapshot()
+    {
+        savedState = await gridRef.GetState();
+    }
+
+    private async Task RestoreSnapshot()
+    {
+        if (savedState is not null)
+        {
+            await gridRef.RestoreState(savedState);
+        }
+    }
+
+    private async Task ResetGrid()
+    {
+        await gridRef.RestoreState(new DataGridState());
+        savedState = null;
+    }
+}
+```
+
+## Restoring State on Load from a Server
+
+Combine `OnInitializedAsync` with `RestoreState()` to load saved state from a server when the component first renders.
+
+```razor
+<ArcadiaDataGrid @ref="gridRef" TItem="Employee" Data="@employees"
+                 OnStateChanged="@SaveStateToServer">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" />
+</ArcadiaDataGrid>
+
+@code {
+    private ArcadiaDataGrid<Employee> gridRef = default!;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var saved = await Http.GetFromJsonAsync<DataGridState>(
+                "/api/grid-state/employees");
+
+            if (saved is not null)
+            {
+                await gridRef.RestoreState(saved);
+            }
+        }
+    }
+
+    private async Task SaveStateToServer(DataGridState state)
+    {
+        await Http.PostAsJsonAsync("/api/grid-state/employees", state);
+    }
+}
+```
+
+> **Note:** `RestoreState()` triggers a re-render automatically. There is no need to call `StateHasChanged()` after restoring.

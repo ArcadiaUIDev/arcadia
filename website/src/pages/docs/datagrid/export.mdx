@@ -1,7 +1,7 @@
 ---
 layout: ../../../../layouts/DocsLayout.astro
 title: DataGrid Export
-description: CSV export for the Arcadia DataGrid with a built-in toolbar button and programmatic ExportToCsvAsync method. Respects current sort and filters.
+description: CSV export and clipboard copy for the Arcadia DataGrid with a built-in toolbar button, programmatic ExportToCsvAsync method, and Ctrl+C keyboard copy. Respects current sort and filters.
 ---
 
 # CSV Export
@@ -150,5 +150,38 @@ Carol,Engineering,"$105,000"
 ```
 
 Values containing commas, double-quotes, or newlines are automatically quoted per RFC 4180.
+
+## Clipboard Copy
+
+Beta.10 adds keyboard-driven clipboard copy. Users can copy grid data to the clipboard without exporting a file.
+
+### How It Works
+
+- Press **Ctrl+C** (or **Cmd+C** on Mac) while the grid is focused to copy data to the clipboard as tab-separated values (TSV).
+- If rows are selected, only the selected rows are copied.
+- If no rows are selected, all visible rows on the current page are copied.
+- The copied data includes a header row with column titles, followed by data rows.
+
+The TSV format pastes cleanly into spreadsheet applications like Excel and Google Sheets, where tabs are interpreted as column separators.
+
+### Example
+
+With three employees visible and none selected, pressing Ctrl+C copies:
+
+```
+Name	Department	Salary
+Alice	Engineering	$95,000
+Bob	Marketing	$72,000
+Carol	Engineering	$105,000
+```
+
+When two rows are selected, only those rows (plus the header) are copied.
+
+### Notes
+
+- Clipboard copy respects column visibility -- hidden columns are excluded.
+- Values are formatted using each column's `Format` string, matching what the user sees on screen.
+- The grid must have focus for the keyboard shortcut to work. Clicking anywhere on the grid gives it focus.
+- In browsers that require clipboard permissions, the user may see a permission prompt on first use.
 
 > **Note:** CSV export operates on the client-side processed data. When using `LoadData` for server-side mode, only the currently loaded rows are exported. To export the full server-side dataset, fetch all rows in your application code and pass them to a separate export utility.

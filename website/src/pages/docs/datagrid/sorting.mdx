@@ -1,7 +1,7 @@
 ---
 layout: ../../../../layouts/DocsLayout.astro
 title: DataGrid Sorting
-description: Column sorting for the Arcadia DataGrid with click-to-sort headers, ascending/descending/none cycling, and the SortChanged event callback.
+description: Column sorting for the Arcadia DataGrid with click-to-sort headers, ascending/descending/none cycling, multi-column sort with Shift+Click, and the SortChanged event callback.
 ---
 
 # Sorting
@@ -102,5 +102,54 @@ When using `LoadData` for server-side data, the sort state is included in the `D
     }
 }
 ```
+
+## Multi-Column Sort
+
+Beta.10 adds support for sorting by multiple columns simultaneously. This is useful when you need secondary or tertiary sort orders -- for example, sorting employees by department first and then by salary within each department.
+
+### How Multi-Column Sort Works
+
+- **Shift+Click** a column header to add it as an additional sort column. The first column you click normally becomes the primary sort; Shift+Click on subsequent columns adds them as secondary, tertiary, and so on.
+- **Click without Shift** on any column header to replace all current sorts with a single-column sort on that column. This resets back to single-sort behavior.
+- **Sort priority badges** appear on each sorted column header, numbered 1, 2, 3, etc., indicating the sort priority order. The badge is omitted when only a single column is sorted.
+- Each sorted column independently cycles through ascending, descending, and unsorted when Shift+Clicked. Removing the last sort column clears all sorts.
+
+### Example
+
+```razor
+<ArcadiaDataGrid TItem="Employee" Data="@employees"
+                 Sortable="true"
+                 SortChanged="@OnSortChanged">
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" />
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" />
+</ArcadiaDataGrid>
+
+<p>Active sorts: @sortSummary</p>
+
+@code {
+    private string sortSummary = "None";
+
+    private void OnSortChanged(SortDescriptor? sort)
+    {
+        // In multi-sort mode, use the SortDescriptors collection
+        // on the grid reference for full sort state.
+        sortSummary = sort is null
+            ? "None"
+            : $"{sort.Property} {sort.Direction}";
+    }
+}
+```
+
+**Interaction walkthrough:**
+
+1. Click "Department" header -- grid sorts by Department ascending (badge: **1**)
+2. Shift+Click "Salary" header -- grid sorts by Department ascending, then Salary ascending (badges: **1**, **2**)
+3. Shift+Click "Salary" again -- Salary flips to descending (badges: **1**, **2**)
+4. Click "Name" without Shift -- all multi-sort is cleared, grid sorts by Name ascending only (no badge)
+
+### Server-Side Multi-Sort
+
+When using `LoadData`, the `DataGridLoadArgs` includes a `Sorts` collection (`IReadOnlyList<SortDescriptor>`) containing all active sort descriptors in priority order. The single-sort properties `SortProperty` and `SortDirection` remain available and reflect the primary sort for backward compatibility.
 
 > **Note:** Sorting resets the page index to 0 and cancels any active inline edit.

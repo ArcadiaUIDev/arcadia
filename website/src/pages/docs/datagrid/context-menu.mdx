@@ -1,0 +1,229 @@
+---
+layout: ../../../../layouts/DocsLayout.astro
+title: Context Menu
+description: Add custom right-click context menus to the Arcadia DataGrid with ContextMenuTemplate and the OnContextMenu callback.
+---
+
+# Context Menu
+
+The Arcadia DataGrid supports custom right-click context menus on rows. Use the `ContextMenuTemplate` render fragment to define menu items, and the `OnContextMenu` callback to handle actions.
+
+## Basic Usage
+
+Provide a `ContextMenuTemplate` with a `RenderFragment<TItem>`. The template receives the row item that was right-clicked. The menu is automatically positioned at the click coordinates and dismissed when the user clicks elsewhere.
+
+```razor
+<ArcadiaDataGrid TItem="Employee" Data="@employees">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" />
+
+    <ContextMenuTemplate Context="employee">
+        <div class="context-menu">
+            <button @onclick="@(() => EditEmployee(employee))">Edit</button>
+            <button @onclick="@(() => CopyName(employee))">Copy Name</button>
+            <hr />
+            <button @onclick="@(() => DeleteEmployee(employee))" class="danger">Delete</button>
+        </div>
+    </ContextMenuTemplate>
+</ArcadiaDataGrid>
+
+@code {
+    private List<Employee> employees = new();
+
+    private void EditEmployee(Employee emp)
+    {
+        Navigation.NavigateTo($"/employees/{emp.Id}/edit");
+    }
+
+    private async Task CopyName(Employee emp)
+    {
+        await Clipboard.SetTextAsync(emp.Name);
+    }
+
+    private async Task DeleteEmployee(Employee emp)
+    {
+        await EmployeeService.DeleteAsync(emp.Id);
+        employees.Remove(emp);
+    }
+}
+```
+
+## OnContextMenu Callback
+
+The `OnContextMenu` callback fires when the user right-clicks a row, before the menu is displayed. Use it for logging, dynamic menu configuration, or to conditionally suppress the menu.
+
+```razor
+<ArcadiaDataGrid TItem="Employee" Data="@employees"
+                 OnContextMenu="@HandleContextMenu">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" />
+
+    <ContextMenuTemplate Context="employee">
+        <div class="context-menu">
+            <button @onclick="@(() => ViewDetails(employee))">View Details</button>
+            @if (canEdit)
+            {
+                <button @onclick="@(() => EditEmployee(employee))">Edit</button>
+            }
+        </div>
+    </ContextMenuTemplate>
+</ArcadiaDataGrid>
+
+@code {
+    private bool canEdit;
+
+    private void HandleContextMenu(DataGridContextMenuEventArgs<Employee> args)
+    {
+        // Check permissions for the clicked row
+        canEdit = args.Item.Department != "Executive";
+
+        // Optionally cancel the menu entirely
+        if (args.Item.IsArchived)
+        {
+            args.Cancel = true;
+        }
+    }
+}
+```
+
+## DataGridContextMenuEventArgs
+
+```csharp
+public class DataGridContextMenuEventArgs<TItem>
+{
+    public TItem Item { get; set; }        // The right-clicked row item
+    public double ClientX { get; set; }    // Mouse X coordinate (viewport)
+    public double ClientY { get; set; }    // Mouse Y coordinate (viewport)
+    public bool Cancel { get; set; }       // Set true to suppress the menu
+}
+```
+
+## Positioning
+
+The context menu is rendered in a portal (appended to `<body>`) and positioned absolutely at the click coordinates. It automatically adjusts if the menu would overflow the viewport edge. The grid sets `aria-haspopup="true"` on rows when a `ContextMenuTemplate` is provided.
+
+## Styling the Menu
+
+The menu container has the CSS class `arcadia-context-menu`. Style it to match your theme:
+
+```css
+.arcadia-context-menu {
+    background: #1a1030;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 8px;
+    padding: 4px;
+    min-width: 160px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+.arcadia-context-menu button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 8px 12px;
+    border: none;
+    background: transparent;
+    color: #d4d0ec;
+    font-size: 0.875rem;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.arcadia-context-menu button:hover {
+    background: rgba(139, 92, 246, 0.12);
+    color: #f1f0f9;
+}
+
+.arcadia-context-menu button.danger {
+    color: #f87171;
+}
+
+.arcadia-context-menu button.danger:hover {
+    background: rgba(248, 113, 113, 0.1);
+}
+
+.arcadia-context-menu hr {
+    border: none;
+    border-top: 1px solid rgba(139, 92, 246, 0.1);
+    margin: 4px 0;
+}
+```
+
+## Full Example with Multiple Actions
+
+```razor
+<ArcadiaDataGrid TItem="Employee" Data="@employees"
+                 OnContextMenu="@HandleContextMenu">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" />
+    <ArcadiaColumn TItem="Employee" Title="Email" Field="@(e => e.Email)" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" />
+
+    <ContextMenuTemplate Context="employee">
+        <div class="context-menu">
+            <button @onclick="@(() => ViewDetails(employee))">
+                View Details
+            </button>
+            <button @onclick="@(() => EditEmployee(employee))">
+                Edit
+            </button>
+            <button @onclick="@(() => CopyEmail(employee))">
+                Copy Email
+            </button>
+            <hr />
+            <button @onclick="@(() => ExportRow(employee))">
+                Export as CSV
+            </button>
+            <hr />
+            <button @onclick="@(() => DeleteEmployee(employee))" class="danger">
+                Delete
+            </button>
+        </div>
+    </ContextMenuTemplate>
+</ArcadiaDataGrid>
+
+@code {
+    private List<Employee> employees = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        employees = await EmployeeService.GetAllAsync();
+    }
+
+    private void HandleContextMenu(DataGridContextMenuEventArgs<Employee> args)
+    {
+        // Log for audit trail
+        Logger.LogInformation("Context menu opened for {Name}", args.Item.Name);
+    }
+
+    private void ViewDetails(Employee emp)
+    {
+        Navigation.NavigateTo($"/employees/{emp.Id}");
+    }
+
+    private void EditEmployee(Employee emp)
+    {
+        Navigation.NavigateTo($"/employees/{emp.Id}/edit");
+    }
+
+    private async Task CopyEmail(Employee emp)
+    {
+        await Clipboard.SetTextAsync(emp.Email);
+    }
+
+    private async Task ExportRow(Employee emp)
+    {
+        var csv = $"{emp.Name},{emp.Department},{emp.Email},{emp.Salary}";
+        await FileExport.DownloadAsync($"{emp.Name}.csv", csv);
+    }
+
+    private async Task DeleteEmployee(Employee emp)
+    {
+        await EmployeeService.DeleteAsync(emp.Id);
+        employees.Remove(emp);
+    }
+}
+```
+
+> **Accessibility:** The context menu is keyboard-navigable. When open, arrow keys move focus between items, Enter activates the focused item, and Escape closes the menu. Focus is returned to the originating row on close.

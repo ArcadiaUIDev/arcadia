@@ -75,6 +75,19 @@ No service registration is required. The component is ready to use after adding 
 | `VirtualizeRows` | `bool` | `false` | Enable virtual scrolling for large datasets. Requires `Height`. Disables pagination |
 | `ItemSize` | `float` | `40` | Estimated row height in pixels for the virtualizer |
 | `OverscanCount` | `int` | `5` | Extra rows rendered outside the viewport to reduce flicker |
+| `Property` | `string?` | `null` | Property name to use as the unique row identifier for tracking and state persistence |
+| `SelectionMode` | `SelectionMode` | `None` | Row selection mode: `None`, `Single`, `Multiple`. Replaces `Selectable`/`MultiSelect` with a single enum |
+| `BatchEdit` | `bool` | `false` | Enable batch editing mode. Edits are staged in memory until explicitly committed |
+| `OnBatchCommit` | `EventCallback<IReadOnlyList<TItem>>` | -- | Callback when staged batch edits are committed. Receives all modified items |
+| `StateKey` | `string?` | `null` | Unique key for persisting grid state (sort, filter, page, column order) to browser storage |
+| `OnStateChanged` | `EventCallback<DataGridState>` | -- | Callback when grid state changes. Fires on sort, filter, page, or column reorder |
+| `QuickFilter` | `string?` | `null` | Cross-column search text. Rows where any column value contains this text are shown. Two-way bindable |
+| `QuickFilterChanged` | `EventCallback<string?>` | -- | Callback when the quick filter text changes |
+| `ShowToolbar` | `bool` | `false` | Show the toolbar above the grid with export button, quick filter search, and filter toggle |
+| `ContextMenuTemplate` | `RenderFragment<TItem>?` | `null` | Template for a custom right-click context menu on rows |
+| `OnContextMenu` | `EventCallback<DataGridContextMenuArgs<TItem>>` | -- | Callback when a row is right-clicked. Use to show a custom context menu |
+| `EmptyTemplate` | `RenderFragment?` | `null` | Custom template shown when Data is null or empty. Overrides `EmptyMessage` text |
+| `SyncGroup` | `string?` | `null` | Sync group name for linked chart components. Charts sharing the same `SyncGroup` synchronize tooltip, crosshair, and zoom state |
 | `Class` | `string?` | `null` | Additional CSS classes on the root element |
 | `Style` | `string?` | `null` | Inline style on the root element |
 

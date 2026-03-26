@@ -1,0 +1,181 @@
+---
+layout: ../../../../layouts/DocsLayout.astro
+title: Batch Editing
+description: Enable batch editing in the Arcadia DataGrid with change tracking, highlighted modified cells, and a save/discard workflow using OnBatchCommit.
+---
+
+# Batch Editing
+
+Batch editing lets users modify multiple cells across different rows before committing all changes at once. Modified cells are highlighted with a visual indicator, and the grid tracks every change until the user saves or discards.
+
+## Enabling Batch Edit Mode
+
+Set `BatchEdit="true"` on the grid. Editable columns must also have `Editable="true"` (the same parameter used for inline editing).
+
+```razor
+<ArcadiaDataGrid TItem="Employee" Data="@employees"
+                 BatchEdit="true"
+                 OnBatchCommit="@HandleCommit">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="ID" Field="@(e => e.Id)" />
+</ArcadiaDataGrid>
+```
+
+When `BatchEdit` is enabled, clicking an editable cell puts it into edit mode. Once the user changes a value and moves to another cell, the change is recorded but **not** applied to the underlying data source. The cell is highlighted to indicate a pending change.
+
+## Change Tracking
+
+The grid exposes a `PendingChangeCount` property that returns the number of unsaved edits. This is useful for enabling/disabling toolbar buttons or showing a badge.
+
+```razor
+<div class="toolbar">
+    <button @onclick="SaveChanges" disabled="@(gridRef.PendingChangeCount == 0)">
+        Save (@gridRef.PendingChangeCount)
+    </button>
+    <button @onclick="DiscardChanges" disabled="@(gridRef.PendingChangeCount == 0)">
+        Discard
+    </button>
+</div>
+
+<ArcadiaDataGrid @ref="gridRef" TItem="Employee" Data="@employees"
+                 BatchEdit="true"
+                 OnBatchCommit="@HandleCommit">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" Editable="true" />
+</ArcadiaDataGrid>
+
+@code {
+    private ArcadiaDataGrid<Employee> gridRef = default!;
+
+    private async Task SaveChanges()
+    {
+        await gridRef.CommitBatchEdits();
+    }
+
+    private async Task DiscardChanges()
+    {
+        await gridRef.DiscardBatchEdits();
+    }
+}
+```
+
+## The OnBatchCommit Callback
+
+When `CommitBatchEdits()` is called (or the user presses the built-in save button), the grid fires the `OnBatchCommit` callback with a list of all pending changes. Each change is a `BatchEditChange<TItem>` record.
+
+```razor
+<ArcadiaDataGrid TItem="Employee" Data="@employees"
+                 BatchEdit="true"
+                 OnBatchCommit="@HandleCommit">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" Editable="true" />
+</ArcadiaDataGrid>
+
+@code {
+    private List<Employee> employees = new();
+
+    private async Task HandleCommit(List<BatchEditChange<Employee>> changes)
+    {
+        foreach (var change in changes)
+        {
+            Console.WriteLine(
+                $"Row: {change.Item.Name}, " +
+                $"Column: {change.ColumnKey}, " +
+                $"Old: {change.OldValue}, " +
+                $"New: {change.NewValue}");
+        }
+
+        // Persist all changes to your data store
+        await EmployeeService.BatchUpdateAsync(changes);
+    }
+}
+```
+
+## BatchEditChange Model
+
+```csharp
+public class BatchEditChange<TItem>
+{
+    public TItem Item { get; set; }          // The row item
+    public string ColumnKey { get; set; }    // Column key (matches Title)
+    public object? OldValue { get; set; }    // Value before the edit
+    public object? NewValue { get; set; }    // Value after the edit
+}
+```
+
+## Full Save / Discard Example
+
+This example shows a complete workflow with a toolbar, change counter, save confirmation, and discard with a warning prompt.
+
+```razor
+<div class="toolbar" style="display: flex; gap: 8px; margin-bottom: 12px;">
+    <button @onclick="SaveChanges"
+            disabled="@(gridRef.PendingChangeCount == 0)"
+            class="btn btn-primary">
+        Save Changes (@gridRef.PendingChangeCount)
+    </button>
+    <button @onclick="DiscardChanges"
+            disabled="@(gridRef.PendingChangeCount == 0)"
+            class="btn btn-secondary">
+        Discard All
+    </button>
+    @if (!string.IsNullOrEmpty(statusMessage))
+    {
+        <span class="status">@statusMessage</span>
+    }
+</div>
+
+<ArcadiaDataGrid @ref="gridRef" TItem="Employee" Data="@employees"
+                 BatchEdit="true"
+                 OnBatchCommit="@HandleCommit">
+    <ArcadiaColumn TItem="Employee" Title="Name" Field="@(e => e.Name)" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="Department" Field="@(e => e.Department)" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="Salary" Field="@(e => e.Salary)" Format="C0" Editable="true" />
+    <ArcadiaColumn TItem="Employee" Title="Start Date" Field="@(e => e.StartDate)" Editable="true" />
+</ArcadiaDataGrid>
+
+@code {
+    private ArcadiaDataGrid<Employee> gridRef = default!;
+    private List<Employee> employees = new();
+    private string? statusMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        employees = await EmployeeService.GetAllAsync();
+    }
+
+    private async Task SaveChanges()
+    {
+        await gridRef.CommitBatchEdits();
+    }
+
+    private async Task DiscardChanges()
+    {
+        await gridRef.DiscardBatchEdits();
+        statusMessage = "Changes discarded.";
+    }
+
+    private async Task HandleCommit(List<BatchEditChange<Employee>> changes)
+    {
+        await EmployeeService.BatchUpdateAsync(changes);
+        statusMessage = $"Saved {changes.Count} change(s).";
+    }
+}
+```
+
+## Visual Indicators
+
+Modified cells receive the CSS class `arcadia-cell-modified`, which applies a subtle highlight. You can customize this in your theme:
+
+```css
+.arcadia-cell-modified {
+    background: rgba(139, 92, 246, 0.08);
+    border-left: 2px solid #8b5cf6;
+}
+```
+
+> **Note:** Batch editing and inline editing are mutually exclusive. Setting `BatchEdit="true"` disables the `OnRowEditCommit` callback. Use one mode or the other, not both.
