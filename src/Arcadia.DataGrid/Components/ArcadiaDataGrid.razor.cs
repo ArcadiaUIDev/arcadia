@@ -770,6 +770,9 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
                     Announce(selected ? "Row selected" : "Row deselected");
                 }
                 break;
+            case "c" when e.CtrlKey || e.MetaKey:
+                _ = CopyToClipboard(visibleCols);
+                break;
             default:
                 return; // don't prevent default for unhandled keys
         }
@@ -789,6 +792,33 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     {
         if (!_gridHasFocus) return null;
         return GetCellId(_focusRow, _focusCol);
+    }
+
+    // ── Clipboard ──
+
+    private async Task CopyToClipboard(List<ArcadiaColumn<TItem>> visibleCols)
+    {
+        try
+        {
+            var cols = visibleCols.Where(c => c.ResolvedField is not null).ToList();
+            var sb = new System.Text.StringBuilder();
+            sb.AppendLine(string.Join("\t", cols.Select(c => c.Title)));
+
+            IEnumerable<TItem> rows = _selectedItems.Count > 0
+                ? _selectedItems
+                : GetPagedData();
+
+            foreach (var item in rows)
+            {
+                sb.AppendLine(string.Join("\t", cols.Select(c => c.FormatValue(c.ResolvedField!(item)))));
+            }
+
+            _jsModule ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
+                "import", "./_content/Arcadia.DataGrid/js/datagrid-interop.js");
+            await _jsModule.InvokeVoidAsync("copyToClipboard", sb.ToString());
+            Announce($"Copied {(_selectedItems.Count > 0 ? _selectedItems.Count : "all")} rows to clipboard");
+        }
+        catch { } // Clipboard API may not be available
     }
 
     // ── ARIA Live Announcements ──

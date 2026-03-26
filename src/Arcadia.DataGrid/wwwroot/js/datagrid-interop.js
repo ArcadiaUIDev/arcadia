@@ -12,6 +12,22 @@ export function downloadCsv(csv, filename) {
     URL.revokeObjectURL(url);
 }
 
+// Copy text to clipboard
+export function copyToClipboard(text) {
+    if (navigator.clipboard) {
+        return navigator.clipboard.writeText(text);
+    }
+    // Fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+}
+
 // Column resize via pointer events
 export function initResizeHandles(tableElement, minWidth) {
     if (!tableElement) return;
