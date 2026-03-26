@@ -858,6 +858,25 @@ th[aria-sort="descending"] .arcadia-grid__sort-icon {
 }
 .arcadia-grid__search-input::placeholder { color: var(--_muted, #6b6890); }
 
+/* Context menu */
+.arcadia-grid__context-menu {
+  background: var(--_header, #151023); border: 1px solid var(--_border, rgba(139,92,246,0.2));
+  border-radius: 8px; padding: 4px 0; min-width: 160px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4); font-size: 13px;
+}
+
+/* Batch edit UI */
+.arcadia-grid__batch-info { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--_accent, #8b5cf6); }
+.arcadia-grid__batch-btn {
+  background: transparent; border: 1px solid var(--_border, rgba(139,92,246,0.2));
+  color: var(--_text, #e2e0f0); font-size: 11px; padding: 2px 10px;
+  border-radius: 4px; cursor: pointer; transition: all 0.15s;
+}
+.arcadia-grid__batch-btn--save { border-color: var(--arcadia-color-success, #16a34a); color: var(--arcadia-color-success, #16a34a); }
+.arcadia-grid__batch-btn--save:hover { background: rgba(22,163,74,0.15); }
+.arcadia-grid__batch-btn--discard:hover { background: rgba(220,38,38,0.15); color: var(--arcadia-color-danger, #dc2626); }
+.arcadia-grid__td--batch-modified { background: rgba(139,92,246,0.08) !important; border-left: 2px solid var(--_accent, #8b5cf6); }
+
 /* Sort priority badge (multi-column sort) */
 .arcadia-grid__sort-priority {
   display: inline-flex; align-items: center; justify-content: center;

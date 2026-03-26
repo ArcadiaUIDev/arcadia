@@ -110,6 +110,14 @@
             {
                 <span class="arcadia-grid__selection-count">@_selectedItems.Count selected</span>
             }
+            @if (BatchEdit && _batchChanges.Count > 0)
+            {
+                <span class="arcadia-grid__batch-info" style="margin-left:auto;">
+                    @_batchChanges.Count pending
+                    <button class="arcadia-grid__batch-btn arcadia-grid__batch-btn--save" @onclick="CommitBatchAsync">Save</button>
+                    <button class="arcadia-grid__batch-btn arcadia-grid__batch-btn--discard" @onclick="DiscardBatch">Discard</button>
+                </span>
+            }
         </div>
         }
         @if (_showColumnPicker)
@@ -419,6 +427,14 @@
                 </select>
             </div>
         }
+    }
+
+    @if (_showContextMenu && _contextMenuItem is not null && ContextMenuTemplate is not null)
+    {
+        <div class="arcadia-grid__context-menu" style="position:fixed;left:@(_contextMenuX)px;top:@(_contextMenuY)px;z-index:1000;"
+             @onclick="CloseContextMenu" @onblur="CloseContextMenu">
+            @ContextMenuTemplate(_contextMenuItem)
+        </div>
     }
 
     <CommunityWatermark />

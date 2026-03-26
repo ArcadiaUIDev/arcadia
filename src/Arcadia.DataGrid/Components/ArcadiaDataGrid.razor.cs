@@ -90,6 +90,18 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     /// <summary>Callback invoked when inline edit is committed (Enter or blur). Receives the edited item for persistence.</summary>
     [Parameter] public EventCallback<TItem> OnRowEdit { get; set; }
 
+    /// <summary>Enable batch editing mode. Modified cells are tracked and can be committed or discarded as a group. Default is false.</summary>
+    [Parameter] public bool BatchEdit { get; set; }
+
+    /// <summary>Callback invoked when batch changes are committed. Receives the list of changes.</summary>
+    [Parameter] public EventCallback<List<BatchEditChange<TItem>>> OnBatchCommit { get; set; }
+
+    /// <summary>Context menu template shown on right-click. Receives the clicked row item.</summary>
+    [Parameter] public RenderFragment<TItem>? ContextMenuTemplate { get; set; }
+
+    /// <summary>Callback invoked when a row is right-clicked.</summary>
+    [Parameter] public EventCallback<TItem> OnContextMenu { get; set; }
+
     /// <summary>Key of the column whose values group rows into collapsible sections. Set to null to disable. Groups show expand/collapse toggles.</summary>
     [Parameter] public string? GroupBy { get; set; }
 
@@ -135,6 +147,10 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     private bool _editCommitting; // guard against double-commit
     private TItem? _currentRow;
     private Dictionary<object, bool> _groupExpanded = new();
+    private List<BatchEditChange<TItem>> _batchChanges = new();
+    private TItem? _contextMenuItem;
+    private double _contextMenuX, _contextMenuY;
+    private bool _showContextMenu;
     private bool _isServerMode => LoadData.HasDelegate;
 
     // ── Keyboard navigation ──
@@ -848,6 +864,69 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
             Announce($"Copied {(_selectedItems.Count > 0 ? _selectedItems.Count : "all")} rows to clipboard");
         }
         catch { } // Clipboard API may not be available
+    }
+
+    // ── Context Menu ──
+
+    internal async Task HandleRowContextMenu(MouseEventArgs e, TItem item)
+    {
+        if (ContextMenuTemplate is null && !OnContextMenu.HasDelegate) return;
+        _contextMenuItem = item;
+        _contextMenuX = e.ClientX;
+        _contextMenuY = e.ClientY;
+        _showContextMenu = true;
+        if (OnContextMenu.HasDelegate) await OnContextMenu.InvokeAsync(item);
+    }
+
+    internal void CloseContextMenu() { _showContextMenu = false; _contextMenuItem = default; }
+
+    // ── Batch Editing ──
+
+    /// <summary>Track a cell change for batch commit.</summary>
+    internal void TrackBatchChange(TItem item, string columnKey, object? oldValue, object? newValue)
+    {
+        if (!BatchEdit) return;
+        var existing = _batchChanges.FirstOrDefault(c =>
+            EqualityComparer<TItem>.Default.Equals(c.Item, item) && c.ColumnKey == columnKey);
+        if (existing is not null)
+        {
+            existing.NewValue = newValue;
+            if (Equals(existing.OldValue, newValue))
+                _batchChanges.Remove(existing); // reverted to original
+        }
+        else
+        {
+            _batchChanges.Add(new BatchEditChange<TItem>
+            {
+                Item = item, ColumnKey = columnKey, OldValue = oldValue, NewValue = newValue
+            });
+        }
+    }
+
+    /// <summary>Get the count of pending batch changes.</summary>
+    public int PendingChangeCount => _batchChanges.Count;
+
+    /// <summary>Check if a cell has been modified in batch mode.</summary>
+    internal bool IsBatchModified(TItem item, string columnKey) =>
+        _batchChanges.Any(c => EqualityComparer<TItem>.Default.Equals(c.Item, item) && c.ColumnKey == columnKey);
+
+    /// <summary>Commit all batch changes and invoke OnBatchCommit callback.</summary>
+    public async Task CommitBatchAsync()
+    {
+        if (_batchChanges.Count == 0) return;
+        if (OnBatchCommit.HasDelegate)
+            await OnBatchCommit.InvokeAsync(_batchChanges.ToList());
+        _batchChanges.Clear();
+        Announce($"Saved {_batchChanges.Count} changes");
+        StateHasChanged();
+    }
+
+    /// <summary>Discard all batch changes.</summary>
+    public void DiscardBatch()
+    {
+        _batchChanges.Clear();
+        Announce("Changes discarded");
+        StateHasChanged();
     }
 
     // ── State Persistence ──
