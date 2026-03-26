@@ -62,7 +62,9 @@
             @{ var vData = GetAllSortedDataList(); }
             @if (vData.Count == 0)
             {
-                <div class="arcadia-grid__empty" style="padding: 48px 16px;">@EmptyMessage</div>
+                <div class="arcadia-grid__empty" style="padding: 48px 16px;">
+                    @if (EmptyTemplate is not null) { @EmptyTemplate } else { @EmptyMessage }
+                </div>
             }
             else
             {
@@ -77,7 +79,7 @@
                         {
                             <div class="arcadia-grid__virtual-cell">
                                 @if (col.Template is not null) { @col.Template(vItem) }
-                                else if (col.Field is not null) { @col.FormatValue(col.Field(vItem)) }
+                                else if (col.ResolvedField is not null) { @col.FormatValue(col.ResolvedField(vItem)) }
                             </div>
                         }
                     </div>
@@ -165,7 +167,7 @@
                             else
                             {
                                 <span>@localCol.Title</span>
-                                @if (isSortable && localCol.Field is not null)
+                                @if (isSortable && localCol.ResolvedField is not null)
                                 {
                                     <span class="arcadia-grid__sort-icon">
                                         @if (sortDir == SortDirection.Ascending) { <text>&#9650;</text> }
@@ -190,7 +192,7 @@
                         @foreach (var col in Columns.Where(c => c.IsVisible))
                         {
                             var fCol = col;
-                            var isFilterable = fCol.Filterable ?? (fCol.Field is not null);
+                            var isFilterable = fCol.Filterable ?? (fCol.ResolvedField is not null);
                             <th class="arcadia-grid__th arcadia-grid__th--filter">
                                 @if (isFilterable)
                                 {
@@ -236,7 +238,7 @@
                                     {
                                         <td role="gridcell" style="text-align:@col.Align;" class="arcadia-grid__td">
                                             @if (col.Template is not null) { @col.Template(item) }
-                                            else if (col.Field is not null) { @col.FormatValue(col.Field(item)) }
+                                            else if (col.ResolvedField is not null) { @col.FormatValue(col.ResolvedField(item)) }
                                         </td>
                                     }
                                 </tr>
@@ -248,7 +250,7 @@
                 {
                     <tr>
                         <td colspan="@colSpan" class="arcadia-grid__empty">
-                            @EmptyMessage
+                            @if (EmptyTemplate is not null) { @EmptyTemplate } else { @EmptyMessage }
                         </td>
                     </tr>
                 }
@@ -311,7 +313,7 @@
                                         else
                                         {
                                             <input class="arcadia-grid__edit-input"
-                                                   value="@editCol.FormatValue(editCol.Field?.Invoke(localItem))"
+                                                   value="@editCol.FormatValue(editCol.ResolvedField?.Invoke(localItem))"
                                                    @onkeydown="@(async (KeyboardEventArgs e) => { if (e.Key == "Enter") await CommitEdit(); else if (e.Key == "Escape") CancelEdit(); })"
                                                    @onblur="@(async () => await CommitEdit())" />
                                         }
@@ -320,9 +322,9 @@
                                     {
                                         @editCol.Template(item)
                                     }
-                                    else if (editCol.Field is not null)
+                                    else if (editCol.ResolvedField is not null)
                                     {
-                                        @editCol.FormatValue(editCol.Field(item))
+                                        @editCol.FormatValue(editCol.ResolvedField(item))
                                     }
                                 </td>
                                 bodyColIdx++;

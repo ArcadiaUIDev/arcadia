@@ -2,8 +2,11 @@
 @typeparam TItem
 
 @code {
-    /// <summary>Value accessor lambda for this column.</summary>
+    /// <summary>Value accessor lambda for this column. Use for computed values or projections. For simple property access, prefer <see cref="Property"/>.</summary>
     [Parameter] public Func<TItem, object>? Field { get; set; }
+
+    /// <summary>Property name on TItem to display (e.g., "Salary"). Simpler alternative to Field — no boxing required for value types. Ignored when Field is set.</summary>
+    [Parameter] public string? Property { get; set; }
 
     /// <summary>Column header text.</summary>
     [Parameter] public string Title { get; set; } = "";
@@ -60,7 +63,12 @@
     [Parameter] public string? Key { get; set; }
 
     /// <summary>Resolved column key (user-provided or auto-generated).</summary>
-    internal string ResolvedKey => Key ?? (!string.IsNullOrEmpty(Title) ? Title : Field?.Method.Name ?? Guid.NewGuid().ToString());
+    internal string ResolvedKey => Key ?? Property ?? (!string.IsNullOrEmpty(Title) ? Title : Field?.Method.Name ?? Guid.NewGuid().ToString());
+
+    /// <summary>Resolved field accessor. Uses Field if set, otherwise builds one from Property via reflection.</summary>
+    internal Func<TItem, object>? ResolvedField => Field ?? _propertyAccessor;
+
+    private Func<TItem, object>? _propertyAccessor;
 
     /// <summary>Format a cell value using the column's Format string.</summary>
     public string FormatValue(object? value)
@@ -77,6 +85,22 @@
     protected override void OnInitialized()
     {
         IsVisible = Visible;
+        BuildPropertyAccessor();
         Collector?.AddColumn(this);
+    }
+
+    private void BuildPropertyAccessor()
+    {
+        if (Field is not null || string.IsNullOrEmpty(Property)) return;
+
+        var prop = typeof(TItem).GetProperty(Property,
+            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.IgnoreCase);
+        if (prop is null) return;
+
+        _propertyAccessor = item => prop.GetValue(item)!;
+
+        // Auto-generate title from property name if not set
+        if (string.IsNullOrEmpty(Title))
+            Title = System.Text.RegularExpressions.Regex.Replace(Property, "([a-z])([A-Z])", "$1 $2");
     }
 }

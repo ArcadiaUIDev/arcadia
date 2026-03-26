@@ -45,6 +45,12 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     /// <summary>Text shown when Data is null or empty and Loading is false. Default is 'No data available'.</summary>
     [Parameter] public string EmptyMessage { get; set; } = "No data available";
 
+    /// <summary>Custom template for the empty state. Overrides EmptyMessage when set.</summary>
+    [Parameter] public RenderFragment? EmptyTemplate { get; set; }
+
+    /// <summary>Selection behavior: None (default), Single (click to select one row), Multiple (checkbox column with select-all). Overrides Selectable/MultiSelect when set explicitly.</summary>
+    [Parameter] public DataGridSelectionMode SelectionMode { get; set; } = DataGridSelectionMode.None;
+
     /// <summary>Show row selector column with row numbers and state indicators.</summary>
     [Parameter] public bool ShowRowSelector { get; set; }
 
@@ -144,6 +150,16 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
 
     private int PageCount => PageSize > 0 ? Math.Max(1, (int)Math.Ceiling((double)TotalCount / PageSize)) : 1;
 
+    protected override void OnParametersSet()
+    {
+        // SelectionMode overrides Selectable/MultiSelect when set
+        if (SelectionMode != DataGridSelectionMode.None)
+        {
+            Selectable = true;
+            MultiSelect = SelectionMode == DataGridSelectionMode.Multiple;
+        }
+    }
+
     protected override async void OnAfterRender(bool firstRender)
     {
         if (_disposed) return;
@@ -193,13 +209,13 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
         foreach (var filter in _filters.Values.Where(f => !string.IsNullOrEmpty(f.Value)))
         {
             var col = Columns.FirstOrDefault(c => c.ResolvedKey == filter.Property);
-            if (col?.Field is null) continue;
+            if (col?.ResolvedField is null) continue;
 
             var filterValue = filter.Value;
             var op = filter.Operator;
             result = result.Where(item =>
             {
-                var cellValue = col.Field(item)?.ToString() ?? "";
+                var cellValue = col.ResolvedField(item)?.ToString() ?? "";
                 return op switch
                 {
                     FilterOperator.Contains => cellValue.Contains(filterValue, StringComparison.OrdinalIgnoreCase),
@@ -226,11 +242,11 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
         if (_currentSort is not null && _currentSort.Direction != SortDirection.None)
         {
             var sortCol = Columns.FirstOrDefault(c => c.ResolvedKey == _currentSort.Property);
-            if (sortCol?.Field is not null)
+            if (sortCol?.ResolvedField is not null)
             {
                 result = _currentSort.Direction == SortDirection.Ascending
-                    ? result.OrderBy(item => sortCol.Field(item))
-                    : result.OrderByDescending(item => sortCol.Field(item));
+                    ? result.OrderBy(item => sortCol.ResolvedField(item))
+                    : result.OrderByDescending(item => sortCol.ResolvedField(item));
             }
         }
 
@@ -249,11 +265,11 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
         if (_currentSort is not null && _currentSort.Direction != SortDirection.None)
         {
             var sortCol = Columns.FirstOrDefault(c => c.ResolvedKey == _currentSort.Property);
-            if (sortCol?.Field is not null)
+            if (sortCol?.ResolvedField is not null)
             {
                 result = _currentSort.Direction == SortDirection.Ascending
-                    ? result.OrderBy(item => sortCol.Field(item))
-                    : result.OrderByDescending(item => sortCol.Field(item));
+                    ? result.OrderBy(item => sortCol.ResolvedField(item))
+                    : result.OrderByDescending(item => sortCol.ResolvedField(item));
             }
         }
 
@@ -345,7 +361,7 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     internal async Task HandleHeaderClick(ArcadiaColumn<TItem> column)
     {
         var isSortable = column.Sortable ?? Sortable;
-        if (!isSortable || column.Field is null) return;
+        if (!isSortable || column.ResolvedField is null) return;
 
         var key = column.ResolvedKey;
         if (_currentSort?.Property == key)
@@ -485,22 +501,22 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     {
         if (string.IsNullOrEmpty(GroupBy)) return new();
         var col = Columns.FirstOrDefault(c => c.ResolvedKey == GroupBy);
-        if (col?.Field is null) return new();
+        if (col?.ResolvedField is null) return new();
 
         IEnumerable<TItem> sorted = GetCachedFilteredData();
         if (_currentSort is not null && _currentSort.Direction != SortDirection.None)
         {
             var sortCol = Columns.FirstOrDefault(c => c.ResolvedKey == _currentSort.Property);
-            if (sortCol?.Field is not null)
+            if (sortCol?.ResolvedField is not null)
             {
                 sorted = _currentSort.Direction == SortDirection.Ascending
-                    ? sorted.OrderBy(item => sortCol.Field(item))
-                    : sorted.OrderByDescending(item => sortCol.Field(item));
+                    ? sorted.OrderBy(item => sortCol.ResolvedField(item))
+                    : sorted.OrderByDescending(item => sortCol.ResolvedField(item));
             }
         }
 
         return sorted
-            .GroupBy(item => col.Field(item)?.ToString() ?? "")
+            .GroupBy(item => col.ResolvedField(item)?.ToString() ?? "")
             .Select(g => ((object)g.Key, g.Key.ToString() ?? "", g.ToList()))
             .ToList();
     }
@@ -523,7 +539,7 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     internal string ToCsv()
     {
         var sb = new System.Text.StringBuilder();
-        var visibleCols = Columns.Where(c => c.IsVisible && c.Field is not null).ToList();
+        var visibleCols = Columns.Where(c => c.IsVisible && c.ResolvedField is not null).ToList();
 
         sb.AppendLine(string.Join(",", visibleCols.Select(c => CsvQuote(c.Title))));
 
@@ -531,17 +547,17 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
         if (_currentSort is not null && _currentSort.Direction != SortDirection.None)
         {
             var sortCol = Columns.FirstOrDefault(c => c.ResolvedKey == _currentSort.Property);
-            if (sortCol?.Field is not null)
+            if (sortCol?.ResolvedField is not null)
             {
                 allData = _currentSort.Direction == SortDirection.Ascending
-                    ? allData.OrderBy(item => sortCol.Field(item))
-                    : allData.OrderByDescending(item => sortCol.Field(item));
+                    ? allData.OrderBy(item => sortCol.ResolvedField(item))
+                    : allData.OrderByDescending(item => sortCol.ResolvedField(item));
             }
         }
 
         foreach (var item in allData)
         {
-            sb.AppendLine(string.Join(",", visibleCols.Select(c => CsvQuote(c.FormatValue(c.Field!(item))))));
+            sb.AppendLine(string.Join(",", visibleCols.Select(c => CsvQuote(c.FormatValue(c.ResolvedField!(item))))));
         }
 
         return sb.ToString();
@@ -586,13 +602,13 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
 
     internal double ComputeAggregate(ArcadiaColumn<TItem> col, AggregateType type)
     {
-        if (col.Field is null) return 0;
+        if (col.ResolvedField is null) return 0;
         var source = GetCachedFilteredData(); // FIX: was using Data, now uses filtered
         if (source.Count == 0) return 0;
 
         var values = source.Select(item =>
         {
-            var raw = col.Field(item);
+            var raw = col.ResolvedField(item);
             return raw switch
             {
                 double d => d,
