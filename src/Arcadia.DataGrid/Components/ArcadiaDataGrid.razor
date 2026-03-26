@@ -8,7 +8,7 @@
 </CascadingValue>
 
 <div class="arcadia-grid @(Dense ? "arcadia-grid--dense" : "") @(Striped ? "arcadia-grid--striped" : "") @(Hoverable ? "arcadia-grid--hoverable" : "") @Class"
-     style="@(Height is not null ? $"height:{Height};overflow:auto;" : "") @Style"
+     style="@(Height is not null && !VirtualizeRows ? $"height:{Height};overflow:auto;" : "") @Style"
      @attributes="AdditionalAttributes"
      role="grid"
      tabindex="0"
