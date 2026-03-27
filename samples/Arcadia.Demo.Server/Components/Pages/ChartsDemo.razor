@@ -1208,7 +1208,7 @@ dotnet add package Arcadia.Theme</code></pre>
         _autoStreamTimer = new System.Threading.Timer(_ =>
         {
             InvokeAsync(() => { AddStreamPoint(); });
-        }, null, 0, 700); // Interval > animation duration (300ms) to avoid overlap
+        }, null, 0, 800); // Interval > animation duration (350ms) + Blazor roundtrip (~100ms)
     }
 
     void StopAutoStream()

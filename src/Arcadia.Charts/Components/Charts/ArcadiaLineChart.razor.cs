@@ -387,17 +387,17 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
     }
 
     // ── Slide animation state (CSS-driven, no JS) ──
-    private bool _slidePhase1; // true = render offset, false = render final (transition animates)
+    private enum SlideState { Idle, Offset, Animating }
+    private SlideState _slideState = SlideState.Idle;
     private double _slideStepWidth;
+    private System.Threading.Timer? _slideCleanupTimer;
 
-    private string GetSlideStyle()
+    private string GetSlideStyle() => _slideState switch
     {
-        if (_slidePhase1)
-            return $"transform: translateX({_slideStepWidth.ToString("F1")}px); transition: none;";
-        if (_slideStepWidth > 0)
-            return "transform: translateX(0); transition: transform 400ms cubic-bezier(0.25, 0.1, 0.25, 1);";
-        return "";
-    }
+        SlideState.Offset => $"transform:translateX({_slideStepWidth.ToString("F1")}px);transition:none;",
+        SlideState.Animating => "transform:translateX(0);transition:transform 350ms cubic-bezier(0.22,0.61,0.36,1);",
+        _ => ""
+    };
 
     /// <summary>Appends a point and removes the first (sliding window in one call). Animates the transition.</summary>
     public void AppendAndSlide(T item)
@@ -409,11 +409,18 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
             if (list.Count > SlidingWindow && SlidingWindow > 0)
                 list.RemoveAt(0);
 
+            // Cancel any in-progress animation cleanup
+            _slideCleanupTimer?.Dispose();
+            _slideCleanupTimer = null;
+
             if (wasAtCapacity && Data is not null && Data.Count > 1)
             {
-                // Phase 1: render new data BUT offset right (looks like old position)
                 _slideStepWidth = _layout.PlotArea.Width / Data.Count;
-                _slidePhase1 = true;
+                _slideState = SlideState.Offset;
+            }
+            else
+            {
+                _slideState = SlideState.Idle;
             }
 
             OnParametersSet();
@@ -425,11 +432,19 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
     {
         base.OnAfterRender(firstRender);
 
-        // Phase 2: remove offset, CSS transition slides to final position
-        if (_slidePhase1)
+        if (_slideState == SlideState.Offset)
         {
-            _slidePhase1 = false;
+            _slideState = SlideState.Animating;
             InvokeAsync(StateHasChanged);
+
+            // Clean up after animation completes
+            _slideCleanupTimer?.Dispose();
+            _slideCleanupTimer = new System.Threading.Timer(_ =>
+            {
+                _slideState = SlideState.Idle;
+                _slideStepWidth = 0;
+                InvokeAsync(StateHasChanged);
+            }, null, 400, System.Threading.Timeout.Infinite);
         }
     }
 
