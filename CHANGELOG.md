@@ -2,6 +2,22 @@
 
 All notable changes to Arcadia Controls are documented here. This project uses [Keep a Changelog](https://keepachangelog.com/) format and [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.13] — 2026-03-27
+
+### Added
+- **Arcadia.UI package** — 9 infrastructure components: Dialog, Tabs, Tooltip, Sidebar, Accordion, Breadcrumb, Card, Badge, Avatar
+- **Playground home page** — marketing landing with product cards, stats, and quick install
+- **UI Components demo tab** — interactive showcase for all 9 UI components in the gallery
+- **Homepage rewrite** — "The complete UI framework Blazor deserves", 7 feature cards, stats bar, playground link
+
+### Fixed
+- **DataGrid grouping by non-displayed property** — GroupBy now resolves via reflection when no matching column is displayed
+- **DataGrid no data in interactive mode** — column collector callback triggers re-render after registration
+- **Watermark CSS not loaded** — arcadia-core.css was never linked in demo apps
+- **Streaming chart animation jank** — pure CSS 3-state machine replaces JS race condition
+- **Focus ring on playground title** — removed browser default outline on h1
+- **Doc layout paths** — 13 DataGrid MDX files had wrong relative path to DocsLayout.astro
+
 ## [1.0.0-beta.11] — 2026-03-26
 
 ### Fixed
