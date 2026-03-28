@@ -82,10 +82,14 @@
     /// <summary>Parent grid registers this column during rendering.</summary>
     [CascadingParameter] internal ArcadiaDataGridColumnCollector<TItem>? Collector { get; set; }
 
+    /// <summary>Auto-detected data type of this column (String, Number, Boolean, Date). Used for typed filter rendering.</summary>
+    internal ColumnDataType DetectedDataType { get; private set; } = ColumnDataType.String;
+
     protected override void OnInitialized()
     {
         IsVisible = Visible;
         BuildPropertyAccessor();
+        DetectDataType();
         Collector?.AddColumn(this);
     }
 
@@ -102,5 +106,34 @@
         // Auto-generate title from property name if not set
         if (string.IsNullOrEmpty(Title))
             Title = System.Text.RegularExpressions.Regex.Replace(Property, "([a-z])([A-Z])", "$1 $2");
+    }
+
+    private void DetectDataType()
+    {
+        Type? valueType = null;
+
+        if (!string.IsNullOrEmpty(Property))
+        {
+            var prop = typeof(TItem).GetProperty(Property,
+                System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.IgnoreCase);
+            valueType = prop?.PropertyType;
+        }
+
+        if (valueType is null) return;
+
+        // Unwrap Nullable<T>
+        valueType = Nullable.GetUnderlyingType(valueType) ?? valueType;
+
+        if (valueType == typeof(bool))
+            DetectedDataType = ColumnDataType.Boolean;
+        else if (valueType == typeof(DateTime) || valueType == typeof(DateTimeOffset)
+#if NET6_0_OR_GREATER
+            || valueType == typeof(DateOnly)
+#endif
+        )
+            DetectedDataType = ColumnDataType.Date;
+        else if (valueType == typeof(int) || valueType == typeof(long) || valueType == typeof(double)
+            || valueType == typeof(float) || valueType == typeof(decimal) || valueType == typeof(short))
+            DetectedDataType = ColumnDataType.Number;
     }
 }

@@ -354,6 +354,47 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
         if (_isServerMode) _ = InvokeLoadData();
     }
 
+    internal void SetBooleanFilter(string columnKey, string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            // "All" selected — clear filter
+            _filters.Remove(columnKey);
+        }
+        else
+        {
+            _filters[columnKey] = new FilterDescriptor
+            {
+                Property = columnKey,
+                Operator = FilterOperator.Equals,
+                Value = value
+            };
+        }
+        _pageIndex = 0;
+        InvalidateCache();
+        if (_isServerMode) _ = InvokeLoadData();
+    }
+
+    internal void SetDateFilter(string columnKey, string value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            _filters.Remove(columnKey);
+        }
+        else
+        {
+            _filters[columnKey] = new FilterDescriptor
+            {
+                Property = columnKey,
+                Operator = FilterOperator.Equals,
+                Value = value
+            };
+        }
+        _pageIndex = 0;
+        InvalidateCache();
+        if (_isServerMode) _ = InvokeLoadData();
+    }
+
     internal void ToggleFilters()
     {
         _showFilters = !_showFilters;

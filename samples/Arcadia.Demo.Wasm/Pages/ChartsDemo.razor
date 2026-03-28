@@ -740,12 +740,12 @@ dotnet add package Arcadia.Theme</code></pre>
             <div class="gallery__showcase">
                 <div class="gallery__showcase-title">Sortable & Filterable Grid</div>
                 <ArcadiaDataGrid TItem="Employee" Data="@_employees" Sortable="true" Filterable="true" Pageable="true" PageSize="5" ShowToolbar="true" Striped="true">
-                    <ArcadiaColumn TItem="Employee" Field="@(e => e.Id)" Title="ID" Width="80px" />
-                    <ArcadiaColumn TItem="Employee" Field="@(e => e.Name)" Title="Name" />
-                    <ArcadiaColumn TItem="Employee" Field="@(e => e.Department)" Title="Department" />
-                    <ArcadiaColumn TItem="Employee" Field="@(e => e.Role)" Title="Role" />
-                    <ArcadiaColumn TItem="Employee" Field="@(e => e.Salary)" Title="Salary" Format="C0" Align="right" />
-                    <ArcadiaColumn TItem="Employee" Field="@(e => e.StartDate)" Title="Start Date" Format="d" />
+                    <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" />
+                    <ArcadiaColumn TItem="Employee" Property="Name" />
+                    <ArcadiaColumn TItem="Employee" Property="Department" />
+                    <ArcadiaColumn TItem="Employee" Property="Role" />
+                    <ArcadiaColumn TItem="Employee" Property="Salary" Format="C0" Align="right" />
+                    <ArcadiaColumn TItem="Employee" Property="StartDate" Title="Start Date" Format="d" />
                 </ArcadiaDataGrid>
             </div>
 

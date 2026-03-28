@@ -222,25 +222,48 @@
                             <th class="arcadia-grid__th arcadia-grid__th--filter">
                                 @if (isFilterable)
                                 {
-                                    <div class="arcadia-grid__filter-cell">
-                                        <select class="arcadia-grid__filter-op"
-                                                value="@GetFilterOperator(fCol.ResolvedKey)"
-                                                @onchange="@((ChangeEventArgs e) => SetFilterOperator(fCol.ResolvedKey, e.Value?.ToString() ?? "Contains"))">
-                                            <option value="Contains">Contains</option>
-                                            <option value="Equals">Equals</option>
-                                            <option value="StartsWith">Starts</option>
-                                            <option value="EndsWith">Ends</option>
-                                            <option value="NotEquals">Not Eq</option>
-                                            <option value="GreaterThan">&gt;</option>
-                                            <option value="LessThan">&lt;</option>
-                                            <option value="IsEmpty">Empty</option>
-                                            <option value="IsNotEmpty">Not Empty</option>
+                                    @if (fCol.DetectedDataType == ColumnDataType.Boolean)
+                                    {
+                                        <select class="arcadia-grid__filter-input"
+                                                value="@GetFilterValue(fCol.ResolvedKey)"
+                                                aria-label="@($"Filter {fCol.Title}")"
+                                                @onchange="@((ChangeEventArgs e) => SetBooleanFilter(fCol.ResolvedKey, e.Value?.ToString() ?? ""))">
+                                            <option value="">All</option>
+                                            <option value="True">True</option>
+                                            <option value="False">False</option>
                                         </select>
-                                        <input type="text" class="arcadia-grid__filter-input"
-                                               placeholder="Filter..."
+                                    }
+                                    else if (fCol.DetectedDataType == ColumnDataType.Date)
+                                    {
+                                        <input type="date" class="arcadia-grid__filter-input"
+                                               aria-label="@($"Filter {fCol.Title}")"
                                                value="@GetFilterValue(fCol.ResolvedKey)"
-                                               @oninput="@((ChangeEventArgs e) => SetFilter(fCol.ResolvedKey, e.Value?.ToString() ?? ""))" />
-                                    </div>
+                                               @onchange="@((ChangeEventArgs e) => SetDateFilter(fCol.ResolvedKey, e.Value?.ToString() ?? ""))" />
+                                    }
+                                    else
+                                    {
+                                        <div class="arcadia-grid__filter-cell">
+                                            <select class="arcadia-grid__filter-op"
+                                                    value="@GetFilterOperator(fCol.ResolvedKey)"
+                                                    @onchange="@((ChangeEventArgs e) => SetFilterOperator(fCol.ResolvedKey, e.Value?.ToString() ?? "Contains"))">
+                                                <option value="Contains">Contains</option>
+                                                <option value="Equals">Equals</option>
+                                                <option value="StartsWith">Starts</option>
+                                                <option value="EndsWith">Ends</option>
+                                                <option value="NotEquals">Not Eq</option>
+                                                <option value="GreaterThan">&gt;</option>
+                                                <option value="LessThan">&lt;</option>
+                                                <option value="IsEmpty">Empty</option>
+                                                <option value="IsNotEmpty">Not Empty</option>
+                                            </select>
+                                            <input type="@(fCol.DetectedDataType == ColumnDataType.Number ? "number" : "text")"
+                                                   class="arcadia-grid__filter-input"
+                                                   placeholder="Filter..."
+                                                   aria-label="@($"Filter {fCol.Title}")"
+                                                   value="@GetFilterValue(fCol.ResolvedKey)"
+                                                   @oninput="@((ChangeEventArgs e) => SetFilter(fCol.ResolvedKey, e.Value?.ToString() ?? ""))" />
+                                        </div>
+                                    }
                                 }
                             </th>
                         }
