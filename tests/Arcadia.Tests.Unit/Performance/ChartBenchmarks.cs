@@ -198,6 +198,58 @@ public class ChartBenchmarks : ChartTestBase
         sw.ElapsedMilliseconds.Should().BeLessThan(50);
     }
 
+    [Fact]
+    public void DataGrid_10000Rows_Under200ms()
+    {
+        var data = GenerateGridData(10000);
+
+        var sw = Stopwatch.StartNew();
+        var cut = Render<ArcadiaDataGrid<GridRow>>(p => p
+            .Add(c => c.Data, data)
+            .Add(c => c.ChildContent, BuildGridColumns()));
+        sw.Stop();
+
+        _output.WriteLine($"DataGrid 10000 rows: {sw.ElapsedMilliseconds}ms");
+        sw.ElapsedMilliseconds.Should().BeLessThan(200);
+    }
+
+    [Fact]
+    public async Task DataGrid_Sort10000Rows_Under50ms()
+    {
+        var data = GenerateGridData(10000);
+        var cut = Render<ArcadiaDataGrid<GridRow>>(p => p
+            .Add(c => c.Data, data)
+            .Add(c => c.Sortable, true)
+            .Add(c => c.ChildContent, BuildGridColumns()));
+
+        var sw = Stopwatch.StartNew();
+        await cut.Instance.HandleHeaderClick(
+            cut.Instance.Collector.Columns.First(c => c.Title == "Salary"));
+        cut.Render();
+        sw.Stop();
+
+        _output.WriteLine($"DataGrid sort 10000 rows: {sw.ElapsedMilliseconds}ms");
+        sw.ElapsedMilliseconds.Should().BeLessThan(50);
+    }
+
+    [Fact]
+    public void DataGrid_Filter10000Rows_Under30ms()
+    {
+        var data = GenerateGridData(10000);
+        var cut = Render<ArcadiaDataGrid<GridRow>>(p => p
+            .Add(c => c.Data, data)
+            .Add(c => c.Filterable, true)
+            .Add(c => c.ChildContent, BuildGridColumns()));
+
+        var sw = Stopwatch.StartNew();
+        cut.Instance.SetFilter("Name", "Person 5");
+        cut.Render();
+        sw.Stop();
+
+        _output.WriteLine($"DataGrid filter 10000 rows: {sw.ElapsedMilliseconds}ms");
+        sw.ElapsedMilliseconds.Should().BeLessThan(30);
+    }
+
     // ── Helpers ──
 
     public record DataPoint(string Label, double Value);
