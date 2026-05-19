@@ -9,7 +9,21 @@ description: Blazor chart library with 20 chart types and 7 dashboard widgets. N
 import LiveDemo from "../../../components/LiveDemo.astro";
 
 
-A dashboard analytics toolkit for Blazor — 20 chart types and 7 pre-composed dashboard widgets. Native SVG rendering with zero JavaScript dependencies.
+A dashboard analytics toolkit for Blazor — 20 chart types and 7 pre-composed dashboard widgets. Native SVG rendering for the chart itself; a small (~12 KB) JS module powers tooltips, resize observation, and pan/zoom.
+
+## Installation
+
+```bash
+dotnet add package Arcadia.Charts
+```
+
+```html
+<link href="_content/Arcadia.Charts/css/arcadia-charts.css" rel="stylesheet" />
+```
+
+That alone is enough — charts render with a built-in palette and dark-themed fallbacks.
+
+**`Arcadia.Theme` is optional.** Install it (and add `_content/Arcadia.Theme/css/arcadia.css`) when you want light/dark theme switching via the `data-arcadia-theme` attribute, semantic color names like `Color="primary"` to follow your brand tokens, or shared design tokens across multiple Arcadia packages. See the [quick-start](/docs/quick-start) for the Theme story.
 
 ## Chart Types
 

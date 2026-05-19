@@ -11,17 +11,7 @@ let tooltipEl = null;
 function ensureTooltip() {
   if (!tooltipEl) {
     tooltipEl = document.createElement('div');
-    tooltipEl.className = 'arcadia-tooltip';
-    tooltipEl.style.cssText = `
-      position: fixed; z-index: 9999; pointer-events: none;
-      background: rgba(15, 10, 40, 0.95); backdrop-filter: blur(8px);
-      border: 1px solid rgba(139, 92, 246, 0.3); border-radius: 8px;
-      padding: 8px 12px; font-size: 12px; color: #f1f0f9;
-      font-family: system-ui, sans-serif; line-height: 1.5;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-      opacity: 0; transition: opacity 0.15s ease;
-      max-width: 240px;
-    `;
+    tooltipEl.className = 'arcadia-tooltip arcadia-tooltip--floating';
     document.body.appendChild(tooltipEl);
   }
   return tooltipEl;

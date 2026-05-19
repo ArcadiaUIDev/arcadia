@@ -20,6 +20,21 @@ Make sure you've [installed the packages](/docs) and added the stylesheets to yo
 <link href="_content/Arcadia.Charts/css/arcadia-charts.css" rel="stylesheet" />
 ```
 
+## Do I need Arcadia.Theme?
+
+`Arcadia.Theme` is **optional**. It provides design tokens (colors, spacing, typography) and the light/dark theme switcher driven by the `data-arcadia-theme` attribute.
+
+**Charts work without it** — every chart ships with a built-in palette and sensible fallbacks, so you can install just `Arcadia.Charts` and render charts immediately.
+
+**Install Theme when** you want any of:
+
+- Light/dark theme switching (the `data-arcadia-theme="light|dark"` attribute only resolves to real colors when Theme is loaded)
+- Semantic color names (`Color="primary"`, `Color="success"`) to follow your app's brand tokens
+- Consistent design tokens shared across multiple Arcadia packages (Charts, DataGrid, UI)
+- Your own components to match Arcadia's visual style
+
+The dashboard below uses semantic color names, so it assumes Theme is installed.
+
 ## The Dashboard
 
 ```razor

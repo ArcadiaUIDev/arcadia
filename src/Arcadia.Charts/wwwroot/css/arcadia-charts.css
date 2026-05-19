@@ -367,17 +367,34 @@ svg .arcadia-chart__radar-fill:hover + .arcadia-chart__radar-line { opacity: 1 !
 .arcadia-chart-toolbar__btn:hover { border-color: #8b5cf6; color: #c084fc; background: rgba(139,92,246,0.15); }
 .arcadia-chart-toolbar__icon { width: 12px; height: 12px; }
 
-/* Custom tooltip template */
-.arcadia-tooltip--custom {
-  background: rgba(15, 10, 40, 0.95);
+/* Tooltip appearance — themed via CSS variables so light/dark themes work
+   without inline overrides. Without Arcadia.Theme installed, the existing
+   dark purple fallback applies. Two flavors: --floating (portal, created
+   by chart-interop.js) and --custom (rendered inline by <TooltipTemplate>). */
+.arcadia-tooltip {
+  background: var(--arcadia-tooltip-bg, var(--arcadia-color-surface-raised, rgba(15, 10, 40, 0.95)));
+  color: var(--arcadia-tooltip-fg, var(--arcadia-color-text, #f1f0f9));
+  border: 1px solid var(--arcadia-tooltip-border, var(--arcadia-color-border, rgba(139, 92, 246, 0.3)));
   backdrop-filter: blur(8px);
-  border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: 8px;
   padding: 8px 12px;
   font-size: 12px;
-  color: #f1f0f9;
   font-family: system-ui, sans-serif;
   line-height: 1.5;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  box-shadow: var(--arcadia-tooltip-shadow, 0 4px 20px rgba(0, 0, 0, 0.4));
+}
+
+/* Portal tooltip used by chart-interop.js — fades in/out on showTooltip/hideTooltip */
+.arcadia-tooltip--floating {
+  position: fixed;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  max-width: 240px;
+}
+
+/* Custom tooltip rendered by Blazor <TooltipTemplate> — position comes from inline style */
+.arcadia-tooltip--custom {
   max-width: 280px;
 }
