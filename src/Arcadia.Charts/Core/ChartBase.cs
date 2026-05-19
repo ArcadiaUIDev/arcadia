@@ -349,17 +349,20 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
         [Microsoft.JSInterop.JSInvokable]
         public Task OnZoomChanged(double zoom, double centerX, double centerY)
         {
+            if (Math.Abs(_chart.ZoomLevel - zoom) < 0.001) return Task.CompletedTask;
             _chart.ZoomLevel = zoom;
-            _chart.InvokeAsync(_chart.StateHasChanged);
+            _ = _chart.InvokeAsync(_chart.StateHasChanged);
             return Task.CompletedTask;
         }
 
         [Microsoft.JSInterop.JSInvokable]
         public Task OnPanChanged(double offsetX, double offsetY)
         {
+            if (Math.Abs(_chart.PanOffsetX - offsetX) < 0.5 && Math.Abs(_chart.PanOffsetY - offsetY) < 0.5)
+                return Task.CompletedTask;
             _chart.PanOffsetX = offsetX;
             _chart.PanOffsetY = offsetY;
-            _chart.InvokeAsync(_chart.StateHasChanged);
+            _ = _chart.InvokeAsync(_chart.StateHasChanged);
             return Task.CompletedTask;
         }
     }
@@ -539,9 +542,17 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
     /// <summary>Returns true if per-element stagger animations should be applied. False when data count is too large.</summary>
     protected static bool ShouldStagger(int totalCount) => totalCount < StaggerDisableThreshold;
 
-    /// <summary>Formats a value for screen reader tables, replacing NaN with "—".</summary>
-    protected static string FormatSrValue(double value) =>
-        double.IsNaN(value) || double.IsInfinity(value) ? "—" : value.ToString("G4");
+    /// <summary>Formats a value for screen reader tables, replacing NaN with "—".
+    /// Uses natural number formatting (e.g., "45,000") rather than scientific notation
+    /// so screen readers announce real numbers instead of "four point five E plus zero four".</summary>
+    protected static string FormatSrValue(double value)
+    {
+        if (double.IsNaN(value) || double.IsInfinity(value)) return "—";
+        var culture = System.Globalization.CultureInfo.InvariantCulture;
+        if (Math.Abs(value) < 1e15 && value == Math.Truncate(value))
+            return value.ToString("N0", culture);
+        return value.ToString("N2", culture);
+    }
 
     /// <summary>Formats an X-axis value for screen reader tables. Applies <see cref="XAxisFormatString"/>
     /// when set, or an invariant default for DateTime values to avoid locale-dependent output.</summary>

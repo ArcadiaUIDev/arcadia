@@ -931,6 +931,9 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
             .ToList();
     }
 
+    private string? _cachedGroupByKey;
+    private Func<TItem, object>? _cachedGroupAccessor;
+
     private Func<TItem, object>? ResolveGroupAccessor()
     {
         // 1. Explicit lambda takes precedence
@@ -938,14 +941,33 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
 
         if (string.IsNullOrEmpty(GroupBy)) return null;
 
+        // Return cached accessor if GroupBy hasn't changed since last resolution.
+        if (_cachedGroupByKey == GroupBy && _cachedGroupAccessor is not null)
+            return _cachedGroupAccessor;
+
         // 2. Try matching a displayed column by key
         var col = Columns.FirstOrDefault(c => c.ResolvedKey == GroupBy);
-        if (col?.ResolvedField is not null) return col.ResolvedField;
+        if (col?.ResolvedField is not null)
+        {
+            _cachedGroupByKey = GroupBy;
+            _cachedGroupAccessor = col.ResolvedField;
+            return col.ResolvedField;
+        }
 
-        // 3. Fall back to reflection on TItem property
+        // 3. Fall back to reflection on TItem property — compile once to an expression
+        //    (~100x faster per call than PropertyInfo.GetValue in a tight grouping loop).
         var prop = typeof(TItem).GetProperty(GroupBy,
             System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.IgnoreCase);
-        if (prop is not null) return item => prop.GetValue(item)!;
+        if (prop is not null)
+        {
+            var param = System.Linq.Expressions.Expression.Parameter(typeof(TItem), "item");
+            var propAccess = System.Linq.Expressions.Expression.Property(param, prop);
+            var convert = System.Linq.Expressions.Expression.Convert(propAccess, typeof(object));
+            var compiled = System.Linq.Expressions.Expression.Lambda<Func<TItem, object>>(convert, param).Compile();
+            _cachedGroupByKey = GroupBy;
+            _cachedGroupAccessor = compiled;
+            return compiled;
+        }
 
         return null;
     }

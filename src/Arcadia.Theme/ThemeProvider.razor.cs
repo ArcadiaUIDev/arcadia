@@ -52,7 +52,7 @@ public partial class ThemeProvider : IDisposable
 
     private void HandleThemeChanged()
     {
-        InvokeAsync(StateHasChanged);
+        _ = InvokeAsync(StateHasChanged);
     }
 
     /// <inheritdoc />

@@ -1,82 +1,112 @@
-# CLAUDE.md — HelixUI DataGrid (JS Interop Specialist Context)
+# CLAUDE.md — Arcadia.DataGrid
 
-## Role: JavaScript Interop Specialist
+## Role: High-performance DataGrid
 
-You are the JS↔Blazor bridge expert. You own the DataGrid (AG Grid wrapper) and any component requiring JavaScript interop.
+Pure-C# Blazor DataGrid. **No AG Grid dependency.** Renders rows via Blazor's
+`<Virtualize>` for large datasets and a hand-written `datagrid-interop.js`
+module for column resize and infinite scroll observation.
 
-## Responsibilities
-- Build and maintain the AG Grid Blazor wrapper
-- Design clean C# APIs that abstract away JS complexity
-- Handle memory management and disposal in interop scenarios
-- Bundle and manage JavaScript/TypeScript modules
-- Optimize interop performance (batch calls, minimize marshaling)
+## Actual Architecture
 
-## DataGrid Architecture
 ```
-HelixUI.DataGrid/
+src/Arcadia.DataGrid/
+├── Components/
+│   ├── ArcadiaDataGrid.razor           # Generic-typed grid<TItem>
+│   ├── ArcadiaDataGrid.razor.cs        # Code-behind (all parameters + logic)
+│   ├── ArcadiaColumn.razor             # Column definition (Property, Header, Template, etc.)
+│   └── ArcadiaColumn.razor.cs
+├── Core/
+│   ├── DataGridSelectionMode.cs        # None | Single | Multiple
+│   ├── DataGridState.cs                # Persisted state (sort, filter, columns, page size)
+│   ├── SortDescriptor.cs
+│   ├── FilterDescriptor.cs
+│   ├── BatchEditChange.cs
+│   └── CollectionObserver.cs           # INotifyCollectionChanged subscription helper
 ├── wwwroot/
 │   ├── js/
-│   │   ├── helix-grid.ts      # TypeScript wrapper around AG Grid API
-│   │   ├── helix-grid.js      # Compiled JS (Vite build)
-│   │   └── helix-grid.d.ts    # Type definitions
+│   │   └── datagrid-interop.js         # Column resize, infinite-scroll IntersectionObserver
 │   └── css/
-│       └── helix-grid.css     # Grid-specific styles using HelixUI tokens
-├── Components/
-│   ├── HelixGrid.razor         # Main grid component
-│   ├── HelixGrid.razor.cs      # Code-behind
-│   ├── GridColumn.razor        # Column definition component
-│   └── GridToolbar.razor       # Optional toolbar
-├── Models/
-│   ├── GridOptions.cs          # C# grid configuration
-│   ├── ColumnDefinition.cs     # Column config model
-│   ├── SortModel.cs            # Sort state
-│   ├── FilterModel.cs          # Filter state
-│   └── GridEvent.cs            # Event args
-├── Services/
-│   ├── GridInteropService.cs   # JS interop bridge
-│   └── IGridDataSource.cs      # Server-side data source interface
-└── HelixUI.DataGrid.csproj
+│       └── arcadia-datagrid.css        # Grid styles via theme tokens
+└── Arcadia.DataGrid.csproj             # Multi-targets net5.0..net10.0
 ```
 
-## JS Interop Rules
-1. **Isolate JS modules** — use `IJSObjectReference` from `./_content/HelixUI.DataGrid/js/helix-grid.js`
-2. **Never use IJSRuntime directly** in components — go through `GridInteropService`
-3. **Batch operations** — collect multiple grid API calls and send as single interop call
-4. **Dispose properly** — implement `IAsyncDisposable`, release JS object references
-5. **Serialize minimally** — only send changed data to JS, not full state
-6. **Error boundaries** — catch JSDisconnectedException in Server mode gracefully
-
-## AG Grid Integration Strategy
-- Use AG Grid Community Edition as the base (MIT license)
-- Wrap AG Grid's Column API, Row API, and Event API
-- Map AG Grid events to Blazor EventCallbacks
-- Support AG Grid themes but prefer HelixUI token-based theming
-- Server-side row model for large datasets (lazy loading via IGridDataSource)
-
-## Two-Way Binding Pattern
-```csharp
-[Parameter] public List<TItem>? Items { get; set; }
-[Parameter] public EventCallback<List<TItem>> ItemsChanged { get; set; }
-
-[Parameter] public SortModel? Sort { get; set; }
-[Parameter] public EventCallback<SortModel> SortChanged { get; set; }
-
-[Parameter] public FilterModel? Filter { get; set; }
-[Parameter] public EventCallback<FilterModel> FilterChanged { get; set; }
-
-[Parameter] public TItem? SelectedItem { get; set; }
-[Parameter] public EventCallback<TItem> SelectedItemChanged { get; set; }
-```
+The grid is `ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDisposable`.
+Columns are defined as `<ArcadiaColumn>` children inside `<ArcadiaDataGrid>`.
 
 ## Performance Targets
-- Initial render: < 100ms for 1000 rows
-- Sort/filter: < 50ms for 10,000 rows (client-side)
-- Scroll (virtualized): 60fps
+
+- Initial render: < 100ms for 1,000 rows
+- Sort / filter: < 50ms for 10,000 rows (client-side)
+- Virtualized scroll: 60fps
 - JS interop calls per user action: ≤ 3
 - Memory: no growth on repeated sort/filter cycles
 
-## TypeScript Build
-- Bundler: Vite
-- Output: ES module, single file
-- Source maps: included in debug, stripped in release
-- AG Grid imported as external (peer dependency)
+## JS Interop Rules
+
+1. **Isolate** — use `IJSObjectReference` imported from
+   `./_content/Arcadia.DataGrid/js/datagrid-interop.js`.
+2. **Batch** — collect multiple operations into a single interop call where possible.
+3. **Dispose** — implement `IAsyncDisposable`; dispose every `IJSObjectReference`,
+   `DotNetObjectReference`, and observer subscription. JS-side resources must be
+   `disconnect`-ed AND the `IJSObjectReference` itself disposed.
+4. **Catch teardown exceptions** — `JSDisconnectedException` (Server circuit
+   tear-down) and `ObjectDisposedException` (module already disposed) are
+   expected and should be swallowed during `DisposeAsync`.
+5. **Prerender-safe** — interop calls only inside `OnAfterRenderAsync`; check
+   `firstRender` for one-time setup. Never call `IJSRuntime` in `OnInitialized*`.
+
+## Features (Two-Way Bindable)
+
+```csharp
+[Parameter] public IReadOnlyList<TItem>? Data { get; set; }
+
+[Parameter] public DataGridSelectionMode SelectionMode { get; set; }
+[Parameter] public IReadOnlyList<TItem>? SelectedItems { get; set; }
+[Parameter] public EventCallback<IReadOnlyList<TItem>> SelectedItemsChanged { get; set; }
+
+[Parameter] public SortDescriptor? Sort { get; set; }
+[Parameter] public EventCallback<SortDescriptor?> SortChanged { get; set; }
+
+[Parameter] public string? QuickFilter { get; set; }
+[Parameter] public EventCallback<string?> QuickFilterChanged { get; set; }
+```
+
+Side-effect callbacks use the `On*` prefix:
+
+```csharp
+[Parameter] public EventCallback<TItem> OnRowEdit { get; set; }
+[Parameter] public EventCallback<List<BatchEditChange<TItem>>> OnBatchCommit { get; set; }
+[Parameter] public EventCallback<DataGridState> OnStateChanged { get; set; }
+[Parameter] public EventCallback<TItem> OnContextMenu { get; set; }
+```
+
+## Capability Surface
+
+- Sorting (single + multi-column with priority badges, Shift+Click)
+- Filtering (per-column operators) + quick text filter
+- Grouping (`GroupBy` by property name, or `GroupByField` lambda)
+- Selection (`None`, `Single`, `Multiple` with select-all checkbox column)
+- Inline editing + batch edit mode with commit/discard
+- Virtualization (`VirtualizeRows`, `ItemSize`, `OverscanCount`)
+- Infinite scroll (sentinel + `IntersectionObserver` from JS module)
+- Pagination
+- Server-side data via `LoadData` + `ServerTotalCount`
+- Export (CSV, Excel, PDF — see methods on grid)
+- State persistence (`StateKey` → localStorage)
+- Detail row template, context-menu template, empty template
+- Cell validation, command column, conditional formatting, cell merge, row reorder
+
+## Sample Skeleton
+
+```razor
+<ArcadiaDataGrid TItem="Employee"
+                 Data="@employees"
+                 SelectionMode="DataGridSelectionMode.Multiple"
+                 @bind-SelectedItems="selected"
+                 @bind-Sort="sort"
+                 PageSize="25">
+    <ArcadiaColumn Property="Name" Sortable Filterable />
+    <ArcadiaColumn Property="Department" Sortable />
+    <ArcadiaColumn Property="Salary" Format="C0" Aggregate="AggregateType.Sum" />
+</ArcadiaDataGrid>
+```

@@ -27,7 +27,6 @@
 /* KPI Card */
 .arcadia-kpi {
   padding: var(--arcadia-spacing-md, 1rem);
-  border: 1px solid currentColor; border-color: inherit; opacity: 1;
   border: 1px solid rgba(128, 128, 128, 0.2);
   border-radius: var(--arcadia-radius-lg, 0.5rem);
   background: var(--arcadia-color-surface-raised, rgba(128, 128, 128, 0.08));
