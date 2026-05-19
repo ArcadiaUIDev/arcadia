@@ -51,6 +51,23 @@ public partial class ArcadiaPieChart<T> : ChartBase<T>
         .AddClass(Class)
         .Build();
 
+    protected override int? ComputeRenderHash()
+    {
+        var hc = new HashCode();
+        hc.Add(ComputeBaseRenderHash());
+        hc.Add(NameField);
+        hc.Add(ValueField);
+        hc.Add(InnerRadius);
+        hc.Add(ShowLabels);
+        hc.Add(LabelFormat);
+        hc.Add(ValueFormatString);
+        hc.Add(MinLabelPercent);
+        hc.Add(SliceStrokeWidth);
+        hc.Add(SliceStrokeColor);
+        hc.Add(OuterRadius);
+        return hc.ToHashCode();
+    }
+
     protected override void OnParametersSet()
     {
         if (Data is null || Data.Count == 0 || NameField is null || ValueField is null)

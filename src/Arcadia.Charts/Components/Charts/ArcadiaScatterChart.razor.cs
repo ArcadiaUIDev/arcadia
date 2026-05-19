@@ -58,6 +58,22 @@ public partial class ArcadiaScatterChart<T> : ChartBase<T>
         .AddClass(Class)
         .Build();
 
+    protected override int? ComputeRenderHash()
+    {
+        var hc = new HashCode();
+        hc.Add(ComputeBaseRenderHash());
+        hc.Add(XField);
+        hc.Add(YField);
+        hc.Add(SizeField);
+        hc.Add(Color);
+        hc.Add(PointSize);
+        hc.Add(XAxisLabel);
+        hc.Add(YAxisLabel);
+        hc.Add(Trendline);
+        hc.Add(PointOpacity);
+        return hc.ToHashCode();
+    }
+
     protected override void OnParametersSet()
     {
         if (Data is null || Data.Count == 0 || XField is null || YField is null)

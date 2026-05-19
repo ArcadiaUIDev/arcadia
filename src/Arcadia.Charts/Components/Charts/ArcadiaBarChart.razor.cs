@@ -35,6 +35,19 @@ public partial class ArcadiaBarChart<T> : ChartBase<T>
         .AddClass(Class)
         .Build();
 
+    protected override int? ComputeRenderHash()
+    {
+        var hc = new HashCode();
+        hc.Add(ComputeBaseRenderHash());
+        hc.Add(Series); hc.Add(Series?.Count ?? 0);
+        hc.Add(XField);
+        hc.Add(Rounded);
+        hc.Add(Stacked);
+        hc.Add(BarPadding);
+        hc.Add(CornerRadius);
+        return hc.ToHashCode();
+    }
+
     protected override void OnParametersSet()
     {
         if (Data is null || Data.Count == 0 || XField is null || Series is null)

@@ -588,6 +588,64 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
         return value.ToString("N2", FormatProvider);
     }
 
+    // ── ShouldRender / render-skip ────────────────────────
+    // Skip re-rendering when no relevant parameter has changed since the last render.
+    // Charts that subclass ChartBase opt in by overriding ComputeRenderHash and returning
+    // a non-null hash. Returning null (the default) preserves the original "always render"
+    // behavior — subclasses that haven't been audited keep their existing semantics.
+
+    private int _lastRenderHash;
+    private bool _hasComputedHash;
+
+    protected override bool ShouldRender()
+    {
+        var h = ComputeRenderHash();
+        if (h is null) return true;
+        if (_hasComputedHash && h.Value == _lastRenderHash) return false;
+        _lastRenderHash = h.Value;
+        _hasComputedHash = true;
+        return true;
+    }
+
+    /// <summary>Override to enable render-skip optimization for this chart. Return a hash
+    /// of every parameter and piece of state that, if changed, must trigger a re-render.
+    /// Combine with <see cref="ComputeBaseRenderHash"/> to include the shared ChartBase
+    /// parameters. Default returns <c>null</c>, meaning the chart re-renders unconditionally.</summary>
+    protected virtual int? ComputeRenderHash() => null;
+
+    /// <summary>Hash of the shared ChartBase parameters and pan/zoom state. Subclasses combine
+    /// this with their chart-specific parameters inside <see cref="ComputeRenderHash"/>.</summary>
+    protected int ComputeBaseRenderHash()
+    {
+        var hc = new HashCode();
+        hc.Add(Data);
+        hc.Add(Data?.Count ?? 0);
+        hc.Add(Width); hc.Add(Height);
+        hc.Add(Title); hc.Add(Subtitle);
+        hc.Add(XAxisTitle); hc.Add(YAxisTitle);
+        hc.Add(YAxisMin); hc.Add(YAxisMax); hc.Add(YAxisType);
+        hc.Add(YAxisMaxTicks); hc.Add(XAxisMaxTicks);
+        hc.Add(YAxisFormatString); hc.Add(XAxisFormatString);
+        hc.Add(YAxis2Title); hc.Add(YAxis2Min); hc.Add(YAxis2Max);
+        hc.Add(YAxis2FormatString); hc.Add(YAxis2MaxTicks);
+        hc.Add(ShowGrid); hc.Add(GridColor); hc.Add(GridDash); hc.Add(GridOpacity);
+        hc.Add(AxisLineOpacity); hc.Add(ShowHorizontalGrid); hc.Add(ShowVerticalGrid);
+        hc.Add(ShowLegend); hc.Add(LegendPosition); hc.Add(Palette);
+        hc.Add(ShowToolbar);
+        hc.Add(AnimateOnLoad); hc.Add(AnimationDuration);
+        hc.Add(MarginTop); hc.Add(MarginRight); hc.Add(MarginBottom); hc.Add(MarginLeft);
+        hc.Add(PointRadius);
+        hc.Add(ShowDataLabels); hc.Add(DataLabelFormatString);
+        hc.Add(EnableZoom); hc.Add(EnablePan); hc.Add(ZoomMode);
+        hc.Add(SyncGroup);
+        hc.Add(ShowCrosshair);
+        hc.Add(Annotations);
+        hc.Add(Loading); hc.Add(NoDataMessage); hc.Add(AriaLabel);
+        hc.Add(TooltipTemplate);
+        hc.Add(ZoomLevel); hc.Add(PanOffsetX); hc.Add(PanOffsetY);
+        return hc.ToHashCode();
+    }
+
     public async ValueTask DisposeAsync()
     {
         _disposed = true;

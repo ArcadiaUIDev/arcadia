@@ -317,6 +317,8 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     private List<TItem>? _filteredDataCache;
     private int _lastDataHash;
     private int _lastFilterHash;
+    private List<TItem>? _sortedDataCache;
+    private int _lastSortHash;
 
     internal ElementReference TableRef;
     private bool _resizeInitialized;
@@ -465,7 +467,22 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
         return _filteredDataCache;
     }
 
-    private void InvalidateCache() { _filteredDataCache = null; }
+    private void InvalidateCache() { _filteredDataCache = null; _sortedDataCache = null; }
+
+    /// <summary>Returns the filtered + sorted view of Data. Cached against filter + sort state
+    /// so virtual scrolling, paging, and group rendering don't re-sort per render.</summary>
+    private List<TItem> GetCachedSortedData()
+    {
+        var filtered = GetCachedFilteredData();
+        var sortHash = unchecked(_sortStack.Aggregate(0,
+            (h, s) => h ^ (s.Property?.GetHashCode() ?? 0) ^ ((int)s.Direction << 16)));
+        if (_sortedDataCache is null || sortHash != _lastSortHash || _sortedDataCache.Count != filtered.Count)
+        {
+            _sortedDataCache = _sortStack.Count == 0 ? filtered : ApplySort(filtered).ToList();
+            _lastSortHash = sortHash;
+        }
+        return _sortedDataCache;
+    }
 
     /// <summary>Get filtered data (before paging). Uses cache.</summary>
     internal IEnumerable<TItem> GetFilteredData() => GetCachedFilteredData();
@@ -526,9 +543,7 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     internal IList<TItem> GetAllSortedData()
     {
         if (_isServerMode) return (IList<TItem>)(Data ?? (IReadOnlyList<TItem>)Array.Empty<TItem>());
-
-        IEnumerable<TItem> result = ApplySort(GetCachedFilteredData());
-        return result.ToList();
+        return GetCachedSortedData();
     }
 
     /// <summary>Get the current page of data, filtered and sorted.</summary>
@@ -538,14 +553,10 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
 
         if (_isServerMode) return Data ?? Enumerable.Empty<TItem>();
 
-        IEnumerable<TItem> result = ApplySort(GetCachedFilteredData());
-
+        var sorted = GetCachedSortedData();
         if (PageSize > 0)
-        {
-            result = result.Skip(_pageIndex * PageSize).Take(PageSize);
-        }
-
-        return result;
+            return sorted.Skip(_pageIndex * PageSize).Take(PageSize);
+        return sorted;
     }
 
     // ── Filter methods ──

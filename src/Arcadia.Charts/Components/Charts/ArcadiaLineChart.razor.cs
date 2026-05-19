@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
 using Arcadia.Core.Utilities;
@@ -48,9 +49,27 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
     private double _lastWidth;
     private double _lastHeight;
 
+    // Pooled buffers — cleared and reused across renders to avoid allocating per series.
+    private readonly StringBuilder _pathBuilder = new(256);
+    private readonly StringBuilder _areaBuilder = new(256);
+    private readonly StringBuilder _trendBuilder = new(128);
+
     private string? CssClass => CssBuilder.Default("arcadia-chart__svg")
         .AddClass(Class)
         .Build();
+
+    protected override int? ComputeRenderHash()
+    {
+        var hc = new HashCode();
+        hc.Add(ComputeBaseRenderHash());
+        hc.Add(Series); hc.Add(Series?.Count ?? 0);
+        hc.Add(XField);
+        hc.Add(ShowPoints);
+        hc.Add(NullHandling);
+        hc.Add(Stacked);
+        hc.Add(XAxisType);
+        return hc.ToHashCode();
+    }
 
     protected override void OnParametersSet()
     {
@@ -251,57 +270,78 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
             if (currentSegment.Count > 0)
                 segments.Add(currentSegment);
 
-            // Build path from segments
-            var pathParts = new List<string>();
+            // Build path from segments — accumulate directly into a pooled StringBuilder
+            // to avoid allocating List<string> + per-point format strings.
+            _pathBuilder.Clear();
+            var segmentRendered = false;
             foreach (var segment in segments)
             {
                 if (segment.Count < 2) continue;
 
+                if (segmentRendered) _pathBuilder.Append(' ');
                 if (series.CurveType == "smooth")
                 {
                     var pts = segment.Select(p => (p.X, p.Y)).ToList();
-                    pathParts.Add(PathSmoother.SmoothPath(pts));
+                    _pathBuilder.Append(PathSmoother.SmoothPath(pts));
                 }
                 else
                 {
-                    var points = segment.Select(p => $"{F(p.X)},{F(p.Y)}").ToList();
-                    pathParts.Add("M" + string.Join(" L", points));
+                    _pathBuilder.Append('M');
+                    for (int j = 0; j < segment.Count; j++)
+                    {
+                        if (j > 0) _pathBuilder.Append(" L");
+                        _pathBuilder.Append(F(segment[j].X)).Append(',').Append(F(segment[j].Y));
+                    }
                 }
+                segmentRendered = true;
             }
 
-            if (pathParts.Count > 0)
+            if (segmentRendered)
             {
-                _paths[si] = string.Join(" ", pathParts);
+                _paths[si] = _pathBuilder.ToString();
 
                 if (series.ShowArea)
                 {
-                    var areaPathParts = new List<string>();
+                    _areaBuilder.Clear();
+                    var areaRendered = false;
                     foreach (var segment in segments)
                     {
                         if (segment.Count < 2) continue;
-                        var points = segment.Select(p => $"{F(p.X)},{F(p.Y)}").ToList();
+                        if (areaRendered) _areaBuilder.Append(' ');
+
+                        // Top edge (left-to-right)
+                        _areaBuilder.Append('M');
+                        for (int j = 0; j < segment.Count; j++)
+                        {
+                            if (j > 0) _areaBuilder.Append(" L");
+                            _areaBuilder.Append(F(segment[j].X)).Append(',').Append(F(segment[j].Y));
+                        }
 
                         if (Stacked && si > 0 && _stackBaselines.ContainsKey(si - 1))
                         {
-                            // Stack: bottom edge follows previous series
+                            // Bottom edge follows the previous series baseline (right-to-left)
                             var prevBaseline = _stackBaselines[si - 1];
-                            var bottomPoints = segment.Select(p => {
-                                var baseY = prevBaseline.ContainsKey(p.Index) ? prevBaseline[p.Index] : _layout.PlotArea.Y + _layout.PlotArea.Height;
-                                return $"{F(p.X)},{F(baseY)}";
-                            }).Reverse().ToList();
-                            var part = "M" + string.Join(" L", points) + " L" + string.Join(" L", bottomPoints) + " Z";
-                            areaPathParts.Add(part);
+                            for (int j = segment.Count - 1; j >= 0; j--)
+                            {
+                                var p = segment[j];
+                                var baseY = prevBaseline.ContainsKey(p.Index)
+                                    ? prevBaseline[p.Index]
+                                    : _layout.PlotArea.Y + _layout.PlotArea.Height;
+                                _areaBuilder.Append(" L").Append(F(p.X)).Append(',').Append(F(baseY));
+                            }
+                            _areaBuilder.Append(" Z");
                         }
                         else
                         {
-                            // Normal: bottom edge is the x-axis
+                            // Bottom edge is the x-axis
                             var baseY = _layout.PlotArea.Y + _layout.PlotArea.Height;
-                            var part = "M" + string.Join(" L", points);
-                            part += $" L{F(segment[^1].X)},{F(baseY)} L{F(segment[0].X)},{F(baseY)} Z";
-                            areaPathParts.Add(part);
+                            _areaBuilder.Append(" L").Append(F(segment[^1].X)).Append(',').Append(F(baseY))
+                                        .Append(" L").Append(F(segment[0].X)).Append(',').Append(F(baseY))
+                                        .Append(" Z");
                         }
+                        areaRendered = true;
                     }
-                    _areaPaths[si] = string.Join(" ", areaPathParts);
+                    _areaPaths[si] = _areaBuilder.ToString();
                 }
 
                 // Store baseline for stacking
@@ -336,18 +376,22 @@ public partial class ArcadiaLineChart<T> : ChartBase<T>
                         trendValues = TrendlineCalculator.LinearRegression(validValues);
                     }
 
-                    var trendPoints = new List<string>();
+                    _trendBuilder.Clear();
+                    var trendScale = series.YAxisIndex == 1 && _y2Scale is not null ? _y2Scale : _yScale!;
+                    int trendCount = 0;
                     for (var i = 0; i < trendValues.Length && i < seriesPoints.Count; i++)
                     {
                         var px = seriesPoints[i].X;
-                        var trendScale = series.YAxisIndex == 1 && _y2Scale is not null ? _y2Scale : _yScale!;
                         var py = trendScale.Scale(trendValues[i]);
-                        trendPoints.Add($"{F(px)},{F(py)}");
+                        if (trendCount == 0) _trendBuilder.Append('M');
+                        else _trendBuilder.Append(" L");
+                        _trendBuilder.Append(F(px)).Append(',').Append(F(py));
+                        trendCount++;
                     }
 
-                    if (trendPoints.Count >= 2)
+                    if (trendCount >= 2)
                     {
-                        _trendlinePaths[si] = "M" + string.Join(" L", trendPoints);
+                        _trendlinePaths[si] = _trendBuilder.ToString();
                     }
                 }
             }
