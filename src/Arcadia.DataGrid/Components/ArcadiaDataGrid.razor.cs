@@ -407,7 +407,7 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
         }
     }
 
-    protected override async void OnAfterRender(bool firstRender)
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (_disposed) return;
 
@@ -1409,11 +1409,12 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
     public async Task CommitBatchAsync()
     {
         if (_batchChanges.Count == 0) return;
+        var count = _batchChanges.Count;
         if (OnBatchCommit.HasDelegate)
             await OnBatchCommit.InvokeAsync(_batchChanges.ToList());
         _batchChanges.Clear();
         _collectionObserver?.Resume(triggerImmediately: true);
-        Announce($"Saved {_batchChanges.Count} changes");
+        Announce($"Saved {count} changes");
         StateHasChanged();
     }
 
@@ -1763,7 +1764,10 @@ public partial class ArcadiaDataGrid<TItem> : ArcadiaComponentBase, IAsyncDispos
         try
         {
             if (_infiniteScrollObserver is not null)
+            {
                 await _infiniteScrollObserver.InvokeVoidAsync("disconnect");
+                await _infiniteScrollObserver.DisposeAsync();
+            }
         }
         catch (Exception ex) { System.Diagnostics.Debug.WriteLine($"[ArcadiaDataGrid] Dispose scroll observer failed: {ex.Message}"); }
         try
