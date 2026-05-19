@@ -42,8 +42,6 @@ public partial class ArcadiaCandlestickChart<T> : ChartBase<T>
     /// <summary>Candle body width as a fraction of the available band space (0-1). Controls how wide each candlestick body is relative to its slot.</summary>
     [Parameter] public double CandleWidthRatio { get; set; } = 0.35;
 
-    /// <summary>Format string for Y-axis labels.</summary>
-
     private ChartLayoutResult _layout = new();
     private LinearScale? _yScale;
     private List<CandleData> _candles = new();
