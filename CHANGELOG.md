@@ -2,6 +2,57 @@
 
 All notable changes to Arcadia Controls are documented here. This project uses [Keep a Changelog](https://keepachangelog.com/) format and [Semantic Versioning](https://semver.org/).
 
+## [1.0.0-beta.22] — 2026-05-20
+
+This release closes 25 issues from a library audit + external pilot report. Focus: DataGrid correctness, chart rendering performance, light-mode theming, and accurate marketing.
+
+### Fixed
+- **`async void OnAfterRender` in `ArcadiaDataGrid`** silently swallowed JS-interop exceptions during the render cycle. Renamed to `OnAfterRenderAsync` so the framework awaits it. (#1)
+- **`CommitBatchAsync` announced `Saved 0 changes`** to screen readers regardless of actual edit count — the count was read after `Clear()`. Now captures the count before clearing. (#2)
+- **`_infiniteScrollObserver` IJSObjectReference leak** — `DisposeAsync` only called `disconnect`, never disposed the reference. Server circuits accumulated handles per page navigation. (#3)
+- **Chart tooltip rendered as dark purple in light theme** — `chart-interop.js` inlined `rgba(15, 10, 40, 0.95)` etc. directly on `document.body`. Split `.arcadia-tooltip` into appearance (themed via CSS variables) + `--floating` (positioning) + `--custom` (max-width override). (#20)
+- **Generic `TItem` attribute leaked into the DOM on every chart** — `<ArcadiaLineChart TItem="DataPoint">` rendered `TItem="DataPoint"` as an HTML attribute because the chart class declares `<T>` and `TItem` fell through to `AdditionalAttributes`. Added `ArcadiaComponentBase.FilteredAttributes` that strips Blazor generic-parameter names; charts now use `@attributes="FilteredAttributes"`. (#15)
+- **Empty `style=""` on chart wrappers** — `GetContainerStyle` returned `""` instead of `null` when no style was needed. (#15)
+- **Demo pages broken in light mode** — `ChartsDemo.razor`, `TestCards`, `TestDataGrid`, `PlaygroundBuilder`, `TestDragGrid`, `TestTimeAxis`, `TestGaugeDemo`, `TestGaugeChart` had hardcoded `#f1f0f9` / `#6b6890` / `#8a86a8` / `#9490b3` / `#c4c0e0` / `#e2e0f0` / `#fff` text colors. Swept to `var(--arcadia-color-text)` / `var(--arcadia-color-text-muted)`. (#12)
+- **DataGrid `Virtualize` row template lacked `@key`** — DOM recycled by position on scroll, losing focus and edit state. (#15)
+- **`FocusTrap.FocusFirstElementAsync` could fire after dispose** — added `_disposed` guard. (#15)
+- **`.arcadia-grid__scroll-container { overflow-x: hidden }`** clipped wide grids silently on narrow viewports. Changed to `overflow-x: auto`. (#15)
+- **Gallery nav-group buttons missing `aria-expanded`** — five collapsibles in `ChartsDemo` now bind `aria-expanded` to their open-state. (#15)
+- **Stylesheet paths 404'd in three blog tutorials** — `_content/Arcadia.Charts/arcadia-charts.css` (missing `/css/` segment) corrected in `blazor-dashboard-tutorial`, `free-blazor-charts-2026`, `how-to-create-blazor-chart`. (#18)
+- **Orphaned XML doc summary** on `_layout` in `ArcadiaCandlestickChart` (`/// <summary>Format string for Y-axis labels.</summary>`) — deleted; would surface on IDE tooltips for the private field. (#19)
+- **Blog tutorial `how-to-create-blazor-chart`** used a non-existent `<ChartSeries>` child component throughout. Rewritten against the real `Data` + `XField` + `Series` (`List<SeriesConfig<T>>`) API; pie example switched to `NameField`/`ValueField`; `OnPointClick` example documents the `EventCallback.Factory.Create<>` workaround for the Razor source generator. (#17, #21)
+- **`.arcadia-kpi` had dead CSS** — `border: 1px solid currentColor; border-color: inherit; opacity: 1;` were overwritten by the next rule. Removed. (#16)
+- **`ThemeProvider.HandleThemeChanged` discarded `InvokeAsync` implicitly** — now explicit `_ = InvokeAsync(...)`. (#16)
+
+### Performance
+- **Chart pan/zoom JS callbacks dirty-check before re-rendering** — 60fps drag operations no longer issue 60 `StateHasChanged` per second for unchanged values. (#7)
+- **DataGrid sort cache** — `GetAllSortedData` and `GetPagedData` now hit a cached `List<TItem>` keyed on filter+sort state. Virtual-scroll grids stop allocating fresh lists on every parent re-render. (#8)
+- **`ChartBase.ShouldRender`** infrastructure via virtual `ComputeRenderHash` (returning `null` preserves the existing always-render behavior). Opted in for the four Community charts (Line, Bar, Pie, Scatter) so a dashboard with N of them stops re-rendering all N on unrelated parent updates. (#9)
+- **`LineChart` pooled `StringBuilder` buffers** for line / area / trendline paths — replaces per-point `string.Format` + `List<string>` + `string.Join`, saving ~`Data.Count` string allocations per series per render. (#10)
+- **DataGrid grouping reflection cached + compiled** — `ResolveGroupAccessor` now caches by `GroupBy` key and compiles `PropertyInfo` to a `Func<TItem, object>` via `Expression.Lambda` (~100× faster per call than `PropertyInfo.GetValue` in a grouping loop). (#11)
+
+### Accessibility
+- **Chart screen-reader data tables emitted scientific notation** — `value.ToString("G4")` produced `4.5E+04` for 45,000, which screen readers literally announce as "four point five E plus zero four". `FormatSrValue` now uses `"N0"` for integers and `"N2"` for floats via invariant culture. (#14)
+- **Charts are responsive** — `.arcadia-chart__svg` gains `max-width: 100%; height: auto;` so fixed-pixel SVGs scale proportionally on narrow viewports via their `viewBox`. (#13)
+
+### Documentation
+- New `/docs/licensing` page covering Community / Pro / Enterprise tiers, the standalone MIT `Arcadia.Gauge` package, and the current honor-system model. (#25)
+- New "Do I need Arcadia.Theme?" section in `/docs/quick-start` and `/docs/charts/index` clarifying that Theme is optional and what installing it enables. (#23)
+- Rewrote `src/Arcadia.DataGrid/CLAUDE.md` to describe the actual pure-C# `Virtualize`-based architecture (the previous content referenced a never-built AG Grid wrapper). (#6)
+- Documented the event-callback naming rule in root `CLAUDE.md`: `<Property>Changed` for two-way binding, `On<Verb>` for side-effects. (#5)
+- Documented the `OnPointClick` typed-handler factory workaround on the line-chart doc page for the Razor source-generator issue. (#21)
+- Astro redirects for shorter per-chart URLs: `/docs/charts/line` → `/docs/charts/line-chart` for the 17 chart pages that use the `-chart` suffix, plus `/docs/charts/realtime` → `/docs/charts/streaming`. (#22)
+
+### Marketing accuracy
+- Swept "zero JavaScript" claims to the accurate "<12 KB JS module for tooltips, resize, and pan/zoom" framing across the root README, `Arcadia.Charts` NuGet README, Product Hunt pitch + social copy, `launch.astro`, `why-arcadia.astro`, `mcp-server.mdx`, and `index.astro` JSON-LD. `Arcadia.Gauge` keeps "zero JavaScript" since that package is genuinely interop-free. Stale "14 chart types" / "12 chart types" counts in three marketing surfaces updated to 20. (#24)
+
+### Architecture
+- New `Arcadia.Core.Utilities.JSModuleHelper` static class consolidating the `import + swallow JSDisconnected/ObjectDisposed/InvalidOperation` pattern that `ChartBase`, `ArcadiaDataGrid`, and `FocusTrap` each reimplemented. `FocusTrap` migrated as the demo case — 30+ lines of try/catch boilerplate became two helper calls. (#4)
+
+### Tests
+- **+14 new tests** covering the three wrapper-chart subclasses that previously had no dedicated test file: `BubbleChartTests`, `DonutChartTests`, `StackedBarChartTests`. Verify figure role, SR data table, and the default-override behavior (DonutChart → `InnerRadius=0.55`, StackedBarChart → `Stacked=true`).
+- **Unit test count: 1,536 → 1,550** (+14, all passing).
+
 ## [1.0.0-beta.21] — 2026-04-04
 
 ### Fixed
