@@ -1,0 +1,41 @@
+---
+layout: ../../layouts/DocsLayout.astro
+title: Licensing
+description: How Arcadia Controls Community, Pro, and Enterprise tiers are scoped, what counts as a Pro chart, and what the license actually enforces today.
+---
+
+# Licensing
+
+Arcadia Controls ships in two NuGet packages that share the same `Arcadia.*` namespace but have very different licenses.
+
+## Tiers at a glance
+
+| Tier | What's included | Price |
+|------|-----------------|-------|
+| **Community** | `ArcadiaLineChart<T>`, `ArcadiaBarChart<T>`, `ArcadiaPieChart<T>`, `ArcadiaScatterChart<T>`. The DataGrid, FormBuilder, UI Components, Notifications, and the standalone `Arcadia.Gauge` package. MIT-licensed. | Free forever |
+| **Pro** | Everything in Community, plus every other chart type: Candlestick, Radar, Heatmap, Funnel, Treemap, Waterfall, Rose, Range Area, Box Plot, Sankey, Chord, Bubble, Donut, Area, Stacked Bar, and the dashboard widgets that depend on them. | $299 / developer / year |
+| **Enterprise** | Pro features + priority support + on-prem deployment guidance. | $799 / developer / year |
+
+The official chart tier table lives on the [charts overview](/docs/charts) — when a chart is listed as **Pro**, it requires a Pro license.
+
+## What "Pro" enforces today
+
+**Honor system.** The published NuGet currently ships every chart type in a single assembly with no compile-time gate, no runtime license check, and no watermark. Pro chart classes compile and render against the Community NuGet because the technical mechanism for enforcement hasn't shipped yet.
+
+That choice is deliberate during the beta: we want pilot developers to evaluate the full surface before committing to a tier. **Production use of Pro chart types is governed by the license agreement, not by code that stops you.** If your production app renders a chart listed as Pro on the [charts overview](/docs/charts), you need a Pro license.
+
+A visible gate (watermark or runtime banner) is on the roadmap; it will be rolled out with a clear migration window before becoming default. The intent is to give honest developers a clear "you're on the Pro tier" signal, not to break working apps.
+
+## Buying a license
+
+[Pricing page](/pricing) — single developer, team, or enterprise seats. We invoice annually and accept PO orders for teams of 10+.
+
+If you're an OSS author and want to use Pro charts in a public-good project, get in touch — we approve OSS licenses case by case.
+
+## `Arcadia.Gauge` is separate
+
+`Arcadia.Gauge` is its own NuGet package (radial, semi-circular, and linear gauges) released under the MIT license. It does not require Arcadia.Core or any other package. The chart-package gauge (`ArcadiaGaugeChart`) inside `Arcadia.Charts` is Pro — `Arcadia.Gauge` is the free, standalone alternative for projects that only need gauges.
+
+## Compliance reporting
+
+We do not currently collect telemetry from runtime chart usage. License compliance is verified through the same legal channels as every other commercial component library: license agreements, audits on request, and good faith. If you have questions about whether a specific use is covered, email [support@arcadiaui.com](mailto:support@arcadiaui.com) before shipping.

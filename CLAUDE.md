@@ -50,7 +50,15 @@ Multi-targets .NET 5 through .NET 10. Supports Blazor Server, WebAssembly, and A
 - No `async void` — ever
 - IAsyncDisposable for any component with JS interop
 - Parameter naming: `Value`, `ValueChanged`, `ValueExpression` for two-way binding
-- Event callbacks: `OnClick`, `OnChange`, `OnSubmit` (On-prefix)
+- Event-callback naming rule:
+  - **`<Property>Changed`** — paired with `<Property>` so `@bind-<Property>` works
+    (e.g. `Value` + `ValueChanged`, `Sort` + `SortChanged`, `SelectedItems` + `SelectedItemsChanged`,
+    `QuickFilter` + `QuickFilterChanged`). Required by the Blazor framework — do not invent a
+    different convention for two-way binding.
+  - **`On<Verb>`** — side-effect callbacks that do NOT write back into a parameter
+    (e.g. `OnClick`, `OnSubmit`, `OnPointClick`, `OnRowEdit`, `OnBatchCommit`, `OnContextMenu`).
+  - When in doubt: ask "does this fire to notify the parent that a bindable parameter
+    changed?" — yes → `*Changed`; no → `On*`.
 - CSS class parameter: always named `Class` (additional CSS), never override root class
 
 ## NuGet Package Naming

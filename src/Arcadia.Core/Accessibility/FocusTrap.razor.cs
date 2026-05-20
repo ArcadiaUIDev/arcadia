@@ -57,47 +57,23 @@ public partial class FocusTrap : Base.ArcadiaComponentBase, IAsyncDisposable
     private async Task FocusFirstElementAsync()
     {
         if (_disposed) return;
+        _module ??= await Utilities.JSModuleHelper.ImportSafelyAsync(JSRuntime, "./_content/Arcadia.Core/js/focusTrap.js");
+        if (_disposed || _module is null) return; // disposed during await, or interop unavailable
         try
         {
-            _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
-                "import", "./_content/Arcadia.Core/js/focusTrap.js");
-            if (_disposed) return; // disposed during await
             await _module.InvokeVoidAsync("focusFirst", _trapElement);
         }
 #if NET6_0_OR_GREATER
-        catch (JSDisconnectedException)
-        {
-            // Circuit disconnected — safe to ignore
-        }
+        catch (JSDisconnectedException) { /* Circuit disconnected — safe to ignore */ }
 #endif
-        catch (Exception)
-        {
-            // Fallback for net5.0 where JSDisconnectedException doesn't exist
-        }
+        catch (Exception) { /* net5.0 fallback */ }
     }
 
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
         _disposed = true;
-        if (_module is not null)
-        {
-            try
-            {
-                await _module.DisposeAsync();
-            }
-#if NET6_0_OR_GREATER
-            catch (JSDisconnectedException)
-            {
-                // Circuit disconnected — safe to ignore
-            }
-#endif
-            catch (Exception)
-            {
-                // Fallback for net5.0 where JSDisconnectedException doesn't exist
-            }
-        }
-
+        await Utilities.JSModuleHelper.DisposeSafelyAsync(_module);
         GC.SuppressFinalize(this);
     }
 }
