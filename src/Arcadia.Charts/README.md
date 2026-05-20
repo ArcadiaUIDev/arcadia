@@ -1,11 +1,11 @@
 <p align="center">
   <strong>Arcadia.Charts</strong><br>
-  <em>20 chart types + 7 dashboard widgets for Blazor — 244KB total, zero JavaScript</em>
+  <em>20 chart types + 7 dashboard widgets for Blazor — 244KB total, &lt;12KB JavaScript runtime</em>
 </p>
 
 ## Why Arcadia Charts?
 
-- **Pure SVG** — no JavaScript runtime, no npm, no webpack. Charts render in C# on the server.
+- **Native SVG rendering** — chart geometry, axes, scales, and accessibility tables all render in C# directly into Blazor's render tree. A small (&lt;12KB) JS module powers tooltips, resize observation, and pan/zoom. No npm, no webpack, no SPA framework.
 - **244KB total** — compare to Syncfusion (3MB+) or Telerik (1.5MB+)
 - **Responsive** — charts fill their container automatically. Set `Width="0"` and done.
 - **Accessible** — WCAG 2.1 AA: screen reader tables, `prefers-reduced-motion`, keyboard nav

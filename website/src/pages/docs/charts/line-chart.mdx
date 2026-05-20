@@ -79,6 +79,24 @@ Plus all [shared ChartBase parameters](/docs/charts).
 | `OnPointClick` | `EventCallback<PointClickEventArgs<T>>` | Fired when a data point is clicked. Receives item, data index, and series context |
 | `OnSeriesClick` | `EventCallback<int>` | Fired when a series is clicked. Receives the series index |
 
+### Wiring `OnPointClick` from Razor
+
+The Razor source generator occasionally has trouble inferring the type argument of `EventCallback<PointClickEventArgs<T>>` when you assign a typed method group directly. If you see CS1503 errors like *"cannot convert from 'method group' to 'Microsoft.AspNetCore.Components.EventCallback'"*, use the explicit factory form:
+
+```razor
+<ArcadiaLineChart TItem="SalesRecord" ...
+    OnPointClick="@(EventCallback.Factory.Create<PointClickEventArgs<SalesRecord>>(this, HandleClick))" />
+
+@code {
+    private void HandleClick(PointClickEventArgs<SalesRecord> args)
+    {
+        // args.Item, args.Index, args.SeriesIndex, args.SeriesName, args.Value
+    }
+}
+```
+
+The same workaround applies to every chart's `OnPointClick`.
+
 ## Null Data Handling
 
 ```csharp

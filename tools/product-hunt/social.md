@@ -4,7 +4,7 @@
 
 We just launched Arcadia Controls on @ProductHunt!
 
-14 Blazor chart types. Pure SVG. Zero JavaScript. 244KB total.
+14 Blazor chart types. Native SVG rendering. <12KB JS for tooltips & resize. 244KB total.
 
 Plus an AI-powered MCP server that generates chart code from plain English.
 
@@ -22,9 +22,9 @@ Today we're changing that with Arcadia Controls.
 
 **What makes it different:**
 
-Arcadia renders all 14 chart types as pure SVG — directly in Blazor's render tree. There is no JavaScript runtime. No WebGL. No canvas fallbacks. The entire library weighs 244KB. Compare that to the multi-megabyte bundles that Telerik and Syncfusion ship.
+Arcadia renders all 14 chart types as native SVG — directly in Blazor's render tree. No WebGL. No canvas fallbacks. No SPA framework. A small (<12KB) JS module handles tooltips, resize observation, and pan/zoom. The entire library weighs 244KB total. Compare that to the multi-megabyte bundles that Telerik and Syncfusion ship.
 
-This matters because Blazor's strength is keeping logic in C#. Every JS interop call is a performance tax. We eliminated that tax entirely.
+This matters because Blazor's strength is keeping logic in C#. Every JS interop call you don't need is a performance tax. We kept JS to the minimum where it earns its keep.
 
 **The AI angle:**
 
@@ -50,7 +50,7 @@ Link in comments.
 
 ## Reddit r/dotnet Post
 
-**Title:** We launched Arcadia Controls — 14 Blazor chart types, pure SVG, zero JavaScript (244KB total)
+**Title:** We launched Arcadia Controls — 14 Blazor chart types, native SVG, <12KB JS runtime (244KB total)
 
 **Body:**
 
@@ -60,7 +60,7 @@ We just launched Arcadia Controls on Product Hunt and wanted to share it with th
 
 **The problem:** Charting in Blazor usually means either paying $1,000+/yr for Telerik/Syncfusion (with heavy JS interop) or hacking together Chart.js wrappers that break on every update.
 
-**Our approach:** Arcadia renders all charts as native SVG directly in Blazor's component tree. No JavaScript runtime at all. The full library is 244KB.
+**Our approach:** Arcadia renders all charts as native SVG directly in Blazor's component tree. A small (<12KB) JS module powers tooltips, resize observation, and pan/zoom — no npm, no webpack, no SPA framework. The full library is 244KB.
 
 **What you get:**
 
@@ -90,7 +90,7 @@ Playground: https://arcadiaui.com/playground/
 
 ## Reddit r/Blazor Post
 
-**Title:** Arcadia Controls: 14 chart types rendered as pure SVG — no JS interop needed
+**Title:** Arcadia Controls: 14 chart types rendered as native SVG — <12KB JS for tooltips + resize
 
 **Body:**
 
@@ -98,7 +98,7 @@ Hey r/Blazor,
 
 I have been building Blazor apps for years and always struggled with charting. JS interop wrappers for Chart.js or D3 felt wrong — they fight Blazor's render model and add complexity.
 
-So I built Arcadia Controls. Every chart renders as SVG directly in Blazor's component tree. No JavaScript module loading. No IJSRuntime calls. No serialization overhead. Just C# parameters and Blazor rendering.
+So I built Arcadia Controls. Every chart's geometry, axes, scales, and accessibility tables render as SVG directly in Blazor's component tree — diffing-friendly, prerender-safe, pure C#. The bits that genuinely need a browser (tooltips that follow the cursor, ResizeObserver, pan/zoom) live in a small (<12KB) JS module that's auto-loaded by the component.
 
 **Why this matters for Blazor specifically:**
 
@@ -123,4 +123,4 @@ Playground: https://arcadiaui.com/playground/
 
 ## Hacker News Title
 
-Launch HN: Arcadia Controls – Blazor chart library, pure SVG, no JS runtime (244KB)
+Launch HN: Arcadia Controls – Blazor chart library, native SVG, <12KB JS runtime (244KB)

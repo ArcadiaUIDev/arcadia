@@ -19,7 +19,7 @@
 
 ## What is Arcadia Controls?
 
-A commercial Blazor component library for enterprise .NET developers. Pure SVG chart rendering with zero JavaScript dependencies for core charting. Multi-targets **.NET 5 through .NET 10** and supports **Server, WebAssembly, and Auto** render modes.
+A commercial Blazor component library for enterprise .NET developers. Charts render as native SVG directly in Blazor's render tree; a small (~12 KB) JS module powers tooltips, resize observation, and pan/zoom. Multi-targets **.NET 5 through .NET 10** and supports **Server, WebAssembly, and Auto** render modes.
 
 **[Live Demo](https://arcadiaui.com/playground/)** · **[Documentation](https://arcadiaui.com/docs/)** · **[Why Arcadia?](https://arcadiaui.com/why-arcadia/)**
 
@@ -100,7 +100,7 @@ dotnet add package Arcadia.Theme
 
 ## Key Features
 
-- **Pure SVG rendering** — no JavaScript dependencies for chart rendering
+- **Native SVG rendering** — chart geometry renders in C# directly into Blazor's render tree; a small (~12 KB) JS module powers tooltips, resize, and pan/zoom (no npm, no webpack)
 - **20 chart types** — from line charts to Sankey flows, chord diagrams to heatmaps
 - **Responsive** — set `Width="0"` and charts auto-fill their container
 - **Dark/Light themes** — full theme support via CSS custom properties

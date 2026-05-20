@@ -100,56 +100,78 @@ Open your `App.razor` (or `_Host.cshtml` for older Blazor Server projects) and a
 
 ### Step 4: Create a page with a basic line chart
 
-Create a new file `Components/Pages/Dashboard.razor`:
+Arcadia charts are strongly-typed generic components. You give the chart your data model, an `XField` accessor for the X-axis value, and a list of `Series` that say how to extract Y-values. Create a new file `Components/Pages/Dashboard.razor`:
 
 ```razor
 @page "/dashboard"
-@using Arcadia.Charts
+@using Arcadia.Charts.Core
+@using Arcadia.Charts.Components.Charts
 
 <h1>Sales Dashboard</h1>
 
-<ArcadiaLineChart Width="700"
+<ArcadiaLineChart TItem="MonthRevenue"
+                  Data="@revenue"
+                  XField="@(d => (object)d.Month)"
+                  Series="@series"
+                  Width="700"
                   Height="400"
                   XAxisTitle="Month"
                   YAxisTitle="Revenue ($k)"
-                  ShowGrid="true">
-    <ChartSeries Name="Revenue"
-                 Data="@revenue"
-                 Color="#8b5cf6" />
-</ArcadiaLineChart>
+                  ShowGrid="true" />
 
 @code {
-    private double[] revenue = { 32.1, 41.5, 38.7, 52.3, 61.8, 58.2,
-                                  67.4, 72.1, 69.8, 78.5, 85.3, 91.7 };
+    record MonthRevenue(string Month, double Revenue);
+
+    private List<MonthRevenue> revenue = new()
+    {
+        new("Jan", 32.1), new("Feb", 41.5), new("Mar", 38.7),
+        new("Apr", 52.3), new("May", 61.8), new("Jun", 58.2),
+        new("Jul", 67.4), new("Aug", 72.1), new("Sep", 69.8),
+        new("Oct", 78.5), new("Nov", 85.3), new("Dec", 91.7),
+    };
+
+    private List<SeriesConfig<MonthRevenue>> series = new()
+    {
+        new() { Name = "Revenue", Field = d => d.Revenue, Color = "#8b5cf6" },
+    };
 }
 ```
 
-Navigate to `/dashboard` and you will see a line chart with monthly revenue data. The chart renders as SVG — inspect the DOM and you will see `<svg>`, `<path>`, `<circle>`, and `<text>` elements. No `<canvas>`, no JavaScript.
+Navigate to `/dashboard` and you will see a line chart with monthly revenue data. The chart renders as SVG — inspect the DOM and you will see `<svg>`, `<path>`, `<circle>`, and `<text>` elements. No `<canvas>`, no JavaScript runtime.
 
 ### Step 5: Add multiple series
 
-Real dashboards compare data. Add a second series to show year-over-year comparison:
+Real dashboards compare data. The chart already takes a `List<SeriesConfig<T>>`, so adding a second line is one entry in `series`:
 
 ```razor
-<ArcadiaLineChart Width="700"
+<ArcadiaLineChart TItem="YearOverYear"
+                  Data="@data"
+                  XField="@(d => (object)d.Month)"
+                  Series="@series"
+                  Width="700"
                   Height="400"
                   XAxisTitle="Month"
                   YAxisTitle="Revenue ($k)"
                   ShowGrid="true"
-                  ShowLegend="true">
-    <ChartSeries Name="2025 Revenue"
-                 Data="@revenue2025"
-                 Color="#8b5cf6" />
-    <ChartSeries Name="2026 Revenue"
-                 Data="@revenue2026"
-                 Color="#ec4899" />
-</ArcadiaLineChart>
+                  ShowLegend="true" />
 
 @code {
-    private double[] revenue2025 = { 32.1, 41.5, 38.7, 52.3, 61.8, 58.2,
-                                      67.4, 72.1, 69.8, 78.5, 85.3, 91.7 };
-    private double[] revenue2026 = { 38.5, 49.2, 45.1, 59.7, 70.3, 65.8,
-                                      74.2, 81.5, 77.3, 0, 0, 0 };
+    record YearOverYear(string Month, double Y2025, double Y2026);
+
+    private List<YearOverYear> data = new()
+    {
+        new("Jan", 32.1, 38.5), new("Feb", 41.5, 49.2),
+        new("Mar", 38.7, 45.1), new("Apr", 52.3, 59.7),
+        new("May", 61.8, 70.3), new("Jun", 58.2, 65.8),
+        new("Jul", 67.4, 74.2), new("Aug", 72.1, 81.5),
+        new("Sep", 69.8, 77.3),
+    };
+
+    private List<SeriesConfig<YearOverYear>> series = new()
+    {
+        new() { Name = "2025 Revenue", Field = d => d.Y2025, Color = "#8b5cf6" },
+        new() { Name = "2026 Revenue", Field = d => d.Y2026, Color = "#ec4899" },
+    };
 }
 ```
 
@@ -157,172 +179,191 @@ The `ShowLegend="true"` parameter adds a color-coded legend so users can disting
 
 ### Step 6: Add area fill and smooth curves
 
-Line charts become more readable with area fills for trend visualization:
+Curve shape and area fill are per-series. Set `CurveType = "smooth"` for spline interpolation and `ShowArea = true` for the translucent fill beneath each line:
 
 ```razor
-<ArcadiaLineChart Width="700"
-                  Height="400"
-                  XAxisTitle="Month"
-                  YAxisTitle="Revenue ($k)"
-                  ShowGrid="true"
-                  ShowLegend="true"
-                  Smooth="true">
-    <ChartSeries Name="2025 Revenue"
-                 Data="@revenue2025"
-                 Color="#8b5cf6"
-                 ShowArea="true"
-                 AreaOpacity="0.15" />
-    <ChartSeries Name="2026 Revenue"
-                 Data="@revenue2026"
-                 Color="#ec4899"
-                 ShowArea="true"
-                 AreaOpacity="0.15" />
-</ArcadiaLineChart>
+private List<SeriesConfig<YearOverYear>> series = new()
+{
+    new() { Name = "2025 Revenue", Field = d => d.Y2025, Color = "#8b5cf6",
+            CurveType = "smooth", ShowArea = true, AreaOpacity = 0.15 },
+    new() { Name = "2026 Revenue", Field = d => d.Y2026, Color = "#ec4899",
+            CurveType = "smooth", ShowArea = true, AreaOpacity = 0.15 },
+};
 ```
 
-The `Smooth="true"` parameter uses Catmull-Rom spline interpolation to create smooth curves instead of straight line segments. `ShowArea="true"` with `AreaOpacity="0.15"` adds a translucent fill beneath each line.
+`CurveType` accepts `"linear"` (default), `"smooth"` (Catmull-Rom spline), or `"step"`.
 
-### Step 7: Add tooltips and crosshair
+### Step 7: Tooltips and crosshair
 
-For an interactive experience, enable tooltips and a crosshair that follows the cursor:
+Tooltips are on by default for data points. To add a vertical crosshair that tracks the cursor and helps align values across series, set `ShowCrosshair="true"` on the chart:
 
 ```razor
-<ArcadiaLineChart Width="700"
+<ArcadiaLineChart TItem="YearOverYear"
+                  Data="@data"
+                  XField="@(d => (object)d.Month)"
+                  Series="@series"
+                  Width="700"
                   Height="400"
                   XAxisTitle="Month"
                   YAxisTitle="Revenue ($k)"
                   ShowGrid="true"
                   ShowLegend="true"
-                  Smooth="true"
-                  ShowTooltips="true"
                   ShowCrosshair="true"
-                  TooltipFormat="$#,##0.0k">
-    <ChartSeries Name="2025 Revenue"
-                 Data="@revenue2025"
-                 Color="#8b5cf6"
-                 ShowArea="true"
-                 AreaOpacity="0.15" />
-    <ChartSeries Name="2026 Revenue"
-                 Data="@revenue2026"
-                 Color="#ec4899"
-                 ShowArea="true"
-                 AreaOpacity="0.15" />
-</ArcadiaLineChart>
+                  YAxisFormatString="$#,##0.0k" />
 ```
 
-The tooltip shows all series values at the hovered position. The crosshair draws vertical and horizontal reference lines. The `TooltipFormat` parameter controls number formatting inside the tooltip.
+`YAxisFormatString` controls how the Y-axis ticks (and the values inside default tooltips) are formatted.
 
 ## Adding Interactivity
 
 ### Click events
 
-Respond to user clicks on data points:
+`OnPointClick` is a strongly-typed `EventCallback<PointClickEventArgs<T>>`. The Razor source generator sometimes has trouble inferring the type argument when binding a typed handler with a method group, so the safest pattern is the explicit factory shown below:
 
 ```razor
-<ArcadiaLineChart Width="700"
+<ArcadiaLineChart TItem="MonthRevenue"
+                  Data="@revenue"
+                  XField="@(d => (object)d.Month)"
+                  Series="@series"
+                  Width="700"
                   Height="400"
-                  OnClick="HandleDataPointClick"
-                  ShowTooltips="true">
-    <ChartSeries Name="Revenue"
-                 Data="@revenue"
-                 Color="#8b5cf6" />
-</ArcadiaLineChart>
+                  OnPointClick="@(EventCallback.Factory.Create<PointClickEventArgs<MonthRevenue>>(this, HandlePointClick))" />
 
 <p>Selected: @selectedPoint</p>
 
 @code {
-    private double[] revenue = { 32.1, 41.5, 38.7, 52.3, 61.8, 58.2 };
     private string selectedPoint = "Click a data point";
 
-    private void HandleDataPointClick(ChartClickEventArgs args)
+    private void HandlePointClick(PointClickEventArgs<MonthRevenue> args)
     {
-        selectedPoint = $"{args.SeriesName}: {args.Value:C1}k at index {args.Index}";
+        selectedPoint = $"{args.SeriesName}: {args.Value:C1} ({args.Item.Month})";
     }
 }
 ```
+
+`PointClickEventArgs<T>` carries the clicked item, its data index, the series name, and the Y-value.
 
 ### Annotations and reference lines
 
-Mark important thresholds or targets on your chart:
+Annotations are a parameter, not a child element. Pass a `List<ChartAnnotation>`:
 
 ```razor
-<ArcadiaLineChart Width="700"
+<ArcadiaLineChart TItem="MonthRevenue"
+                  Data="@revenue"
+                  XField="@(d => (object)d.Month)"
+                  Series="@series"
+                  Annotations="@annotations"
+                  Width="700"
                   Height="400"
-                  ShowGrid="true"
-                  ShowTooltips="true">
-    <ChartSeries Name="Revenue"
-                 Data="@revenue"
-                 Color="#8b5cf6" />
-    <ChartAnnotation Type="AnnotationType.HorizontalLine"
-                     Value="70"
-                     Color="#f59e0b"
-                     Label="Target"
-                     StrokeDash="6,4" />
-</ArcadiaLineChart>
+                  ShowGrid="true" />
+
+@code {
+    private List<ChartAnnotation> annotations = new()
+    {
+        new ChartAnnotation
+        {
+            Type = ChartAnnotationType.HorizontalLine,
+            Value = 70,
+            Color = "#f59e0b",
+            Label = "Target",
+            StrokeDash = "6,4",
+        },
+    };
+}
 ```
 
-The annotation renders as a dashed horizontal line at the 70k mark with a "Target" label. This is useful for KPI tracking, SLA thresholds, and budget targets.
+A dashed horizontal line at 70k is useful for KPI tracking, SLA thresholds, and budget targets.
 
 ### Dynamic data updates
 
-Charts automatically re-render when bound data changes, just like any Blazor component:
+Charts automatically re-render when their parameters change. For real-time / streaming data, use an `ObservableCollection<T>` — the chart subscribes to `INotifyCollectionChanged` and re-renders without manual `StateHasChanged` calls:
 
 ```razor
-<ArcadiaLineChart Width="700"
-                  Height="400"
-                  ShowTooltips="true"
-                  Smooth="true">
-    <ChartSeries Name="Live Data"
-                 Data="@liveData"
-                 Color="#10b981" />
-</ArcadiaLineChart>
+@using System.Collections.ObjectModel
 
-<button @onclick="AddDataPoint" class="btn btn-primary">Add Point</button>
+<ArcadiaLineChart TItem="Tick"
+                  Data="@liveData"
+                  XField="@(d => (object)d.Time)"
+                  Series="@series"
+                  Width="700"
+                  Height="400" />
+
+<button @onclick="AddTick">Add Point</button>
 
 @code {
-    private List<double> liveData = new() { 10, 25, 18, 32, 28 };
+    record Tick(DateTime Time, double Value);
 
-    private void AddDataPoint()
+    private ObservableCollection<Tick> liveData = new();
+
+    private List<SeriesConfig<Tick>> series = new()
     {
-        var random = new Random();
-        liveData.Add(liveData.Last() + random.Next(-10, 15));
-        StateHasChanged();
+        new() { Name = "Live", Field = d => d.Value, Color = "#10b981", CurveType = "smooth" },
+    };
+
+    protected override void OnInitialized()
+    {
+        var t = DateTime.Now;
+        for (int i = 0; i < 5; i++) liveData.Add(new Tick(t.AddSeconds(i), 10 + i * 3));
+    }
+
+    private void AddTick()
+    {
+        var last = liveData[^1];
+        var rng = new Random();
+        liveData.Add(new Tick(last.Time.AddSeconds(1), last.Value + rng.Next(-5, 8)));
     }
 }
 ```
 
-Each time you click the button, a new data point is added and the chart smoothly updates. Since Arcadia charts are part of the Blazor component tree, they participate in standard Blazor diffing — only the changed SVG elements are updated in the DOM.
-
 ## Creating Other Chart Types
 
-The same patterns work across all Arcadia chart types. Here is a bar chart:
+Bar charts use the same `Data` + `XField` + `Series` pattern as line charts:
 
 ```razor
-<ArcadiaBarChart Width="600"
+<ArcadiaBarChart TItem="QuarterRow"
+                 Data="@quarters"
+                 XField="@(d => (object)d.Region)"
+                 Series="@barSeries"
+                 Width="600"
                  Height="350"
-                 ShowTooltips="true"
-                 ShowGrid="true"
-                 Orientation="Orientation.Vertical">
-    <ChartSeries Name="Q1"
-                 Data="@(new double[] { 85, 72, 91, 68, 77 })"
-                 Color="#8b5cf6" />
-    <ChartSeries Name="Q2"
-                 Data="@(new double[] { 92, 81, 88, 75, 83 })"
-                 Color="#ec4899" />
-</ArcadiaBarChart>
+                 ShowGrid="true" />
+
+@code {
+    record QuarterRow(string Region, double Q1, double Q2);
+
+    private List<QuarterRow> quarters = new()
+    {
+        new("NA", 85, 92), new("EU", 72, 81),
+        new("APAC", 91, 88), new("LATAM", 68, 75), new("MEA", 77, 83),
+    };
+
+    private List<SeriesConfig<QuarterRow>> barSeries = new()
+    {
+        new() { Name = "Q1", Field = d => d.Q1, Color = "#8b5cf6" },
+        new() { Name = "Q2", Field = d => d.Q2, Color = "#ec4899" },
+    };
+}
 ```
 
-And a pie chart:
+Pie charts have a simpler shape — one `NameField` and one `ValueField`:
 
 ```razor
-<ArcadiaPieChart Width="400"
+<ArcadiaPieChart TItem="DeviceShare"
+                 Data="@devices"
+                 NameField="@(d => d.Device)"
+                 ValueField="@(d => d.Share)"
+                 Width="400"
                  Height="400"
-                 ShowLabels="true"
-                 ShowTooltips="true">
-    <PieSlice Label="Desktop" Value="58.3" Color="#8b5cf6" />
-    <PieSlice Label="Mobile" Value="31.2" Color="#ec4899" />
-    <PieSlice Label="Tablet" Value="10.5" Color="#f59e0b" />
-</ArcadiaPieChart>
+                 ShowLabels="true" />
+
+@code {
+    record DeviceShare(string Device, double Share);
+
+    private List<DeviceShare> devices = new()
+    {
+        new("Desktop", 58.3), new("Mobile", 31.2), new("Tablet", 10.5),
+    };
+}
 ```
 
 ## Going Further
