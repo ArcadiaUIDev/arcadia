@@ -1,0 +1,92 @@
+name: Update E2E Baselines
+
+# Visual baselines must be captured on the same OS+Chromium the CI E2E job runs
+# against (ubuntu-latest). Capturing them on a contributor's local machine
+# produces sub-pixel differences that fail every visual test in CI.
+#
+# Trigger manually via the Actions tab when intentional visual changes land
+# (e.g. responsive CSS, theme tokens, tooltip restyling). The workflow runs
+# UPDATE_SNAPSHOTS=1 against the demo server, then commits the regenerated PNGs.
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Why baselines need refreshing (one-liner for the commit message)'
+        required: true
+        default: 'Intentional visual changes — refresh baselines on Linux/CI'
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+permissions:
+  contents: write
+
+jobs:
+  refresh-baselines:
+    name: Regenerate baselines on Linux
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Need a writeable token to push back to the branch
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Build E2E project
+        run: dotnet build tests/Arcadia.Tests.E2E/Arcadia.Tests.E2E.csproj --configuration Release
+
+      - name: Install Playwright browsers
+        run: pwsh tests/Arcadia.Tests.E2E/bin/Release/net9.0/playwright.ps1 install --with-deps chromium
+
+      - name: Build and start demo server
+        run: |
+          dotnet build samples/Arcadia.Demo.Server/Arcadia.Demo.Server.csproj --configuration Release --framework net9.0
+          ASPNETCORE_URLS=http://localhost:5050 dotnet run --project samples/Arcadia.Demo.Server/Arcadia.Demo.Server.csproj --configuration Release --framework net9.0 --no-build &
+          for i in $(seq 1 30); do curl -s http://localhost:5050 > /dev/null && break || sleep 2; done
+
+      - name: Regenerate baselines (UPDATE_SNAPSHOTS=1)
+        env:
+          UPDATE_SNAPSHOTS: '1'
+        run: dotnet test tests/Arcadia.Tests.E2E/Arcadia.Tests.E2E.csproj --configuration Release --no-build --verbosity minimal
+        continue-on-error: true  # UPDATE_SNAPSHOTS still reports tests as failed; we only care that PNGs got written
+
+      - name: Show what changed
+        run: |
+          git status --short tests/Arcadia.Tests.E2E/Screenshots/ || true
+          echo "---"
+          echo "Changed PNG count: $(git status --short tests/Arcadia.Tests.E2E/Screenshots/ | wc -l)"
+
+      - name: Commit and push refreshed baselines
+        run: |
+          changed=$(git status --short tests/Arcadia.Tests.E2E/Screenshots/ | wc -l)
+          if [ "$changed" -eq 0 ]; then
+            echo "No baselines changed — exiting."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tests/Arcadia.Tests.E2E/Screenshots/
+          git commit -m "$(cat <<EOF
+          chore(e2e): refresh visual baselines (CI-generated)
+
+          Regenerated via the update-baselines workflow on ubuntu-latest /
+          Playwright Chromium so PNGs match the rendering environment used
+          by the CI E2E job.
+
+          Reason: ${{ github.event.inputs.reason }}
+
+          Triggered by: ${{ github.actor }}
+          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          EOF
+          )"
+          git push origin HEAD:${{ github.ref_name }}
