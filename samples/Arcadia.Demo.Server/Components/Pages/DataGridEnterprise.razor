@@ -117,7 +117,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">CSV &amp; Excel Export</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Click the CSV or Excel buttons in the toolbar to download grid data.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Click the CSV or Excel buttons in the toolbar to download grid data.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" ShowToolbar="true" Sortable="true" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" />
                 <ArcadiaColumn TItem="Employee" Property="Name" />
@@ -130,7 +130,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Column Picker</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Use the Columns button in the toolbar to show/hide columns dynamically.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Use the Columns button in the toolbar to show/hide columns dynamically.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" ShowToolbar="true" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" />
                 <ArcadiaColumn TItem="Employee" Property="Name" />
@@ -143,7 +143,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">State Persistence</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Sort or filter, then refresh the page — grid state is restored from local storage.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Sort or filter, then refresh the page — grid state is restored from local storage.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" StateKey="demo-grid" Sortable="true" Filterable="true" ShowToolbar="true" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" />
                 <ArcadiaColumn TItem="Employee" Property="Name" />
@@ -156,12 +156,12 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Context Menu</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Right-click a row to see View, Edit, and Delete actions.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Right-click a row to see View, Edit, and Delete actions.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" PageSize="0">
                 <ContextMenuTemplate Context="emp">
                     <div style="background: #1e1b38; border: 1px solid rgba(139,92,246,0.2); border-radius: 8px; padding: 4px 0; min-width: 160px; box-shadow: 0 8px 24px rgba(0,0,0,0.4);">
-                        <button style="display: block; width: 100%; text-align: left; padding: 8px 16px; background: none; border: none; color: #e2e0f0; cursor: pointer; font-size: 0.8125rem;" @onclick="@(() => ToastService.ShowInfo($"Viewing {emp.Name}"))">View Details</button>
-                        <button style="display: block; width: 100%; text-align: left; padding: 8px 16px; background: none; border: none; color: #e2e0f0; cursor: pointer; font-size: 0.8125rem;" @onclick="@(() => ToastService.ShowInfo($"Editing {emp.Name}"))">Edit</button>
+                        <button style="display: block; width: 100%; text-align: left; padding: 8px 16px; background: none; border: none; color: var(--arcadia-color-text); cursor: pointer; font-size: 0.8125rem;" @onclick="@(() => ToastService.ShowInfo($"Viewing {emp.Name}"))">View Details</button>
+                        <button style="display: block; width: 100%; text-align: left; padding: 8px 16px; background: none; border: none; color: var(--arcadia-color-text); cursor: pointer; font-size: 0.8125rem;" @onclick="@(() => ToastService.ShowInfo($"Editing {emp.Name}"))">Edit</button>
                         <button style="display: block; width: 100%; text-align: left; padding: 8px 16px; background: none; border: none; color: #f87171; cursor: pointer; font-size: 0.8125rem;" @onclick="@(() => ToastService.ShowWarning($"Delete {emp.Name}?"))">Delete</button>
                     </div>
                 </ContextMenuTemplate>
@@ -177,7 +177,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Footer Aggregates</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Sum of Salary and Average of Salary computed in the footer row.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Sum of Salary and Average of Salary computed in the footer row.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" Aggregate="AggregateType.Count" />
                 <ArcadiaColumn TItem="Employee" Property="Name" />
@@ -190,7 +190,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Theme Showcase</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Switch between grid visual styles using CSS class overrides.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Switch between grid visual styles using CSS class overrides.</p>
             <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
                 @foreach (var theme in new[] { ("", "Default"), ("arcadia-grid--compact", "Compact"), ("arcadia-grid--bordered", "Bordered"), ("arcadia-grid--rounded", "Rounded"), ("arcadia-grid--flat", "Flat"), ("arcadia-grid--neon", "Neon") })
                 {

@@ -2,7 +2,7 @@
 @typeparam T
 @inherits Arcadia.Charts.Core.ChartBase<T>
 
-<div class="arcadia-chart @(AwaitingMeasurement || Loading ? "arcadia-chart--loading" : "")" @ref="ContainerRef" style="@GetContainerStyle()" @attributes="AdditionalAttributes">
+<div class="arcadia-chart @(AwaitingMeasurement || Loading ? "arcadia-chart--loading" : "")" @ref="ContainerRef" style="@GetContainerStyle()" @attributes="FilteredAttributes">
 @if (AwaitingMeasurement) {
 }
 else if (Data is not null && Data.Count > 0 && NameField is not null && ValueField is not null) {

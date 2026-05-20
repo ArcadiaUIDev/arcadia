@@ -28,7 +28,7 @@
         <nav class="gallery__nav">
             <button class="gallery__nav-btn gallery__nav-btn--home @(_tab == "home" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "home"' style="font-weight:600;margin-bottom:8px;">Home</button>
 
-            <button class="gallery__nav-group" @onclick="() => _chartsOpen = !_chartsOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
+            <button class="gallery__nav-group" type="button" aria-expanded="@(_chartsOpen ? "true" : "false")" @onclick="() => _chartsOpen = !_chartsOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
                 <span style="display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                     Charts
@@ -56,7 +56,7 @@
                 <button class="gallery__nav-btn @(_tab == "advanced" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "advanced"'>Advanced</button>
             }
 
-            <button class="gallery__nav-group" @onclick="() => _datagridOpen = !_datagridOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
+            <button class="gallery__nav-group" type="button" aria-expanded="@(_datagridOpen ? "true" : "false")" @onclick="() => _datagridOpen = !_datagridOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
                 <span style="display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
                     DataGrid
@@ -71,7 +71,7 @@
                 <a href="/datagrid/enterprise" class="gallery__nav-btn" style="text-decoration:none;">Enterprise</a>
             }
 
-            <button class="gallery__nav-group" @onclick="() => _formsOpen = !_formsOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
+            <button class="gallery__nav-group" type="button" aria-expanded="@(_formsOpen ? "true" : "false")" @onclick="() => _formsOpen = !_formsOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
                 <span style="display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                     Forms
@@ -85,7 +85,7 @@
                 <button class="gallery__nav-btn @(_tab == "wizard" ? "gallery__nav-btn--active" : "")" @onclick='() => _tab = "wizard"'>Wizard</button>
             }
 
-            <button class="gallery__nav-group" @onclick="() => _uiOpen = !_uiOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
+            <button class="gallery__nav-group" type="button" aria-expanded="@(_uiOpen ? "true" : "false")" @onclick="() => _uiOpen = !_uiOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
                 <span style="display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/></svg>
                     UI
@@ -107,7 +107,7 @@
                 Live Data
             </a>
 
-            <button class="gallery__nav-group" @onclick="() => _toolsOpen = !_toolsOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
+            <button class="gallery__nav-group" type="button" aria-expanded="@(_toolsOpen ? "true" : "false")" @onclick="() => _toolsOpen = !_toolsOpen" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;width:100%;gap:6px;background:transparent;border:none;color:inherit;font:inherit;padding:0;">
                 <span style="display:flex;align-items:center;gap:6px;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.09a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.09a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
                     Tools
@@ -134,7 +134,7 @@
                     <h1 style="font-size: 2.75rem; font-weight: 800; letter-spacing: -0.035em; line-height: 1.1; margin: 0 0 16px; outline: none;">
                         <span style="background: linear-gradient(135deg, #8b5cf6 0%, #c084fc 50%, #ec4899 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Arcadia Controls</span>
                     </h1>
-                    <p style="font-size: 1.125rem; color: #8a86a8; line-height: 1.75; margin: 0; max-width: 580px;">
+                    <p style="font-size: 1.125rem; color: var(--arcadia-color-text-muted); line-height: 1.75; margin: 0; max-width: 580px;">
                         Enterprise Blazor components for .NET. Charts, DataGrid, Forms, and UI primitives — accessible, themeable, zero JavaScript.
                     </p>
                 </div>
@@ -145,8 +145,8 @@
                         <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
                         </div>
-                        <div style="font-size: 1.0625rem; font-weight: 600; color: #f1f0f9; margin-bottom: 8px;">Charts & Dashboard</div>
-                        <div style="font-size: 0.8125rem; color: #6b6890; line-height: 1.65; margin-bottom: 16px;">16 chart types and 7 dashboard widgets. Pure SVG rendering with zero JavaScript dependencies.</div>
+                        <div style="font-size: 1.0625rem; font-weight: 600; color: var(--arcadia-color-text); margin-bottom: 8px;">Charts & Dashboard</div>
+                        <div style="font-size: 0.8125rem; color: var(--arcadia-color-text-muted); line-height: 1.65; margin-bottom: 16px;">16 chart types and 7 dashboard widgets. Pure SVG rendering with zero JavaScript dependencies.</div>
                         <div style="font-size: 0.8125rem; color: #8b5cf6; font-weight: 500;">Explore charts <span style="margin-left: 2px;">&#8594;</span></div>
                     </button>
 
@@ -154,8 +154,8 @@
                         <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #22d3ee, #0891b2); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
                         </div>
-                        <div style="font-size: 1.0625rem; font-weight: 600; color: #f1f0f9; margin-bottom: 8px;">DataGrid</div>
-                        <div style="font-size: 0.8125rem; color: #6b6890; line-height: 1.65; margin-bottom: 16px;">Multi-column sort, quick filter, batch editing, virtual scrolling, state persistence, and 6 built-in themes.</div>
+                        <div style="font-size: 1.0625rem; font-weight: 600; color: var(--arcadia-color-text); margin-bottom: 8px;">DataGrid</div>
+                        <div style="font-size: 0.8125rem; color: var(--arcadia-color-text-muted); line-height: 1.65; margin-bottom: 16px;">Multi-column sort, quick filter, batch editing, virtual scrolling, state persistence, and 6 built-in themes.</div>
                         <div style="font-size: 0.8125rem; color: #22d3ee; font-weight: 500;">Explore grid <span style="margin-left: 2px;">&#8594;</span></div>
                     </a>
 
@@ -163,8 +163,8 @@
                         <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #ec4899, #db2777); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
                         </div>
-                        <div style="font-size: 1.0625rem; font-weight: 600; color: #f1f0f9; margin-bottom: 8px;">Form Builder</div>
-                        <div style="font-size: 0.8125rem; color: #6b6890; line-height: 1.65; margin-bottom: 16px;">20+ field types with schema-driven and model-driven forms, wizard mode, validation, and conditional fields.</div>
+                        <div style="font-size: 1.0625rem; font-weight: 600; color: var(--arcadia-color-text); margin-bottom: 8px;">Form Builder</div>
+                        <div style="font-size: 0.8125rem; color: var(--arcadia-color-text-muted); line-height: 1.65; margin-bottom: 16px;">20+ field types with schema-driven and model-driven forms, wizard mode, validation, and conditional fields.</div>
                         <div style="font-size: 0.8125rem; color: #ec4899; font-weight: 500;">Explore forms <span style="margin-left: 2px;">&#8594;</span></div>
                     </button>
 
@@ -172,8 +172,8 @@
                         <div style="width: 44px; height: 44px; border-radius: 12px; background: linear-gradient(135deg, #facc15, #eab308); display: flex; align-items: center; justify-content: center; margin-bottom: 20px;">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a4 4 0 00-8 0v2"/><circle cx="12" cy="15" r="1"/></svg>
                         </div>
-                        <div style="font-size: 1.0625rem; font-weight: 600; color: #f1f0f9; margin-bottom: 8px;">UI Components</div>
-                        <div style="font-size: 0.8125rem; color: #6b6890; line-height: 1.65; margin-bottom: 16px;">Dialog, Tabs, Tooltip, Sidebar, Accordion, Breadcrumb, Card, Badge, Avatar, and Toast notifications.</div>
+                        <div style="font-size: 1.0625rem; font-weight: 600; color: var(--arcadia-color-text); margin-bottom: 8px;">UI Components</div>
+                        <div style="font-size: 0.8125rem; color: var(--arcadia-color-text-muted); line-height: 1.65; margin-bottom: 16px;">Dialog, Tabs, Tooltip, Sidebar, Accordion, Breadcrumb, Card, Badge, Avatar, and Toast notifications.</div>
                         <div style="font-size: 0.8125rem; color: #eab308; font-weight: 500;">Explore UI <span style="margin-left: 2px;">&#8594;</span></div>
                     </button>
 
@@ -182,25 +182,25 @@
                 <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; margin-bottom: 56px; padding: 32px 0; border-top: 1px solid rgba(139,92,246,0.08); border-bottom: 1px solid rgba(139,92,246,0.08); text-align: center;">
                     <div>
                         <div style="font-size: 2.25rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1;">57+</div>
-                        <div style="font-size: 0.6875rem; color: #6b6890; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px;">Components</div>
+                        <div style="font-size: 0.6875rem; color: var(--arcadia-color-text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px;">Components</div>
                     </div>
                     <div>
                         <div style="font-size: 2.25rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1;">973</div>
-                        <div style="font-size: 0.6875rem; color: #6b6890; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px;">Unit Tests</div>
+                        <div style="font-size: 0.6875rem; color: var(--arcadia-color-text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px;">Unit Tests</div>
                     </div>
                     <div>
                         <div style="font-size: 2.25rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1;">7</div>
-                        <div style="font-size: 0.6875rem; color: #6b6890; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px;">Packages</div>
+                        <div style="font-size: 0.6875rem; color: var(--arcadia-color-text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px;">Packages</div>
                     </div>
                     <div>
                         <div style="font-size: 2.25rem; font-weight: 800; background: linear-gradient(135deg, #8b5cf6, #ec4899); -webkit-background-clip: text; -webkit-text-fill-color: transparent; line-height: 1;">0</div>
-                        <div style="font-size: 0.6875rem; color: #6b6890; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px;">KB JavaScript</div>
+                        <div style="font-size: 0.6875rem; color: var(--arcadia-color-text-muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px;">KB JavaScript</div>
                     </div>
                 </div>
 
                 <div style="background: rgba(139,92,246,0.04); border: 1px solid rgba(139,92,246,0.10); border-radius: 14px; padding: 28px 32px;">
                     <div style="font-size: 0.75rem; font-weight: 600; color: #8b5cf6; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px;">Quick Install</div>
-                    <pre style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; color: #c4c0e0; line-height: 2;"><code>dotnet add package Arcadia.Charts
+                    <pre style="margin: 0; font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 0.8125rem; color: var(--arcadia-color-text); line-height: 2;"><code>dotnet add package Arcadia.Charts
 dotnet add package Arcadia.DataGrid
 dotnet add package Arcadia.FormBuilder
 dotnet add package Arcadia.UI
@@ -831,10 +831,10 @@ dotnet add package Arcadia.Theme</code></pre>
                 </div>
                 <ArcadiaDialog @bind-Visible="_showDialog" Title="Confirm Action" Width="440px">
                     <ChildContent>
-                        <p style="color: #9490b3; margin: 0;">Are you sure you want to proceed? This action cannot be undone.</p>
+                        <p style="color: var(--arcadia-color-text-muted); margin: 0;">Are you sure you want to proceed? This action cannot be undone.</p>
                     </ChildContent>
                     <FooterTemplate>
-                        <button style="padding: 8px 20px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: transparent; color: #e2e0f0; cursor: pointer;" @onclick="() => _showDialog = false">Cancel</button>
+                        <button style="padding: 8px 20px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: transparent; color: var(--arcadia-color-text); cursor: pointer;" @onclick="() => _showDialog = false">Cancel</button>
                         <button style="padding: 8px 20px; border-radius: 8px; border: none; background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; cursor: pointer; font-weight: 500;" @onclick="HandleDialogConfirm">Confirm</button>
                     </FooterTemplate>
                 </ArcadiaDialog>
@@ -844,13 +844,13 @@ dotnet add package Arcadia.Theme</code></pre>
                 <div class="gallery__showcase-title">Tabs</div>
                 <ArcadiaTabs>
                     <ArcadiaTabPanel Title="Overview">
-                        <div style="padding: 16px 0; color: #9490b3;">This is the overview panel. Tabs use arrow key navigation and ARIA tablist/tabpanel roles.</div>
+                        <div style="padding: 16px 0; color: var(--arcadia-color-text-muted);">This is the overview panel. Tabs use arrow key navigation and ARIA tablist/tabpanel roles.</div>
                     </ArcadiaTabPanel>
                     <ArcadiaTabPanel Title="Features">
-                        <div style="padding: 16px 0; color: #9490b3;">Feature details go here. Each panel is lazily rendered — only the active panel is in the DOM.</div>
+                        <div style="padding: 16px 0; color: var(--arcadia-color-text-muted);">Feature details go here. Each panel is lazily rendered — only the active panel is in the DOM.</div>
                     </ArcadiaTabPanel>
                     <ArcadiaTabPanel Title="API Reference">
-                        <div style="padding: 16px 0; color: #9490b3;">API documentation content. Parameters, events, and code examples.</div>
+                        <div style="padding: 16px 0; color: var(--arcadia-color-text-muted);">API documentation content. Parameters, events, and code examples.</div>
                     </ArcadiaTabPanel>
                     <ArcadiaTabPanel Title="Disabled" Disabled="true">
                         <div>This panel is disabled.</div>
@@ -862,16 +862,16 @@ dotnet add package Arcadia.Theme</code></pre>
                 <div class="gallery__showcase-title">Tooltip</div>
                 <div style="display: flex; gap: 32px; align-items: center; padding: 24px 0;">
                     <ArcadiaTooltip Text="Tooltip on top (default)" Position="top">
-                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: #e2e0f0; cursor: pointer;">Top</button>
+                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: var(--arcadia-color-text); cursor: pointer;">Top</button>
                     </ArcadiaTooltip>
                     <ArcadiaTooltip Text="Tooltip on the right" Position="right">
-                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: #e2e0f0; cursor: pointer;">Right</button>
+                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: var(--arcadia-color-text); cursor: pointer;">Right</button>
                     </ArcadiaTooltip>
                     <ArcadiaTooltip Text="Tooltip on the bottom" Position="bottom">
-                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: #e2e0f0; cursor: pointer;">Bottom</button>
+                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: var(--arcadia-color-text); cursor: pointer;">Bottom</button>
                     </ArcadiaTooltip>
                     <ArcadiaTooltip Text="Tooltip on the left" Position="left">
-                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: #e2e0f0; cursor: pointer;">Left</button>
+                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: var(--arcadia-color-text); cursor: pointer;">Left</button>
                     </ArcadiaTooltip>
                 </div>
             </div>
@@ -880,16 +880,16 @@ dotnet add package Arcadia.Theme</code></pre>
                 <div class="gallery__showcase-title">Card</div>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
                     <ArcadiaCard Title="Revenue Report" Subtitle="Q4 2026" Elevation="2">
-                        <p style="color: #9490b3; margin: 0;">Total revenue increased by 23% compared to the previous quarter, driven by enterprise subscriptions.</p>
+                        <p style="color: var(--arcadia-color-text-muted); margin: 0;">Total revenue increased by 23% compared to the previous quarter, driven by enterprise subscriptions.</p>
                     </ArcadiaCard>
                     <ArcadiaCard Title="Glass Card" Subtitle="Frosted effect" Variant="glass" BlurAmount="20" GlassOpacity="0.10" Elevation="0">
                         <p style="margin: 0;">Semi-transparent with backdrop blur for a modern frosted look.</p>
                     </ArcadiaCard>
                     <ArcadiaCard Title="Gradient Border" Badge="New" GradientBorder="true" Elevation="2">
-                        <p style="color: #9490b3; margin: 0;">A multi-color gradient border that catches the eye.</p>
+                        <p style="color: var(--arcadia-color-text-muted); margin: 0;">A multi-color gradient border that catches the eye.</p>
                     </ArcadiaCard>
                     <ArcadiaCard Title="Clickable Card" Subtitle="Hover to lift" Clickable="true" OnClick="HandleCardClick" AccentColor="#8b5cf6" Elevation="1">
-                        <p style="color: #9490b3; margin: 0;">Accent border, hover lift, and click event. Try it.</p>
+                        <p style="color: var(--arcadia-color-text-muted); margin: 0;">Accent border, hover lift, and click event. Try it.</p>
                     </ArcadiaCard>
                 </div>
             </div>
@@ -898,13 +898,13 @@ dotnet add package Arcadia.Theme</code></pre>
                 <div class="gallery__showcase-title">Badge & Avatar</div>
                 <div style="display: flex; gap: 32px; align-items: center; padding: 16px 0;">
                     <ArcadiaBadge Content="3" Color="primary">
-                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: #e2e0f0;">Inbox</button>
+                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: var(--arcadia-color-text);">Inbox</button>
                     </ArcadiaBadge>
                     <ArcadiaBadge Content="99+" Color="danger">
-                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: #e2e0f0;">Alerts</button>
+                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: var(--arcadia-color-text);">Alerts</button>
                     </ArcadiaBadge>
                     <ArcadiaBadge Dot="true" Color="success">
-                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: #e2e0f0;">Online</button>
+                        <button style="padding: 8px 16px; border-radius: 8px; border: 1px solid rgba(139,92,246,0.2); background: rgba(139,92,246,0.06); color: var(--arcadia-color-text);">Online</button>
                     </ArcadiaBadge>
                     <span style="margin-left: 16px;"></span>
                     <ArcadiaAvatar Name="Alice Chen" Size="lg" Color="primary" />
@@ -917,13 +917,13 @@ dotnet add package Arcadia.Theme</code></pre>
                 <div class="gallery__showcase-title">Accordion</div>
                 <ArcadiaAccordion>
                     <ArcadiaAccordionItem Title="What is Arcadia Controls?">
-                        <p style="color: #9490b3; margin: 0;">Arcadia Controls is a commercial Blazor component library with charts, DataGrid, forms, and UI components. Pure C# rendering with zero JavaScript.</p>
+                        <p style="color: var(--arcadia-color-text-muted); margin: 0;">Arcadia Controls is a commercial Blazor component library with charts, DataGrid, forms, and UI components. Pure C# rendering with zero JavaScript.</p>
                     </ArcadiaAccordionItem>
                     <ArcadiaAccordionItem Title="How do I install it?">
-                        <p style="color: #9490b3; margin: 0;">Run <code style="color: #c084fc;">dotnet add package Arcadia.Charts</code> and add the CSS link to your App.razor.</p>
+                        <p style="color: var(--arcadia-color-text-muted); margin: 0;">Run <code style="color: #c084fc;">dotnet add package Arcadia.Charts</code> and add the CSS link to your App.razor.</p>
                     </ArcadiaAccordionItem>
                     <ArcadiaAccordionItem Title="Is it free?">
-                        <p style="color: #9490b3; margin: 0;">Community Edition includes 4 chart types for free. Pro ($299/dev/year) adds all 16 charts, DataGrid, Form Builder, and more.</p>
+                        <p style="color: var(--arcadia-color-text-muted); margin: 0;">Community Edition includes 4 chart types for free. Pro ($299/dev/year) adds all 16 charts, DataGrid, Form Builder, and more.</p>
                     </ArcadiaAccordionItem>
                 </ArcadiaAccordion>
             </div>

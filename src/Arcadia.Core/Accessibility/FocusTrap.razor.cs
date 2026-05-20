@@ -33,6 +33,7 @@ public partial class FocusTrap : Base.ArcadiaComponentBase, IAsyncDisposable
 
     private ElementReference _trapElement;
     private IJSObjectReference? _module;
+    private bool _disposed;
 
     private string? CssClass => Utilities.CssBuilder.Default("arcadia-focus-trap")
         .AddClass("arcadia-focus-trap--active", Active)
@@ -55,10 +56,12 @@ public partial class FocusTrap : Base.ArcadiaComponentBase, IAsyncDisposable
 
     private async Task FocusFirstElementAsync()
     {
+        if (_disposed) return;
         try
         {
             _module ??= await JSRuntime.InvokeAsync<IJSObjectReference>(
                 "import", "./_content/Arcadia.Core/js/focusTrap.js");
+            if (_disposed) return; // disposed during await
             await _module.InvokeVoidAsync("focusFirst", _trapElement);
         }
 #if NET6_0_OR_GREATER
@@ -76,6 +79,7 @@ public partial class FocusTrap : Base.ArcadiaComponentBase, IAsyncDisposable
     /// <inheritdoc />
     public async ValueTask DisposeAsync()
     {
+        _disposed = true;
         if (_module is not null)
         {
             try

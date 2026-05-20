@@ -129,12 +129,12 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Custom Edit Templates</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Department uses a dropdown select for constrained editing.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Department uses a dropdown select for constrained editing.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" OnRowEdit="HandleRowEdit" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Name" Editable="true" />
                 <ArcadiaColumn TItem="Employee" Property="Department" Editable="true">
                     <EditTemplate Context="item">
-                        <select style="background: #1a1833; color: #e2e0f0; border: 1px solid rgba(139,92,246,0.3); border-radius: 6px; padding: 4px 8px; width: 100%;">
+                        <select style="background: #1a1833; color: var(--arcadia-color-text); border: 1px solid rgba(139,92,246,0.3); border-radius: 6px; padding: 4px 8px; width: 100%;">
                             @foreach (var dept in new[] { "Engineering", "Design", "Marketing", "Sales" })
                             {
                                 <option value="@dept" selected="@(item.Department == dept)">@dept</option>
@@ -161,7 +161,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Single Row Selection</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Click a row to select it. Details appear below.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Click a row to select it. Details appear below.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" SelectionMode="DataGridSelectionMode.SingleRow" PageSize="0"
                              SelectedItems="@_selectedEmployeeSet" SelectedItemsChanged="HandleSingleSelect">
                 <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" />
@@ -172,15 +172,15 @@
             </ArcadiaDataGrid>
             @if (_selectedEmployee is not null)
             {
-                <div style="margin-top: 12px; padding: 12px 16px; border-radius: 8px; background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.15); color: #c4c0e0; font-size: 0.8125rem;">
-                    Selected: <strong style="color: #e2e0f0;">@_selectedEmployee.Name</strong> — @_selectedEmployee.Role in @_selectedEmployee.Department (@_selectedEmployee.Salary.ToString("C0"))
+                <div style="margin-top: 12px; padding: 12px 16px; border-radius: 8px; background: rgba(139,92,246,0.06); border: 1px solid rgba(139,92,246,0.15); color: var(--arcadia-color-text); font-size: 0.8125rem;">
+                    Selected: <strong style="color: var(--arcadia-color-text);">@_selectedEmployee.Name</strong> — @_selectedEmployee.Role in @_selectedEmployee.Department (@_selectedEmployee.Salary.ToString("C0"))
                 </div>
             }
         </div>
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Multi-Row Selection</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Checkbox selection with row count display.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Checkbox selection with row count display.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" SelectionMode="DataGridSelectionMode.Multiple" ShowRowSelector="true" PageSize="0"
                              SelectedItems="@_selectedEmployees" SelectedItemsChanged="@(items => { _selectedEmployees = items; StateHasChanged(); })">
                 <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" />
@@ -189,14 +189,14 @@
                 <ArcadiaColumn TItem="Employee" Property="Role" />
                 <ArcadiaColumn TItem="Employee" Property="Salary" Format="C0" Align="right" />
             </ArcadiaDataGrid>
-            <div style="margin-top: 8px; color: #8a86a8; font-size: 0.8125rem;">
+            <div style="margin-top: 8px; color: var(--arcadia-color-text-muted); font-size: 0.8125rem;">
                 @(_selectedEmployees?.Count ?? 0) row(s) selected
             </div>
         </div>
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Row Numbers</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Auto-generated row numbers alongside a row selector column.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Auto-generated row numbers alongside a row selector column.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" ShowRowSelector="true" ShowRowNumbers="true" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Name" />
                 <ArcadiaColumn TItem="Employee" Property="Department" />

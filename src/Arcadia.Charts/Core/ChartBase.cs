@@ -265,8 +265,12 @@ public abstract class ChartBase<T> : Arcadia.Core.Base.ArcadiaComponentBase, IAs
     protected bool AwaitingMeasurement => false;
 
     /// <summary>Gets the container div style — adds width:100% and min-height when awaiting measurement.</summary>
-    protected string GetContainerStyle() =>
-        AwaitingMeasurement ? $"width:100%;min-height:{Height.ToString("F0")}px;{Style}" : Style ?? "";
+    protected string? GetContainerStyle()
+    {
+        if (AwaitingMeasurement)
+            return $"width:100%;min-height:{Height.ToString("F0")}px;{Style}";
+        return string.IsNullOrEmpty(Style) ? null : Style;
+    }
 
     private double _measuredWidth;
 

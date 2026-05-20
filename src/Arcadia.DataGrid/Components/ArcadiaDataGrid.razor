@@ -116,7 +116,7 @@
                     ItemSize="@ItemSize"
                     OverscanCount="@OverscanCount"
                     Context="vItem">
-                    <div class="arcadia-grid__virtual-row" style="@GetGridTemplateColumns()">
+                    <div @key="vItem" class="arcadia-grid__virtual-row" style="@GetGridTemplateColumns()">
                         @foreach (var col in Columns.Where(c => c.IsVisible))
                         {
                             <div class="arcadia-grid__virtual-cell">

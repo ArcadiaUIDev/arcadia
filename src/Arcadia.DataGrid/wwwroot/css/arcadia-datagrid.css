@@ -888,7 +888,7 @@ th[aria-sort="descending"] .arcadia-grid__sort-icon {
 /* ── Virtual Scroll ── */
 .arcadia-grid__scroll-container {
   overflow-y: auto;
-  overflow-x: hidden;
+  overflow-x: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }

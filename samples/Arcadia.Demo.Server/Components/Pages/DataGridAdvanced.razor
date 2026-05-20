@@ -117,7 +117,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Grouping</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Rows grouped by Department with collapsible group headers.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Rows grouped by Department with collapsible group headers.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" GroupBy="Department" Sortable="true" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Name" />
                 <ArcadiaColumn TItem="Employee" Property="Role" />
@@ -127,7 +127,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Computed Grouping</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Group by a computed expression: salary above $120k = "Senior", below = "Standard".</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Group by a computed expression: salary above $120k = "Senior", below = "Standard".</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" GroupByField="@(e => (object)(e.Salary > 120000 ? "Senior ($120k+)" : "Standard"))" Sortable="true" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Name" />
                 <ArcadiaColumn TItem="Employee" Property="Department" />
@@ -138,7 +138,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Charts in Grid Cells</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Sparklines, delta indicators, and progress bars embedded in grid columns.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Sparklines, delta indicators, and progress bars embedded in grid columns.</p>
             <ArcadiaDataGrid TItem="ProductMetric" Data="@_productMetrics" Striped="true" PageSize="0">
                 <ArcadiaColumn TItem="ProductMetric" Field="@(p => p.Product)" Title="Product" />
                 <ArcadiaColumn TItem="ProductMetric" Field="@(p => p.Revenue)" Title="Revenue" Format="C0" Align="right" />
@@ -162,12 +162,12 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Master-Detail</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Expand a row to see that employee's project assignments.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Expand a row to see that employee's project assignments.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" Sortable="true" PageSize="0">
                 <DetailTemplate Context="emp">
                     <div style="padding: 12px 24px; background: rgba(139,92,246,0.03);">
-                        <strong style="color: #c4c0e0; font-size: 0.8125rem;">Projects for @emp.Name</strong>
-                        <table style="width: 100%; margin-top: 8px; font-size: 0.8125rem; color: #9490b3;">
+                        <strong style="color: var(--arcadia-color-text); font-size: 0.8125rem;">Projects for @emp.Name</strong>
+                        <table style="width: 100%; margin-top: 8px; font-size: 0.8125rem; color: var(--arcadia-color-text-muted);">
                             <thead><tr style="border-bottom: 1px solid rgba(139,92,246,0.1);"><th style="text-align: left; padding: 4px 8px;">Project</th><th style="text-align: left; padding: 4px 8px;">Status</th><th style="text-align: right; padding: 4px 8px;">Hours</th></tr></thead>
                             <tbody>
                                 @foreach (var p in GetProjects(emp.Id))
@@ -190,7 +190,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Virtual Scrolling</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">10,000 rows rendered on demand with virtualization.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">10,000 rows rendered on demand with virtualization.</p>
             <ArcadiaDataGrid TItem="LargeItem" Data="@_largeDataset" VirtualizeRows="true" Height="400px" ItemSize="40" Sortable="true" Filterable="true" PageSize="0">
                 <ArcadiaColumn TItem="LargeItem" Property="Id" Title="ID" Width="80px" />
                 <ArcadiaColumn TItem="LargeItem" Property="Name" />
@@ -202,7 +202,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Frozen Columns</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">First two columns stay fixed during horizontal scroll.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">First two columns stay fixed during horizontal scroll.</p>
             <ArcadiaDataGrid TItem="WideRow" Data="@_wideData" PageSize="0" Height="360px">
                 <ArcadiaColumn TItem="WideRow" Property="Id" Title="ID" Width="70px" Frozen="true" />
                 <ArcadiaColumn TItem="WideRow" Property="Name" Width="140px" Frozen="true" />

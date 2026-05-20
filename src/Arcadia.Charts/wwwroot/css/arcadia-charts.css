@@ -82,7 +82,15 @@
 /* Charts */
 .arcadia-chart { position: relative; overflow: hidden; color: inherit; }
 .arcadia-gauge { width: fit-content; }
-.arcadia-chart__svg { font-family: var(--arcadia-font-sans, system-ui); overflow: visible; }
+.arcadia-chart__svg {
+  font-family: var(--arcadia-font-sans, system-ui);
+  overflow: visible;
+  /* Responsive: shrink on narrow viewports instead of overflowing the container.
+     viewBox is already set so the chart scales proportionally. height:auto preserves
+     the aspect ratio; consumers who want a non-scaling chart can override .Class. */
+  max-width: 100%;
+  height: auto;
+}
 .arcadia-chart__title { font-size: var(--arcadia-text-base, 1rem); font-weight: var(--arcadia-font-semibold, 600); fill: currentColor; }
 .arcadia-chart__tick-label { font-size: 11px; fill: var(--arcadia-color-muted, #9ca3af); }
 .arcadia-chart__line { transition: opacity var(--arcadia-duration-fast, 100ms), d 400ms cubic-bezier(0.25, 0.1, 0.25, 1); }

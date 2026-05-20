@@ -1,7 +1,7 @@
 @namespace Arcadia.Charts.Components.Charts
 @inherits Arcadia.Core.Base.ArcadiaComponentBase
 
-<div class="arcadia-chart arcadia-gauge @(Editable ? "arcadia-gauge--editable" : "")" style="@Style" @attributes="AdditionalAttributes">
+<div class="arcadia-chart arcadia-gauge @(Editable ? "arcadia-gauge--editable" : "")" style="@Style" @attributes="FilteredAttributes">
     <svg width="@Width" height="@Height" viewBox="0 0 @Width @Height"
          role="figure" data-chart="true" aria-label="@(AriaLabel ?? Title ?? $"Gauge: {_displayValue}")"
          class="@CssClass"

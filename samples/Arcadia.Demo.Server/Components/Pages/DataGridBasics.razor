@@ -117,7 +117,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Default Grid</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Minimal setup — just data and columns, no sorting or filtering.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Minimal setup — just data and columns, no sorting or filtering.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" Sortable="false" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" />
                 <ArcadiaColumn TItem="Employee" Property="Name" />
@@ -143,7 +143,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Column Filtering</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Type-aware filters: text contains, numeric range, date range, boolean toggle.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Type-aware filters: text contains, numeric range, date range, boolean toggle.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" Filterable="true" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" />
                 <ArcadiaColumn TItem="Employee" Property="Name" />
@@ -156,7 +156,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Pagination</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">50 rows with configurable page sizes.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">50 rows with configurable page sizes.</p>
             <ArcadiaDataGrid TItem="Order" Data="@_orders" Sortable="true" PageSize="10" PageSizeOptions="@(new[]{5,10,25,50})">
                 <ArcadiaColumn TItem="Order" Property="OrderId" Title="Order #" Width="90px" />
                 <ArcadiaColumn TItem="Order" Property="Customer" />
@@ -169,7 +169,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Toolbar &amp; Quick Search</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Built-in toolbar with search, column picker, and export buttons.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Built-in toolbar with search, column picker, and export buttons.</p>
             <ArcadiaDataGrid TItem="Employee" Data="@_employees" ShowToolbar="true" Sortable="true" PageSize="0">
                 <ArcadiaColumn TItem="Employee" Property="Id" Title="ID" Width="80px" />
                 <ArcadiaColumn TItem="Employee" Property="Name" />
@@ -182,7 +182,7 @@
 
         <div class="gallery__showcase">
             <div class="gallery__showcase-title">Column Formatting</div>
-            <p style="color: #8a86a8; font-size: 0.8125rem; margin-bottom: 12px;">Currency, percentage, date, and alignment formatting on financial data.</p>
+            <p style="color: var(--arcadia-color-text-muted); font-size: 0.8125rem; margin-bottom: 12px;">Currency, percentage, date, and alignment formatting on financial data.</p>
             <ArcadiaDataGrid TItem="FinancialRow" Data="@_financialData" Sortable="true" PageSize="0" Striped="true">
                 <ArcadiaColumn TItem="FinancialRow" Property="Ticker" Title="Ticker" Width="100px" />
                 <ArcadiaColumn TItem="FinancialRow" Property="Price" Title="Price" Format="C2" Align="right" Width="120px" />

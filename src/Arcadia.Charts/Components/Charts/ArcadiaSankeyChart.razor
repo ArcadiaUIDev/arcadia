@@ -1,7 +1,7 @@
 @namespace Arcadia.Charts.Components.Charts
 @inherits Arcadia.Charts.Core.ChartBase<Arcadia.Charts.Core.SankeyNode>
 
-<div class="arcadia-chart @(AwaitingMeasurement || Loading ? "arcadia-chart--loading" : "")" @ref="ContainerRef" style="@GetContainerStyle()" @attributes="AdditionalAttributes">
+<div class="arcadia-chart @(AwaitingMeasurement || Loading ? "arcadia-chart--loading" : "")" @ref="ContainerRef" style="@GetContainerStyle()" @attributes="FilteredAttributes">
 @if (AwaitingMeasurement) {
 }
 else if (HasData) {
