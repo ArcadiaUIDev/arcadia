@@ -40,6 +40,17 @@ public partial class ArcadiaBarChart<T> : ChartBase<T>
         var hc = new HashCode();
         hc.Add(ComputeBaseRenderHash());
         hc.Add(Series); hc.Add(Series?.Count ?? 0);
+        // SeriesConfig is mutable — include per-series state that affects render output
+        // (notably Visible, which legend-button clicks toggle in place).
+        if (Series is not null)
+        {
+            foreach (var s in Series)
+            {
+                hc.Add(s.Visible);
+                hc.Add(s.Name);
+                hc.Add(s.Color);
+            }
+        }
         hc.Add(XField);
         hc.Add(Rounded);
         hc.Add(Stacked);
